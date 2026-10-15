@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="stylesheet" href="css.css"></head>
+    <style>
+        p{
+            color: #f00;
+            font-size: 100px;
+        }
+        .text{
+            color: green;
+        }
+        #text{
+            color: purple;
+        }
+        .box p{
+            color: orange;
+        }
+        #box #text{
+            color: blue;
+            }
+        .text {
+            color: rgb(82, 74, 74)!important;
+        }
+        #box{
+            width: 600px;
+            height: 300px;
+            background-color: rgb(236, 208, 67);
+            margin:10px;
+            padding: 10px;
+            letter-spacing: 10px;
+            border-radius: 10px;
+        }
+        /* 优先级: id>class>标签 */
+    </style>
+    <!-- 后定义的覆盖前定义的 -->
+</head>
+<body>
+    <h2>层叠与继承</h2>
+    <div id="box" class="box">
+        <p id="text" class="text">521 张海玉</p>
+        <p>层叠与继承的优先级</p>
+
+    </div>
+</body>
+</html>

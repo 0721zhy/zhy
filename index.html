@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张海玉｜高级网页设计课堂实践</title>
+    <style>
+        :root {
+            --ink: #17212b;
+            --muted: #63707b;
+            --paper: #fffdf8;
+            --blue: #1d5d8f;
+            --blue-light: #dcecf5;
+            --coral: #d86d55;
+            --line: #d9e1e5;
+            --shadow: 0 18px 45px rgba(23, 33, 43, .12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                linear-gradient(90deg, rgba(29, 93, 143, .045) 1px, transparent 1px),
+                linear-gradient(rgba(29, 93, 143, .045) 1px, transparent 1px),
+                linear-gradient(135deg, #f3f8f8 0%, #fffdf8 55%, #f9eee8 100%);
+            background-size: 32px 32px, 32px 32px, auto;
+            font-family: Georgia, "Microsoft YaHei", serif;
+            line-height: 1.7;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page {
+            width: min(1160px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 28px 0 56px;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            gap: 28px;
+            align-items: center;
+            padding: 18px 0 30px;
+            border-bottom: 3px solid var(--ink);
+        }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--coral);
+            font: bold 13px/1.2 "Microsoft YaHei", sans-serif;
+            letter-spacing: 3px;
+        }
+
+        h1, h2, p {
+            margin-top: 0;
+        }
+
+        h1 {
+            max-width: 780px;
+            margin-bottom: 12px;
+            font-size: clamp(34px, 5vw, 62px);
+            line-height: 1.1;
+            letter-spacing: 0;
+        }
+
+        .intro {
+            max-width: 650px;
+            margin-bottom: 0;
+            color: var(--muted);
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 15px;
+        }
+
+        .stamp {
+            flex: 0 0 190px;
+            padding: 18px 12px;
+            border-top: 1px solid var(--coral);
+            border-bottom: 1px solid var(--coral);
+            color: var(--coral);
+            text-align: center;
+            transform: rotate(-4deg);
+            font-family: "Microsoft YaHei", sans-serif;
+            font-weight: bold;
+        }
+
+        .stamp span {
+            display: block;
+            font-size: 25px;
+            line-height: 1.2;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 26px;
+        }
+
+        .panel {
+            padding: 26px;
+            background: rgba(255, 253, 248, .9);
+            border: 1px solid rgba(23, 33, 43, .12);
+            box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
+        }
+
+        .panel h2 {
+            margin-bottom: 18px;
+            font-size: 23px;
+        }
+
+        .content > section:first-child {
+            grid-column: 1 / -1;
+        }
+
+        .work-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .work-link {
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            background: #fff;
+            text-decoration: none;
+            transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .work-link:hover,
+        .work-link:focus-visible {
+            border-color: var(--blue);
+            box-shadow: 0 8px 20px rgba(29, 93, 143, .12);
+            transform: translateY(-4px);
+            outline: none;
+        }
+
+        .work-number {
+            color: var(--coral);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .work-title {
+            display: block;
+            font: bold 15px/1.3 "Microsoft YaHei", sans-serif;
+        }
+
+        .work-desc {
+            display: block;
+            color: var(--muted);
+            font: 13px/1.5 "Microsoft YaHei", sans-serif;
+        }
+
+        .arrow {
+            align-self: flex-end;
+            color: var(--blue);
+            font: bold 20px sans-serif;
+        }
+
+        .side-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-content: center;
+            gap: 20px 28px;
+        }
+
+        .info {
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--line);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .info:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 3px;
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .prompt {
+            grid-column: 1 / -1;
+            color: var(--muted);
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+        }
+
+        .prompt h2 {
+            color: var(--ink);
+            font-family: Georgia, "Microsoft YaHei", serif;
+        }
+
+        .prompt blockquote {
+            margin: 0;
+            padding: 18px 20px;
+            border-left: 4px solid var(--coral);
+            background: #fff;
+        }
+
+        footer {
+            margin-top: 26px;
+            color: var(--muted);
+            font: 12px "Microsoft YaHei", sans-serif;
+            text-align: center;
+        }
+
+        @media (max-width: 720px) {
+            .page {
+                width: min(100% - 24px, 560px);
+                padding-top: 14px;
+            }
+
+            .hero {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                gap: 28px;
+            }
+
+            .stamp {
+                justify-self: start;
+                width: 170px;
+                padding: 14px 10px;
+            }
+
+            .stamp span {
+                font-size: 21px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .work-list {
+                grid-template-columns: 1fr;
+            }
+
+            .content > section:first-child {
+                grid-column: auto;
+            }
+
+            .side-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="hero">
+            <div>
+                <p class="eyebrow">CLASSROOM PRACTICE / 2025</p>
+                <h1>张海玉的<br>《高级网页设计》课堂实践</h1>
+                <p class="intro">从 HTML 基础到 CSS 样式练习，把每一次课堂尝试整理成一份可以继续探索的网页档案。</p>
+            </div>
+            <div class="stamp" aria-label="课堂实践印章">
+                <div><span>网页</span>实践集<br>ZHANG HAIYU</div>
+            </div>
+        </header>
+
+        <section class="content">
+            <section class="panel" aria-labelledby="works-title">
+                <h2 id="works-title">实践页面</h2>
+                <nav class="work-list" aria-label="本目录网页列表">
+                    <a class="work-link" href="1.html">
+                        <span class="work-number">01</span>
+                        <span><span class="work-title">HTML 起步</span><span class="work-desc">第一个网页与基础结构</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="2-1.html">
+                        <span class="work-number">02</span>
+                        <span><span class="work-title">HTML 元素练习</span><span class="work-desc">文本、列表与页面内容</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="2-2.html">
+                        <span class="work-number">03</span>
+                        <span><span class="work-title">超链接与图片</span><span class="work-desc">链接、图片与表格实践</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="3-2.html">
+                        <span class="work-number">04</span>
+                        <span><span class="work-title">CSS 选择器</span><span class="work-desc">选择器与视觉样式练习</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="3-3.html">
+                        <span class="work-number">05</span>
+                        <span><span class="work-title">HTML 表单</span><span class="work-desc">表单控件与用户输入</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="4-1.html">
+                        <span class="work-number">06</span>
+                        <span><span class="work-title">CSS 进阶</span><span class="work-desc">群组、后代选择器与继承</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="7-1%20%E4%B8%8A%E5%9B%BE%E4%B8%8B%E6%96%87.html">
+                        <span class="work-number">07</span>
+                        <span><span class="work-title">上图下文</span><span class="work-desc">图片与文字的上下布局</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="7-2%20%E5%B7%A6%E5%9B%BE%E5%8F%B3%E6%96%87.html">
+                        <span class="work-number">08</span>
+                        <span><span class="work-title">左图右文</span><span class="work-desc">图片与文字的横向布局</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="11-1.html">
+                        <span class="work-number">09</span>
+                        <span><span class="work-title">长度单位</span><span class="work-desc">px、em、rem、vw 等单位详解</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="work-link" href="11-2.html">
+                        <span class="work-number">10</span>
+                        <span><span class="work-title">CSS3 3D 动画</span><span class="work-desc">立方体、翻转卡片与环形旋转</span></span>
+                        <span class="arrow" aria-hidden="true">→</span>
+                    </a>
+                </nav>
+            </section>
+
+            <aside class="panel side-panel" aria-label="课程信息">
+                <div class="info"><span class="info-label">AUTHOR</span>张海玉</div>
+                <div class="info"><span class="info-label">COURSE</span>高级网页设计</div>
+                <div class="info"><span class="info-label">FORMAT</span>HTML / CSS 原生实践</div>
+                <div class="info"><span class="info-label">CONTENTS</span>10 个课堂实践页面</div>
+            </aside>
+
+            <section class="panel prompt" aria-labelledby="prompt-title">
+                <h2 id="prompt-title">本次页面要求</h2>
+                <blockquote>“创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为张海玉的《高级网页设计》课堂实践，美化页面，页面中包括本提示词。”</blockquote>
+            </section>
+        </section>
+
+        <footer>张海玉 · 《高级网页设计》· 课堂实践归档</footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>媒体查询响应式布局</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			padding: 32px 20px;
+			color: #20322f;
+			background: #f1f3ed;
+			font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+		}
+
+		main {
+			width: min(100%, 1000px);
+			margin: 0 auto;
+		}
+
+		h1 {
+			margin: 0 0 24px;
+			font-size: 28px;
+		}
+
+		.box-list {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 14px;
+		}
+
+		.box {
+			display: grid;
+			min-height: 130px;
+			place-items: center;
+			border-radius: 8px;
+			color: #fff;
+			background: #397b70;
+			font-size: 24px;
+			font-weight: 700;
+		}
+
+		.box:nth-child(3n + 2) {
+			background: #c75b39;
+		}
+
+		.box:nth-child(3n) {
+			background: #526b9a;
+		}
+
+		@media (max-width: 1200px) {
+			.box-list {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+		}
+
+		@media (max-width: 900px) {
+			.box-list {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		@media (max-width: 600px) {
+			.box-list {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<h1>张海玉的盒子布局</h1>
+		<section class="box-list" aria-label="八个响应式盒子">
+			<div class="box">盒子 1</div>
+			<div class="box">盒子 2</div>
+			<div class="box">盒子 3</div>
+			<div class="box">盒子 4</div>
+			<div class="box">盒子 5</div>
+			<div class="box">盒子 6</div>
+			<div class="box">盒子 7</div>
+			<div class="box">盒子 8</div>
+		</section>
+	</main>
+</body>
+</html>

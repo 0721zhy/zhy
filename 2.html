@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张海玉的图片幻灯片</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 32px 20px;
+            color: #f4f1e9;
+            background: #18352f;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        main {
+            width: min(100%, 760px);
+        }
+
+        h1 {
+            margin: 0 0 22px;
+            font-family: Georgia, "Songti SC", serif;
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        .slideshow {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .track {
+            display: flex;
+            width: 400%;
+            animation: slide-position 16s infinite;
+        }
+
+        figure {
+            position: relative;
+            flex: 0 0 25%;
+            width: 25%;
+            margin: 0;
+        }
+
+        figure img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+        }
+
+        .name {
+            position: absolute;
+            top: 20px;
+            left: 22px;
+            color: #fff;
+            font-family: Georgia, "Songti SC", serif;
+            font-size: 30px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgb(0 0 0 / 75%);
+        }
+
+        figcaption {
+            min-height: 72px;
+            padding: 16px 2px;
+            color: #d9e3dc;
+            font-size: 16px;
+        }
+
+        @keyframes slide-position {
+            0%, 20% {
+                transform: translateX(0);
+            }
+            25%, 45% {
+                transform: translateX(-25%);
+            }
+            50%, 70% {
+                transform: translateX(-50%);
+            }
+            75%, 95% {
+                transform: translateX(-75%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .name {
+                top: 14px;
+                left: 14px;
+                font-size: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .track {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>张海玉的影像集</h1>
+        <section class="slideshow" aria-label="自动播放的图片幻灯片">
+            <div class="track">
+                <figure>
+                    <img src="img/1.jpg" alt="中国与埃及代表合影">
+                    <span class="name">张海玉</span>
+                    <figcaption>中埃友好交流</figcaption>
+                </figure>
+                <figure>
+                    <img src="img/2.jpeg" alt="欢迎仪式上的车队">
+                    <span class="name">张海玉</span>
+                    <figcaption>礼宾车队巡行</figcaption>
+                </figure>
+                <figure>
+                    <img src="img/3.jpg" alt="欢迎仪式现场">
+                    <span class="name">张海玉</span>
+                    <figcaption>仪式现场</figcaption>
+                </figure>
+                <figure aria-hidden="true">
+                    <img src="img/1.jpg" alt="">
+                    <span class="name">张海玉</span>
+                    <figcaption>中埃友好交流</figcaption>
+                </figure>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

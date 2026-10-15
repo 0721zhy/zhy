@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长度单位</title>
+    <style>
+        html {
+            font-size: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: #17212b;
+            background: #fffdf8;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            line-height: 1.7;
+        }
+
+        .page {
+            width: min(960px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 40px 0 64px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+        }
+
+        .intro {
+            margin: 0 0 28px;
+            color: #63707b;
+        }
+
+        .card {
+            margin-top: 24px;
+            padding: 24px 28px;
+            background: #fff;
+            border: 1px solid rgba(23, 33, 43, .12);
+            box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
+        }
+
+        .card h2 {
+            margin: 0 0 6px;
+            padding-bottom: 10px;
+            font-size: 22px;
+            border-bottom: 2px solid #d86d55;
+        }
+
+        .card > p {
+            margin: 8px 0 16px;
+            color: #63707b;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #d9e1e5;
+            text-align: left;
+        }
+
+        th {
+            background: #dcecf5;
+        }
+
+        td code {
+            color: #c75b39;
+        }
+
+        code {
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: #f1f5f7;
+            color: #c75b39;
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .demo {
+            margin-top: 18px;
+            padding: 16px;
+            background: #f6f4ee;
+            border: 1px dashed #b9c6cd;
+        }
+
+        .demo-title {
+            margin: 0 0 12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            height: 30px;
+            margin: 6px 0;
+            padding-left: 10px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .px-bar {
+            width: 96px;
+            background: #1d5d8f;
+        }
+
+        .in-bar {
+            width: 1in;
+            background: #397b70;
+        }
+
+        .cm-bar {
+            width: 1cm;
+            background: #c75b39;
+        }
+
+        .mm-bar {
+            width: 10mm;
+            background: #8a6d39;
+        }
+
+        .font-outer {
+            margin: 14px 0 4px;
+            padding: 12px;
+            border: 1px solid #d9e1e5;
+            font-size: 32px;
+        }
+
+        .em-box {
+            margin: 6px 0;
+            padding: 1em;
+            background: #dcecf5;
+        }
+
+        .rem-box {
+            margin: 6px 0;
+            padding: 1rem;
+            background: #f9eee8;
+        }
+
+        .box-label {
+            font-size: 14px;
+        }
+
+        .viewport-demo .vw-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50vw;
+            height: 64px;
+            color: #fff;
+            background: #526b9a;
+            font-size: 14px;
+        }
+
+        .viewport-demo .vh-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 220px;
+            height: 25vh;
+            margin-top: 12px;
+            color: #fff;
+            background: #397b70;
+            font-size: 14px;
+        }
+
+        .tip {
+            margin: 10px 0 0;
+            color: #63707b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <h1>Web 前端长度单位</h1>
+        <p class="intro">CSS 中的长度单位分为<b>绝对长度单位</b>与<b>相对长度单位</b>两大类：绝对单位长度固定，相对单位会随字体大小或视口尺寸变化。</p>
+
+        <section class="card">
+            <h2>一、绝对长度单位</h2>
+            <p>长度固定，不随浏览器窗口或字号变化，常用于打印场景。</p>
+            <table>
+                <tr><th>单位</th><th>名称</th><th>换算关系</th><th>说明</th></tr>
+                <tr><td><code>px</code></td><td>像素</td><td>基准单位</td><td>网页开发中最常用，对应屏幕上的一个像素点</td></tr>
+                <tr><td><code>in</code></td><td>英寸</td><td>1in = 96px</td><td>国际单位换算的基准</td></tr>
+                <tr><td><code>cm</code></td><td>厘米</td><td>1cm ≈ 37.8px</td><td>常见于打印样式</td></tr>
+                <tr><td><code>mm</code></td><td>毫米</td><td>1mm ≈ 3.78px</td><td>常见于打印样式</td></tr>
+                <tr><td><code>pt</code></td><td>点</td><td>1pt = 1/72in</td><td>传统印刷单位</td></tr>
+                <tr><td><code>pc</code></td><td>派卡</td><td>1pc = 12pt</td><td>印刷用，网页中较少使用</td></tr>
+            </table>
+            <div class="demo">
+                <p class="demo-title">演示：px、in、cm、mm 的实际长度对比</p>
+                <div class="bar px-bar">96px</div>
+                <div class="bar in-bar">1in（= 96px，与上一行等长）</div>
+                <div class="bar cm-bar">1cm</div>
+                <div class="bar mm-bar">10mm</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>二、相对长度单位 · 相对于字体大小</h2>
+            <p>随元素的字体大小或根元素字号变化，是最常用的相对单位。</p>
+            <table>
+                <tr><th>单位</th><th>参照对象</th><th>说明</th></tr>
+                <tr><td><code>em</code></td><td>当前元素的 font-size</td><td>字号 24px 时，1em = 24px</td></tr>
+                <tr><td><code>rem</code></td><td>根元素（html）的 font-size</td><td>不受父级影响，适合整体缩放</td></tr>
+                <tr><td><code>%</code></td><td>父元素的对应属性值</td><td>如 width: 50% 即父元素宽度的一半</td></tr>
+            </table>
+            <div class="demo">
+                <p class="demo-title">演示：em 与 rem 的区别（外层字号 32px，根字号 16px）</p>
+                <div class="font-outer">
+                    <div class="em-box"><span class="box-label">padding: 1em = 32px（跟随当前字号）</span></div>
+                    <div class="rem-box"><span class="box-label">padding: 1rem = 16px（固定为根字号）</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>三、相对长度单位 · 相对于视口大小</h2>
+            <p>随浏览器窗口（视口）尺寸变化，常用于响应式布局。</p>
+            <table>
+                <tr><th>单位</th><th>说明</th></tr>
+                <tr><td><code>vw</code></td><td>视口宽度的 1%，如 100vw 表示铺满整行</td></tr>
+                <tr><td><code>vh</code></td><td>视口高度的 1%，如 100vh 表示占满一屏</td></tr>
+                <tr><td><code>vmin</code></td><td>vw 与 vh 中较小的一个</td></tr>
+                <tr><td><code>vmax</code></td><td>vw 与 vh 中较大的一个</td></tr>
+            </table>
+            <div class="demo viewport-demo">
+                <p class="demo-title">演示：调整浏览器窗口，观察两个盒子的变化</p>
+                <div class="vw-box">宽度 50vw</div>
+                <div class="vh-box">高度 25vh</div>
+                <p class="tip">vw 盒子只在窗口宽度变化时改变，vh 盒子只在窗口高度变化时改变。</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>四、其他常用相对单位</h2>
+            <table>
+                <tr><th>单位</th><th>参照对象</th><th>说明</th></tr>
+                <tr><td><code>ch</code></td><td>当前字体中 "0" 字符的宽度</td><td>常用于限制文本列宽，如 60ch</td></tr>
+                <tr><td><code>lh</code></td><td>当前元素的行高（line-height）</td><td>CSS 新增单位，便于按行高对齐</td></tr>
+                <tr><td><code>fr</code></td><td>网格容器的等分份额</td><td>仅用于 CSS Grid 布局，如 1fr 1fr 均分两列</td></tr>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

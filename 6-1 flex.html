@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宫格布局练习</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f1f1f1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            background: #f3f3f3;
+            padding-top: 28px;
+            position: relative;
+        }
+
+        .page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .workspace {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 0 24px;
+        }
+
+        .panel {
+            width: 48%;
+            min-width: 420px;
+            height: 420px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #cfcfcf;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .left-panel {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .left-panel .square {
+            width: 180px;
+            height: 180px;
+            background: #d9d9d9;
+            border: 2px solid #1d1d1d;
+        }
+
+        .right-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stack {
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .stack .bar {
+            width: 220px;
+            height: 90px;
+            background: #d9d9d9;
+            border: 2px solid #1d1d1d;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="workspace">
+            <div class="panel left-panel">
+                <div class="square"></div>
+            </div>
+            <div class="panel right-panel">
+                <div class="stack">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul{
+            list-style: none;
+        }
+        img{
+            display: block;
+        }
+    
+        .ilist{
+            display: flex;
+        }
+        .ilist li{
+            width: 30%;
+            margin: 1px;
+            flex-grow: 1;
+            position: relative;
+        }
+        .ilist img{
+            width: 100%;
+        }
+        .ilist p{
+        text-align: center;
+        font-size: 14px;
+        line-height: 33px;
+        /* 绝对定位 */
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #dbdbe19e;
+        /* 字体加粗 */
+        font-weight: bold;
+        color: #6e52bd;
+        
+    }
+    </style>
+</head>
+<body>
+    <ul class="ilist">
+        <li><img src="img/7.1.png" >
+        <p>张海玉的上图</p>
+        </li>
+        <li><img src="img/7.2.png"> 
+        <p>张海玉的下图</p>
+        </li>
+        <li><img src="img/7.3.png"> 
+        <p>张海玉的下图</p>
+        </li>
+    </ul>
+</body>
+</html>
