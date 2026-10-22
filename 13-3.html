@@ -1,256 +1,358 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>移动端底部导航 · 字体图标</title>
-    <link rel="stylesheet" href="%E4%B8%89%E7%BA%A7%E9%A1%B9%E7%9B%AE/font_5244699_m6lrs264gp/iconfont.css">
+    <title>移动端底部导航 · iconfont 图标</title>
+    <link rel="stylesheet" href="font/iconfont.css">
     <style>
         * {
             box-sizing: border-box;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
         }
 
         body {
             min-height: 100vh;
             color: #17212b;
             background:
-                linear-gradient(90deg, rgba(29, 93, 143, .05) 1px, transparent 1px),
-                linear-gradient(rgba(29, 93, 143, .05) 1px, transparent 1px),
-                linear-gradient(135deg, #e9f2f4 0%, #f6f1ea 100%);
-            background-size: 30px 30px, 30px 30px, auto;
+                linear-gradient(90deg, rgba(29, 93, 143, .045) 1px, transparent 1px),
+                linear-gradient(rgba(29, 93, 143, .045) 1px, transparent 1px),
+                linear-gradient(135deg, #f3f8f8 0%, #fffdf8 55%, #f9eee8 100%);
+            background-size: 32px 32px, 32px 32px, auto;
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
         }
 
+        /* ===== 模拟手机容器 ===== */
         .zhy_stage {
             width: 100%;
+            max-width: 420px;
             min-height: 100vh;
-            background: #f5f7f8;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 30px rgba(23, 33, 43, .06);
+            position: relative;
+            overflow: hidden;
         }
 
         .zhy_statusbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 22px 8px;
+            padding: 14px 22px 6px;
             color: #17212b;
             font-size: 12px;
             font-weight: 700;
         }
 
-        .zhy_header {
+        /* ===== 主内容区 ===== */
+        .zhy_content {
+            padding: 6px 16px 100px;
+        }
+
+        .zhy_banner {
+            height: 160px;
+            margin-bottom: 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1d5d8f 0%, #d86d55 100%);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            background: #fff;
-            border-bottom: 1px solid #e6eaec;
-        }
-
-        .zhy_header h1 {
-            margin: 0;
-            font-size: 17px;
-        }
-
-        .zhy_header p {
-            margin: 2px 0 0;
-            color: #8a97a0;
-            font-size: 12px;
-        }
-
-        .zhy_avatar {
-            width: 34px;
-            height: 34px;
-            background: linear-gradient(135deg, #1d5d8f, #d86d55);
-            border-radius: 50%;
+            justify-content: center;
             color: #fff;
-            font-size: 13px;
-            font-weight: 700;
-            line-height: 34px;
-            text-align: center;
+            font: 600 16px/1.5 "Microsoft YaHei", sans-serif;
+            box-shadow: 0 4px 14px rgba(29, 93, 143, .25);
         }
 
-        .zhy_content {
-            padding: 16px 16px 100px;
+        .zhy_grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .zhy_card {
-            margin-bottom: 14px;
-            padding: 16px;
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 14px rgba(23, 33, 43, .05);
+        .zhy_item {
+            height: 120px;
+            background: #f5f7f8;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #63707b;
+            gap: 8px;
         }
 
-        .zhy_card h2 {
-            margin: 0 0 6px;
-            font-size: 15px;
+        .zhy_item i {
+            font-size: 30px;
+            color: #1d5d8f;
         }
 
-        .zhy_card p {
-            margin: 0;
-            color: #8a97a0;
+        .zhy_item span {
             font-size: 12px;
-            line-height: 1.8;
         }
 
-        .zhy_card code {
-            padding: 1px 6px;
-            background: #eef3f6;
-            border-radius: 4px;
-            color: #1d5d8f;
-            font-family: Consolas, monospace;
+        .zhy_feed-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 8px 0 10px;
+            color: #17212b;
         }
 
-        .zhy_tag {
-            display: inline-block;
-            margin-bottom: 8px;
-            padding: 2px 8px;
-            background: #dcecf5;
-            border-radius: 6px;
-            color: #1d5d8f;
-            font-size: 11px;
+        .zhy_feed {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f3f5;
         }
 
+        .zhy_feed-cover {
+            width: 90px;
+            height: 66px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #dcecf5, #f9eee8);
+            flex-shrink: 0;
+        }
+
+        .zhy_feed-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .zhy_feed-info h3 {
+            margin: 0 0 6px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #17212b;
+        }
+
+        .zhy_feed-info p {
+            margin: 0;
+            font-size: 12px;
+            color: #95a5a6;
+        }
+
+        /* ===== 底部导航 ===== */
         .zhy_tabbar {
             position: fixed;
             bottom: 0;
             left: 50%;
-            z-index: 20;
-            display: flex;
-            width: 100%;
-            padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-            background: #fff;
-            border-radius: 22px 22px 0 0;
-            box-shadow: 0 -6px 18px rgba(23, 33, 43, .08);
             transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            align-items: stretch;
+            background: #ffffff;
+            padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+            box-shadow: 0 -1px 0 rgba(23, 33, 43, .06);
+            z-index: 20;
+            border-top: 1px solid #f0f3f5;
         }
 
         .zhy_tab {
-            display: flex;
+            position: relative;
             flex: 1;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            padding: 4px 0;
+            justify-content: center;
+            gap: 3px;
+            padding: 6px 0 4px;
             color: #9aa6ae;
             text-decoration: none;
-            transition: color .2s ease;
+            cursor: pointer;
+            user-select: none;
+            transition: color .15s ease;
         }
 
-        .zhy_tab:hover,
+        .zhy_tab:hover { color: #63707b; }
+
         .zhy_tab.zhy_active {
-            color: #1d5d8f;
+            color: #17212b;
         }
 
         .zhy_tab-icon {
             position: relative;
             display: inline-flex;
-            font-size: 22px;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
             line-height: 1;
+            width: 30px;
+            height: 30px;
         }
 
         .zhy_tab-label {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
+            line-height: 1;
         }
 
+        /* ===== 角标 ===== */
         .zhy_badge {
             position: absolute;
-            top: -6px;
-            right: -10px;
+            top: -2px;
+            right: -6px;
+            z-index: 2;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: #ff4d4f;
+            background: #ff3b30;
             color: #fff;
             box-shadow: 0 0 0 2px #fff;
         }
 
+        /* 数字徽章：消息 */
         .zhy_badge.zhy_badge-num {
-            min-width: 17px;
-            height: 17px;
-            padding: 0 5px;
-            border-radius: 9px;
-            font-size: 10px;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 10px;
+            font: 10px/1 "Microsoft YaHei", sans-serif;
             font-weight: 700;
-            line-height: 17px;
         }
 
+        /* 红点：发现 */
         .zhy_badge.zhy_badge-dot {
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
+            padding: 0;
             border-radius: 50%;
+            top: 0;
+            right: 0;
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        /* ===== 图标库注释 ===== */
+        .zhy_note {
+            position: fixed;
+            bottom: 70px;
+            right: 12px;
+            padding: 8px 12px;
+            background: #17212b;
+            color: #dcecf5;
+            font: 11px/1.6 "Consolas", monospace;
+            border-radius: 6px;
+            max-width: 220px;
+            opacity: .55;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <!-- 姓名：张海玉 日期：2026-10-22 功能：移动端底部导航 · 字体图标 -->
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：移动端底部导航 · iconfont 图标 -->
+
     <div class="zhy_stage">
+        <!-- 状态栏 -->
         <div class="zhy_statusbar">
             <span>9:41</span>
             <span>5G ▮▮▮</span>
         </div>
 
-        <header class="zhy_header">
-            <div>
-                <h1>张海玉的课堂实践</h1>
-                <p>高级网页设计 · 移动端底部导航</p>
-            </div>
-            <div class="zhy_avatar">张</div>
-        </header>
-
+        <!-- 主内容 -->
         <main class="zhy_content">
-            <section class="zhy_card">
-                <span class="zhy_tag">字体图标</span>
-                <h2>首页</h2>
-                <p>本页下导航使用 iconfont 字体图标：<code>icon-shouye</code>、<code>icon-shipin</code>、<code>icon-xinxi</code>、<code>icon-my</code>。</p>
-            </section>
-            <section class="zhy_card">
-                <span class="zhy_tag">自适应宽度</span>
-                <h2>四个导航项</h2>
-                <p>导航固定在视口底部，四项以 <code>flex: 1</code> 等分宽度，随屏幕宽度自适应伸缩。</p>
-            </section>
-            <section class="zhy_card">
-                <span class="zhy_tag">角标</span>
-                <h2>数字徽章与红点</h2>
-                <p>图标右上角通过绝对定位叠加角标：数字徽章显示 <code>99+</code>，红点表示有新消息。</p>
-            </section>
-            <section class="zhy_card">
-                <span class="zhy_tag">用法</span>
-                <h2>实现要点</h2>
-                <p><code>&lt;i class="iconfont icon-shipin"&gt;&lt;/i&gt;</code> 渲染图标，角标用 <code>.zhy_badge-num</code> 与 <code>.zhy_badge-dot</code> 绝对定位到图标右上角。</p>
-            </section>
+            <div class="zhy_banner">iconfont 5 项底部导航演示</div>
+
+            <div class="zhy_grid">
+                <div class="zhy_item"><i class="iconfont icon-shouye"></i><span>首页</span></div>
+                <div class="zhy_item"><i class="iconfont icon-shipin"></i><span>视频</span></div>
+                <div class="zhy_item"><i class="iconfont icon-faxian"></i><span>发现</span></div>
+                <div class="zhy_item"><i class="iconfont icon-xihuan"></i><span>喜欢</span></div>
+            </div>
+
+            <div class="zhy_feed-title">推荐内容</div>
+
+            <div class="zhy_feed">
+                <div class="zhy_feed-cover"></div>
+                <div class="zhy_feed-info">
+                    <h3>iconfont 字体图标的使用方法详解</h3>
+                    <p>张海玉 · 3 分钟前</p>
+                </div>
+            </div>
+            <div class="zhy_feed">
+                <div class="zhy_feed-cover"></div>
+                <div class="zhy_feed-info">
+                    <h3>移动端底部导航设计最佳实践</h3>
+                    <p>前端专栏 · 10 分钟前</p>
+                </div>
+            </div>
+            <div class="zhy_feed">
+                <div class="zhy_feed-cover"></div>
+                <div class="zhy_feed-info">
+                    <h3>CSS 角标 badge 的几种实现方式</h3>
+                    <p>CSS 技巧 · 1 小时前</p>
+                </div>
+            </div>
         </main>
+
+        <!-- ===== 底部导航：5 个 tab ===== -->
+        <nav class="zhy_tabbar" aria-label="底部导航">
+            <!-- 首页（激活） -->
+            <a class="zhy_tab zhy_active" data-tab="home" href="#">
+                <span class="zhy_tab-icon"><i class="iconfont icon-shouye" aria-hidden="true"></i></span>
+                <span class="zhy_tab-label">首页</span>
+            </a>
+
+            <!-- 视频 -->
+            <a class="zhy_tab" data-tab="video" href="#">
+                <span class="zhy_tab-icon"><i class="iconfont icon-shipin" aria-hidden="true"></i></span>
+                <span class="zhy_tab-label">视频</span>
+            </a>
+
+            <!-- 发现（红点） -->
+            <a class="zhy_tab" data-tab="discover" href="#">
+                <span class="zhy_tab-icon">
+                    <i class="iconfont icon-faxian" aria-hidden="true"></i>
+                    <span class="zhy_badge zhy_badge-dot" aria-label="有新发现"></span>
+                </span>
+                <span class="zhy_tab-label">发现</span>
+            </a>
+
+            <!-- 消息（数字徽章 408） -->
+            <a class="zhy_tab" data-tab="message" href="#">
+                <span class="zhy_tab-icon">
+                    <i class="iconfont icon-xinxi" aria-hidden="true"></i>
+                    <span class="zhy_badge zhy_badge-num" aria-label="408 条未读">408</span>
+                </span>
+                <span class="zhy_tab-label">消息</span>
+            </a>
+
+            <!-- 我 -->
+            <a class="zhy_tab" data-tab="me" href="#">
+                <span class="zhy_tab-icon"><i class="iconfont icon-my" aria-hidden="true"></i></span>
+                <span class="zhy_tab-label">我</span>
+            </a>
+        </nav>
     </div>
 
-    <nav class="zhy_tabbar" aria-label="底部导航">
-        <a class="zhy_tab zhy_active" href="#">
-            <span class="zhy_tab-icon"><i class="iconfont icon-shouye" aria-hidden="true"></i></span>
-            <span class="zhy_tab-label">首页</span>
-        </a>
-        <a class="zhy_tab" href="#">
-            <span class="zhy_tab-icon">
-                <i class="iconfont icon-shipin" aria-hidden="true"></i>
-                <span class="zhy_badge zhy_badge-dot" aria-label="有新视频"></span>
-            </span>
-            <span class="zhy_tab-label">视频</span>
-        </a>
-        <a class="zhy_tab" href="#">
-            <span class="zhy_tab-icon">
-                <i class="iconfont icon-xinxi" aria-hidden="true"></i>
-                <span class="zhy_badge zhy_badge-num">99+</span>
-            </span>
-            <span class="zhy_tab-label">信息</span>
-        </a>
-        <a class="zhy_tab" href="#">
-            <span class="zhy_tab-icon"><i class="iconfont icon-my" aria-hidden="true"></i></span>
-            <span class="zhy_tab-label">我的</span>
-        </a>
-    </nav>
+    <script>
+        // tab 切换：点击激活
+        var zhyTabs = document.querySelectorAll('.zhy_tab');
+        var zhyTabName = {
+            home:     '首页',
+            video:    '视频',
+            discover: '发现',
+            message:  '消息',
+            me:       '我'
+        };
+
+        zhyTabs.forEach(function(zhyTab) {
+            zhyTab.addEventListener('click', function(zhyEvt) {
+                zhyEvt.preventDefault();
+
+                // 清除所有激活态
+                zhyTabs.forEach(function(t) { t.classList.remove('zhy_active'); });
+
+                // 当前 tab 激活
+                zhyTab.classList.add('zhy_active');
+
+                // 轻提示（console + alert 二选一，这里用 console 更友好）
+                var zhyKey = zhyTab.getAttribute('data-tab');
+                console.log('[tab] 切换到 →', zhyTabName[zhyKey] || zhyKey);
+            });
+        });
+    </script>
 </body>
 </html>
