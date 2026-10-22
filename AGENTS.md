@@ -4,10 +4,20 @@ Static HTML/CSS coursework site (张海玉 · 《高级网页设计》课堂实�
 
 ## Constraints
 
-- Course brief requires native HTML/CSS only — no CDNs, no frameworks, no external resources. Keep it that way.
-- Content is Chinese (`lang="zh-CN"`); match existing tone and terminology when editing.
-- All CSS class names, id names, CSS custom properties, and JS variables must be prefixed with `zhy_` (e.g. `.zhy_page`, `#zhy_title`, `--zhy_ink`). Existing pages must also follow this convention.
-- Every HTML page must include an HTML comment right after `<body>`: `<!-- 姓名：张海玉 日期：YYYY-MM-DD 功能：xxx -->`.
+- **原生技术栈**：只允许原生 HTML + CSS + JavaScript，**严禁**引入任何第三方库（框架、图标库、动画库等）、CDN、外部资源（外部字体、远程图片、Google Fonts 等）。所有代码必须手写，所有资源必须来自本地。
+- **图标规范**：项目图标统一使用 `font/` 目录下的 iconfont 字体图标。在 `<head>` 中引入 `<link rel="stylesheet" href="font/iconfont.css">`，元素上用 `<i class="iconfont icon-xxx"></i>` 渲染。iconfont 的 `icon-` 前缀是图标库的类名约定，**豁免**下方 `zhy_` 前缀规则。
+- 内容为中文 (`lang="zh-CN"`)；编辑时沿用已有语气和术语。
+- **命名规范**：所有自定义 CSS 类名、id 名、CSS 自定义属性、JS 变量必须带 `zhy_` 前缀（例：`.zhy_page`、`#zhy_title`、`--zhy_ink`、`var zhy_data`）。内置标签（`div`、`p`）、第三方库约定类名（iconfont 的 `iconfont`、`icon-xxx`）、浏览器内置对象（`document`、`Date`、`Math`）豁免此规则。
+- **页面注释**：每个 HTML 页面 `<body>` 之后必须紧跟一条注释：`<!-- 姓名：张海玉 日期：YYYY-MM-DD 功能：xxx -->`。
+
+### 历史页面例外
+
+以下页面是课程演示特定第三方库的练习成品，作为历史保留，不计入当前约束：
+
+- `13-1.html` — Font Awesome 字体图标演示（页面本身就是该库的练习）
+- `13-2.html` — Lucide SVG 图标演示（页面本身就是该库的练习）
+
+新建或改写页面**禁止**参考这些文件的第三方库用法。
 
 ## Prompt Logging
 
