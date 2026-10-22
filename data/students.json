@@ -1,0 +1,42 @@
+{
+  "code": 200,
+  "message": "ok",
+  "total": 5,
+  "list": [
+    {
+      "id": 1001,
+      "name": "张海玉",
+      "role": "班长",
+      "score": 95,
+      "isActive": true
+    },
+    {
+      "id": 1002,
+      "name": "李明",
+      "role": "学习委员",
+      "score": 88,
+      "isActive": true
+    },
+    {
+      "id": 1003,
+      "name": "王芳",
+      "role": "生活委员",
+      "score": 91,
+      "isActive": false
+    },
+    {
+      "id": 1004,
+      "name": "赵磊",
+      "role": "体育委员",
+      "score": 76,
+      "isActive": true
+    },
+    {
+      "id": 1005,
+      "name": "陈雪",
+      "role": "文艺委员",
+      "score": 84,
+      "isActive": true
+    }
+  ]
+}
