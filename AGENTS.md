@@ -6,7 +6,8 @@ Static HTML/CSS coursework site (张海玉 · 《高级网页设计》课堂实�
 
 - Course brief requires native HTML/CSS only — no CDNs, no frameworks, no external resources. Keep it that way.
 - Content is Chinese (`lang="zh-CN"`); match existing tone and terminology when editing.
-- All CSS class names, id names, and JS variables must be prefixed with `zhang_` (e.g. `.zhang_page`, `#zhang_title`). Applies to new code; existing pages have not been renamed.
+- All CSS class names, id names, CSS custom properties, and JS variables must be prefixed with `zhy_` (e.g. `.zhy_page`, `#zhy_title`, `--zhy_ink`). Existing pages must also follow this convention.
+- Every HTML page must include an HTML comment right after `<body>`: `<!-- 姓名：张海玉 日期：YYYY-MM-DD 功能：xxx -->`.
 
 ## Prompt Logging
 

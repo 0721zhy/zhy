@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -21,11 +21,11 @@
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
         }
 
-        .gallery {
+        .zhy_gallery {
             width: min(100%, 960px);
         }
 
-        .eyebrow {
+        .zhy_eyebrow {
             margin: 0 0 10px;
             color: #64736a;
             font-size: 13px;
@@ -39,7 +39,7 @@
             font-weight: 600;
         }
 
-        .slideshow {
+        .zhy_slideshow {
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -49,30 +49,30 @@
             box-shadow: 0 24px 60px rgb(25 35 31 / 20%);
         }
 
-        .slide {
+        .zhy_slide {
             position: absolute;
             inset: 0;
             margin: 0;
             opacity: 0;
-            animation: slideshow 12s infinite;
+            animation: zhy_slideshow 12s infinite;
         }
 
-        .slide:nth-child(2) {
+        .zhy_slide:nth-child(2) {
             animation-delay: -4s;
         }
 
-        .slide:nth-child(3) {
+        .zhy_slide:nth-child(3) {
             animation-delay: -8s;
         }
 
-        .slide img {
+        .zhy_slide img {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .slide figcaption {
+        .zhy_slide figcaption {
             position: absolute;
             right: 0;
             bottom: 0;
@@ -84,7 +84,7 @@
             font-weight: 600;
         }
 
-        @keyframes slideshow {
+        @keyframes zhy_slideshow {
             0% {
                 opacity: 0;
             }
@@ -109,37 +109,38 @@
                 font-size: 28px;
             }
 
-            .slide figcaption {
+            .zhy_slide figcaption {
                 padding: 36px 16px 14px;
                 font-size: 16px;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .slide {
+            .zhy_slide {
                 animation: none;
             }
 
-            .slide:first-child {
+            .zhy_slide:first-child {
                 opacity: 1;
             }
         }
     </style>
 </head>
 <body>
-    <main class="gallery">
-        <p class="eyebrow">影像档案 / 01—03</p>
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：CSS 图片幻灯片 -->
+    <main class="zhy_gallery">
+        <p class="zhy_eyebrow">影像档案 / 01—03</p>
         <h1>阅兵影像</h1>
-        <section class="slideshow" aria-label="图片幻灯片">
-            <figure class="slide">
+        <section class="zhy_slideshow" aria-label="图片幻灯片">
+            <figure class="zhy_slide">
                 <img src="img/1.1.webp" alt="导弹装备与队列">
                 <figcaption>装备列阵</figcaption>
             </figure>
-            <figure class="slide">
+            <figure class="zhy_slide">
                 <img src="img/1.2.webp" alt="阅兵中的导弹运输车队">
                 <figcaption>方阵行进</figcaption>
             </figure>
-            <figure class="slide">
+            <figure class="zhy_slide">
                 <img src="img/1.3.webp" alt="整齐排列的军用车辆">
                 <figcaption>装备展示</figcaption>
             </figure>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,22 +10,22 @@
             color: #f00;
             font-size: 100px;
         }
-        .text{
+        .zhy_text{
             color: green;
         }
-        #text{
+        #zhy_text{
             color: purple;
         }
-        .box p{
+        .zhy_box p{
             color: orange;
         }
-        #box #text{
+        #zhy_box #zhy_text{
             color: blue;
             }
-        .text {
+        .zhy_text {
             color: rgb(82, 74, 74)!important;
         }
-        #box{
+        #zhy_box{
             width: 600px;
             height: 300px;
             background-color: rgb(236, 208, 67);
@@ -39,9 +39,10 @@
     <!-- 后定义的覆盖前定义的 -->
 </head>
 <body>
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：5-1 层叠与继承 -->
     <h2>层叠与继承</h2>
-    <div id="box" class="box">
-        <p id="text" class="text">521 张海玉</p>
+    <div id="zhy_box" class="zhy_box">
+        <p id="zhy_text" class="zhy_text">521 张海玉</p>
         <p>层叠与继承的优先级</p>
 
     </div>

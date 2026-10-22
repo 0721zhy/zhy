@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -23,25 +23,25 @@
             line-height: 1.7;
         }
 
-        .zhang_page {
+        .zhy_page {
             width: min(1040px, 100%);
             margin: 0 auto;
         }
 
-        .zhang_eyebrow {
+        .zhy_eyebrow {
             margin: 0 0 8px;
             color: #d86d55;
             font: bold 13px/1.2 "Microsoft YaHei", sans-serif;
             letter-spacing: 3px;
         }
 
-        .zhang_title {
+        .zhy_title {
             margin: 0 0 12px;
             font-size: clamp(30px, 5vw, 46px);
             line-height: 1.15;
         }
 
-        .zhang_intro {
+        .zhy_intro {
             max-width: 640px;
             margin: 0 0 34px;
             color: #63707b;
@@ -49,7 +49,7 @@
             font-size: 15px;
         }
 
-        .zhang_section {
+        .zhy_section {
             margin-bottom: 30px;
             padding: 24px 26px 28px;
             background: rgba(255, 253, 248, .94);
@@ -57,24 +57,24 @@
             box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
         }
 
-        .zhang_section-title {
+        .zhy_section-title {
             margin: 0 0 4px;
             font-size: 21px;
         }
 
-        .zhang_section-desc {
+        .zhy_section-desc {
             margin: 0 0 20px;
             color: #63707b;
             font: 13px/1.5 "Microsoft YaHei", sans-serif;
         }
 
-        .zhang_grid {
+        .zhy_grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
             gap: 12px;
         }
 
-        .zhang_icon-card {
+        .zhy_icon-card {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -85,27 +85,27 @@
             transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
         }
 
-        .zhang_icon-card:hover {
+        .zhy_icon-card:hover {
             border-color: #1d5d8f;
             box-shadow: 0 8px 20px rgba(29, 93, 143, .12);
             transform: translateY(-4px);
         }
 
-        .zhang_icon-card i,
-        .zhang_icon-card svg {
+        .zhy_icon-card i,
+        .zhy_icon-card svg {
             width: 30px;
             height: 30px;
             color: #1d5d8f;
         }
 
-        .zhang_icon-card span {
+        .zhy_icon-card span {
             color: #63707b;
             font: 12px/1.3 "Microsoft YaHei", sans-serif;
             text-align: center;
             word-break: break-all;
         }
 
-        .zhang_size-row {
+        .zhy_size-row {
             display: flex;
             align-items: flex-end;
             gap: 26px;
@@ -113,7 +113,7 @@
             padding: 18px 4px 4px;
         }
 
-        .zhang_size-item {
+        .zhy_size-item {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -121,18 +121,18 @@
             color: #1d5d8f;
         }
 
-        .zhang_size-item span {
+        .zhy_size-item span {
             color: #63707b;
             font: 12px/1.2 "Microsoft YaHei", sans-serif;
         }
 
-        .zhang_note {
+        .zhy_note {
             margin: 6px 0 0;
             color: #63707b;
             font: 13px/1.6 "Microsoft YaHei", sans-serif;
         }
 
-        .zhang_note code {
+        .zhy_note code {
             padding: 1px 6px;
             background: #eef3f6;
             border-radius: 4px;
@@ -140,7 +140,7 @@
             font-family: Consolas, monospace;
         }
 
-        .zhang_svg-demo {
+        .zhy_svg-demo {
             display: flex;
             align-items: center;
             gap: 18px;
@@ -150,77 +150,78 @@
     </style>
 </head>
 <body>
-    <main class="zhang_page">
-        <p class="zhang_eyebrow">ICON 02 / LUCIDE</p>
-        <h1 class="zhang_title">Lucide 图标（SVG 方式）</h1>
-        <p class="zhang_intro">
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：Lucide 图标（SVG 方式） -->
+    <main class="zhy_page">
+        <p class="zhy_eyebrow">ICON 02 / LUCIDE</p>
+        <h1 class="zhy_title">Lucide 图标（SVG 方式）</h1>
+        <p class="zhy_intro">
             本页引入本地脚本 <code>cdn/lucide/lucide.min.js</code>。Lucide 以“SVG 图标”方式工作：
             只需在元素上标注 <code>data-lucide="图标名"</code>，调用 <code>lucide.createIcons()</code> 后，
             脚本会把该元素替换为一段内联 SVG，因此图标可随 <code>width</code> / <code>height</code> / <code>color</code> 自由缩放。
         </p>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">常用图标 · data-lucide</h2>
-            <p class="zhang_section-desc">声明 <code>&lt;i data-lucide="house"&gt;&lt;/i&gt;</code>，由 createIcons 自动替换为 SVG。</p>
-            <div class="zhang_grid">
-                <div class="zhang_icon-card"><i data-lucide="house"></i><span>house</span></div>
-                <div class="zhang_icon-card"><i data-lucide="search"></i><span>search</span></div>
-                <div class="zhang_icon-card"><i data-lucide="heart"></i><span>heart</span></div>
-                <div class="zhang_icon-card"><i data-lucide="star"></i><span>star</span></div>
-                <div class="zhang_icon-card"><i data-lucide="user"></i><span>user</span></div>
-                <div class="zhang_icon-card"><i data-lucide="mail"></i><span>mail</span></div>
-                <div class="zhang_icon-card"><i data-lucide="shopping-cart"></i><span>shopping-cart</span></div>
-                <div class="zhang_icon-card"><i data-lucide="settings"></i><span>settings</span></div>
-                <div class="zhang_icon-card"><i data-lucide="cloud-upload"></i><span>cloud-upload</span></div>
-                <div class="zhang_icon-card"><i data-lucide="bell"></i><span>bell</span></div>
-                <div class="zhang_icon-card"><i data-lucide="zap"></i><span>zap</span></div>
-                <div class="zhang_icon-card"><i data-lucide="circle-check"></i><span>circle-check</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">常用图标 · data-lucide</h2>
+            <p class="zhy_section-desc">声明 <code>&lt;i data-lucide="house"&gt;&lt;/i&gt;</code>，由 createIcons 自动替换为 SVG。</p>
+            <div class="zhy_grid">
+                <div class="zhy_icon-card"><i data-lucide="house"></i><span>house</span></div>
+                <div class="zhy_icon-card"><i data-lucide="search"></i><span>search</span></div>
+                <div class="zhy_icon-card"><i data-lucide="heart"></i><span>heart</span></div>
+                <div class="zhy_icon-card"><i data-lucide="star"></i><span>star</span></div>
+                <div class="zhy_icon-card"><i data-lucide="user"></i><span>user</span></div>
+                <div class="zhy_icon-card"><i data-lucide="mail"></i><span>mail</span></div>
+                <div class="zhy_icon-card"><i data-lucide="shopping-cart"></i><span>shopping-cart</span></div>
+                <div class="zhy_icon-card"><i data-lucide="settings"></i><span>settings</span></div>
+                <div class="zhy_icon-card"><i data-lucide="cloud-upload"></i><span>cloud-upload</span></div>
+                <div class="zhy_icon-card"><i data-lucide="bell"></i><span>bell</span></div>
+                <div class="zhy_icon-card"><i data-lucide="zap"></i><span>zap</span></div>
+                <div class="zhy_icon-card"><i data-lucide="circle-check"></i><span>circle-check</span></div>
             </div>
         </section>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">更多图标</h2>
-            <p class="zhang_section-desc">同一套命名规则，按需取用。</p>
-            <div class="zhang_grid">
-                <div class="zhang_icon-card"><i data-lucide="menu"></i><span>menu</span></div>
-                <div class="zhang_icon-card"><i data-lucide="arrow-right"></i><span>arrow-right</span></div>
-                <div class="zhang_icon-card"><i data-lucide="download"></i><span>download</span></div>
-                <div class="zhang_icon-card"><i data-lucide="link-2"></i><span>link-2</span></div>
-                <div class="zhang_icon-card"><i data-lucide="image"></i><span>image</span></div>
-                <div class="zhang_icon-card"><i data-lucide="camera"></i><span>camera</span></div>
-                <div class="zhang_icon-card"><i data-lucide="pencil"></i><span>pencil</span></div>
-                <div class="zhang_icon-card"><i data-lucide="trash-2"></i><span>trash-2</span></div>
-                <div class="zhang_icon-card"><i data-lucide="message-circle"></i><span>message-circle</span></div>
-                <div class="zhang_icon-card"><i data-lucide="send"></i><span>send</span></div>
-                <div class="zhang_icon-card"><i data-lucide="github"></i><span>github</span></div>
-                <div class="zhang_icon-card"><i data-lucide="square"></i><span>square</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">更多图标</h2>
+            <p class="zhy_section-desc">同一套命名规则，按需取用。</p>
+            <div class="zhy_grid">
+                <div class="zhy_icon-card"><i data-lucide="menu"></i><span>menu</span></div>
+                <div class="zhy_icon-card"><i data-lucide="arrow-right"></i><span>arrow-right</span></div>
+                <div class="zhy_icon-card"><i data-lucide="download"></i><span>download</span></div>
+                <div class="zhy_icon-card"><i data-lucide="link-2"></i><span>link-2</span></div>
+                <div class="zhy_icon-card"><i data-lucide="image"></i><span>image</span></div>
+                <div class="zhy_icon-card"><i data-lucide="camera"></i><span>camera</span></div>
+                <div class="zhy_icon-card"><i data-lucide="pencil"></i><span>pencil</span></div>
+                <div class="zhy_icon-card"><i data-lucide="trash-2"></i><span>trash-2</span></div>
+                <div class="zhy_icon-card"><i data-lucide="message-circle"></i><span>message-circle</span></div>
+                <div class="zhy_icon-card"><i data-lucide="send"></i><span>send</span></div>
+                <div class="zhy_icon-card"><i data-lucide="github"></i><span>github</span></div>
+                <div class="zhy_icon-card"><i data-lucide="square"></i><span>square</span></div>
             </div>
         </section>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">尺寸与颜色</h2>
-            <p class="zhang_section-desc">SVG 默认 24×24，可传入属性统一调整，也可用 CSS 覆盖。</p>
-            <div class="zhang_size-row">
-                <div class="zhang_size-item"><i data-lucide="rocket" data-size="16"></i><span>16</span></div>
-                <div class="zhang_size-item"><i data-lucide="rocket" data-size="24"></i><span>24</span></div>
-                <div class="zhang_size-item"><i data-lucide="rocket" data-size="36"></i><span>36</span></div>
-                <div class="zhang_size-item"><i data-lucide="rocket" data-size="48"></i><span>48</span></div>
-                <div class="zhang_size-item"><i data-lucide="rocket" data-size="64" data-color="coral"></i><span>64 · 珊瑚色</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">尺寸与颜色</h2>
+            <p class="zhy_section-desc">SVG 默认 24×24，可传入属性统一调整，也可用 CSS 覆盖。</p>
+            <div class="zhy_size-row">
+                <div class="zhy_size-item"><i data-lucide="rocket" data-size="16"></i><span>16</span></div>
+                <div class="zhy_size-item"><i data-lucide="rocket" data-size="24"></i><span>24</span></div>
+                <div class="zhy_size-item"><i data-lucide="rocket" data-size="36"></i><span>36</span></div>
+                <div class="zhy_size-item"><i data-lucide="rocket" data-size="48"></i><span>48</span></div>
+                <div class="zhy_size-item"><i data-lucide="rocket" data-size="64" data-color="coral"></i><span>64 · 珊瑚色</span></div>
             </div>
-            <p class="zhang_note">调用示例：<code>lucide.createIcons({ attrs: { width: 32, height: 32 } })</code></p>
+            <p class="zhy_note">调用示例：<code>lucide.createIcons({ attrs: { width: 32, height: 32 } })</code></p>
         </section>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">手写内联 SVG</h2>
-            <p class="zhang_section-desc">SVG 图标的本质就是一段内联矢量标记，也可以不依赖脚本直接书写。</p>
-            <div class="zhang_svg-demo">
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">手写内联 SVG</h2>
+            <p class="zhy_section-desc">SVG 图标的本质就是一段内联矢量标记，也可以不依赖脚本直接书写。</p>
+            <div class="zhy_svg-demo">
                 <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
                 <span>Home 图标（24×24，描边式）</span>
             </div>
-            <p class="zhang_note">手写 SVG 可直接在 <code>&lt;svg&gt;</code> 上设置 <code>width</code>、<code>height</code>、<code>fill</code>、<code>stroke</code> 等属性，实现完全可控的图标样式。</p>
+            <p class="zhy_note">手写 SVG 可直接在 <code>&lt;svg&gt;</code> 上设置 <code>width</code>、<code>height</code>、<code>fill</code>、<code>stroke</code> 等属性，实现完全可控的图标样式。</p>
         </section>
     </main>
 
@@ -228,12 +229,12 @@
     <script>
         (function () {
             lucide.createIcons();
-            document.querySelectorAll(".lucide[data-size]").forEach(function (zhang_el) {
-                zhang_el.setAttribute("width", zhang_el.getAttribute("data-size"));
-                zhang_el.setAttribute("height", zhang_el.getAttribute("data-size"));
+            document.querySelectorAll(".lucide[data-size]").forEach(function (zhy_el) {
+                zhy_el.setAttribute("width", zhy_el.getAttribute("data-size"));
+                zhy_el.setAttribute("height", zhy_el.getAttribute("data-size"));
             });
-            document.querySelectorAll('.lucide[data-color="coral"]').forEach(function (zhang_el) {
-                zhang_el.style.color = "#d86d55";
+            document.querySelectorAll('.lucide[data-color="coral"]').forEach(function (zhy_el) {
+                zhy_el.style.color = "#d86d55";
             });
         })();
     </script>

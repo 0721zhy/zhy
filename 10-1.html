@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
@@ -19,7 +19,7 @@
 			font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
 		}
 
-		.color-box {
+		.zhy_color-box {
 			display: grid;
 			width: min(220px, 60vw);
 			aspect-ratio: 1;
@@ -30,11 +30,11 @@
 			text-shadow: 0 2px 8px rgb(0 0 0 / 25%);
 			box-shadow: 0 20px 45px rgb(25 35 31 / 20%);
 			animation:
-				change-color 8s linear infinite,
-				float-and-morph 3s ease-in-out infinite alternate;
+				zhy_change-color 8s linear infinite,
+				zhy_float-and-morph 3s ease-in-out infinite alternate;
 		}
 
-		@keyframes change-color {
+		@keyframes zhy_change-color {
 			0% {
 				background-color: #e74c3c;
 			}
@@ -52,7 +52,7 @@
 			}
 		}
 
-		@keyframes float-and-morph {
+		@keyframes zhy_float-and-morph {
 			from {
 				transform: translateY(0) scale(1);
 				border-radius: 12px;
@@ -64,7 +64,7 @@
 		}
 
 		@media (prefers-reduced-motion: reduce) {
-			.color-box {
+			.zhy_color-box {
 				animation: none;
 				background-color: #e74c3c;
 			}
@@ -72,6 +72,7 @@
 	</style>
 </head>
 <body>
-	<div class="color-box">张海玉</div>
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：CSS Animation 动画 -->
+	<div class="zhy_color-box">张海玉</div>
 </body>
 </html>

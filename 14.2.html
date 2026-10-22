@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 六种基本数据类型</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: #17212b;
+            background:
+                linear-gradient(90deg, rgba(29, 93, 143, .045) 1px, transparent 1px),
+                linear-gradient(rgba(29, 93, 143, .045) 1px, transparent 1px),
+                linear-gradient(135deg, #f3f8f8 0%, #fffdf8 55%, #f9eee8 100%);
+            background-size: 32px 32px, 32px 32px, auto;
+            font-family: Georgia, "Microsoft YaHei", serif;
+            line-height: 1.7;
+        }
+
+        .zhy_page {
+            width: min(1040px, 100%);
+            margin: 0 auto;
+        }
+
+        .zhy_eyebrow {
+            margin: 0 0 8px;
+            color: #d86d55;
+            font: bold 13px/1.2 "Microsoft YaHei", sans-serif;
+            letter-spacing: 3px;
+        }
+
+        .zhy_title {
+            margin: 0 0 12px;
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.15;
+        }
+
+        .zhy_intro {
+            max-width: 640px;
+            margin: 0 0 34px;
+            color: #63707b;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 15px;
+        }
+
+        .zhy_section {
+            margin-bottom: 30px;
+            padding: 24px 26px 28px;
+            background: rgba(255, 253, 248, .94);
+            border: 1px solid rgba(23, 33, 43, .12);
+            box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
+        }
+
+        .zhy_section-title {
+            margin: 0 0 4px;
+            font-size: 21px;
+        }
+
+        .zhy_section-desc {
+            margin: 0 0 20px;
+            color: #63707b;
+            font: 13px/1.5 "Microsoft YaHei", sans-serif;
+        }
+
+        .zhy_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .zhy_type-card {
+            border: 1px solid #d9e1e5;
+            background: #fff;
+            padding: 20px 22px 22px;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .zhy_type-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 26px rgba(29, 93, 143, .12);
+        }
+
+        .zhy_type-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1d5d8f;
+        }
+
+        .zhy_type-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #17212b;
+        }
+
+        .zhy_type-en {
+            font: 12px/1 "Consolas", monospace;
+            padding: 3px 8px;
+            background: #1d5d8f;
+            color: #fffdf8;
+            border-radius: 2px;
+        }
+
+        .zhy_type-desc {
+            margin: 0 0 12px;
+            color: #63707b;
+            font: 13px/1.6 "Microsoft YaHei", sans-serif;
+        }
+
+        .zhy_code-box {
+            background: #17212b;
+            color: #dcecf5;
+            padding: 10px 14px;
+            border-radius: 3px;
+            font: 13px/1.6 "Consolas", monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 12px;
+        }
+
+        .zhy_result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-family: "Consolas", monospace;
+        }
+
+        .zhy_result-label {
+            color: #63707b;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .zhy_result-value {
+            color: #1d5d8f;
+            font-weight: bold;
+        }
+
+        .zhy_result-value.zhy_null {
+            color: #d86d55;
+        }
+
+        .zhy_object-list {
+            margin: 0;
+            padding-left: 18px;
+            color: #63707b;
+            font: 13px/1.6 "Microsoft YaHei", sans-serif;
+        }
+
+        .zhy_object-list li + li {
+            margin-top: 4px;
+        }
+
+        .zhy_footer {
+            margin-top: 32px;
+            padding: 16px 22px;
+            background: rgba(29, 93, 143, .06);
+            border-left: 4px solid #1d5d8f;
+            font: 13px/1.7 "Microsoft YaHei", sans-serif;
+            color: #17212b;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：JavaScript六种数据类型 -->
+
+    <main class="zhy_page">
+        <p class="zhy_eyebrow">LESSON 14 · 基础语法</p>
+        <h1 class="zhy_title">JavaScript 六种基本数据类型</h1>
+        <p class="zhy_intro">
+            JavaScript 的数据类型分为六大类：字符串、数值、布尔、未定义、空值、对象。
+            使用 <code>typeof</code> 关键字可以检测一个值的数据类型。下方每张卡片演示一种类型的定义方式与检测结果。
+        </p>
+
+        <div class="zhy_section">
+            <h2 class="zhy_section-title">类型演示</h2>
+            <p class="zhy_section-desc">每张卡片左侧是声明变量的代码，右侧是浏览器实际运行后的 typeof 返回值。</p>
+
+            <div class="zhy_grid" id="zhy_type-grid">
+                <!-- JS 动态生成六张卡片 -->
+            </div>
+        </div>
+
+        <div class="zhy_footer">
+            <strong>小贴士：</strong><br>
+            ① <code>typeof null</code> 返回 <code>"object"</code> 是 JavaScript 的历史遗留 bug，实际 null 是独立的空值类型；<br>
+            ② 数组和函数在 typeof 看来都是 object，但它们是 object 的特殊子类；<br>
+            ③ ES6 新增了 Symbol 和 BigInt 两种原始类型，现代项目中也会用到。
+        </div>
+    </main>
+
+    <script>
+        // ===== 六种数据类型示例变量（全部 zhy_ 前缀） =====
+
+        // 1. String 字符串
+        var zhy_str_single = '你好';
+        var zhy_str_double = "Hello JS";
+        var zhy_str_temp   = `模板字符串`;
+
+        // 2. Number 数值
+        var zhy_num_int    = 42;
+        var zhy_num_float  = 3.14;
+        var zhy_num_neg    = -100;
+        var zhy_num_sci    = 1.5e3;       // 科学计数法 = 1500
+        var zhy_num_nan    = NaN;
+        var zhy_num_inf    = Infinity;
+
+        // 3. Boolean 布尔
+        var zhy_bool_true  = true;
+        var zhy_bool_false = false;
+
+        // 4. Undefined 未定义
+        var zhy_undef;
+        // 或显式赋值：var zhy_undef_explict = undefined;
+
+        // 5. Null 空值
+        var zhy_null_val = null;
+
+        // 6. Object 对象
+        var zhy_obj_literal = { name: '张海玉', age: 20 };   // 对象字面量
+        var zhy_arr         = [1, 2, 3, 4, 5];              // 数组（特殊对象）
+        function zhy_fn() { return '我是函数'; }             // 函数（特殊对象）
+        var zhy_date        = new Date();                    // 内置对象
+
+
+        // ===== 组装六种类型的展示数据 =====
+        var zhy_types = [
+            {
+                name: '字符串',
+                en: 'String',
+                desc: '由引号（单引号、双引号、反引号）包裹的文本。',
+                code: "var zhy_str = '你好';\nvar zhy_str2 = \"Hello\";\nvar zhy_str3 = `模板字符串`;",
+                value: zhy_str_single,
+                type:  typeof zhy_str_single
+            },
+            {
+                name: '数值',
+                en: 'Number',
+                desc: '整数、浮点数、科学计数法，以及特殊值 NaN / Infinity。',
+                code: "var zhy_num = 42;\nvar zhy_pi = 3.14;\nvar zhy_nan = NaN;\nvar zhy_inf = Infinity;",
+                value: zhy_num_int,
+                type:  typeof zhy_num_int
+            },
+            {
+                name: '布尔',
+                en: 'Boolean',
+                desc: '只有 true 和 false 两个取值，常用于条件判断。',
+                code: "var zhy_ok = true;\nvar zhy_no = false;\nif(zhy_ok) { ... }",
+                value: zhy_bool_true,
+                type:  typeof zhy_bool_true
+            },
+            {
+                name: '未定义',
+                en: 'Undefined',
+                desc: '声明了变量但未赋值时的默认状态。',
+                code: "var zhy_x;   // 声明未赋值\nconsole.log(zhy_x);   // undefined",
+                value: String(zhy_undef),
+                type:  typeof zhy_undef
+            },
+            {
+                name: '空值',
+                en: 'Null',
+                desc: '故意赋予变量一个空值，表示\"没有东西\"。',
+                code: "var zhy_empty = null;\n// 注意：typeof null 返回 \"object\"（历史bug）",
+                value: 'null',
+                type:  typeof zhy_null_val,
+                isNull: true
+            },
+            {
+                name: '对象',
+                en: 'Object',
+                desc: '键值对的集合。数组、函数、Date 等内置类型都属于 Object。',
+                code: "var zhy_obj = { name: '张海玉' };\nvar zhy_arr = [1,2,3];\nfunction zhy_fn(){}",
+                objectList: [
+                    '普通对象 typeof → ' + typeof zhy_obj_literal,
+                    '数组     typeof → ' + typeof zhy_arr + '（Array.isArray 检测数组）',
+                    '函数     typeof → ' + typeof zhy_fn,
+                    'Date     typeof → ' + typeof zhy_date
+                ]
+            }
+        ];
+
+
+        // ===== 渲染到页面 =====
+        var zhy_grid = document.getElementById('zhy_type-grid');
+
+        zhy_types.forEach(function(zhy_item) {
+            var zhy_card = document.createElement('article');
+            zhy_card.className = 'zhy_type-card';
+
+            // 类型头
+            var zhy_header = document.createElement('div');
+            zhy_header.className = 'zhy_type-header';
+            zhy_header.innerHTML =
+                '<span class="zhy_type-name">' + zhy_item.name + '</span>' +
+                '<span class="zhy_type-en">' + zhy_item.en + '</span>';
+
+            // 描述
+            var zhy_desc = document.createElement('p');
+            zhy_desc.className = 'zhy_type-desc';
+            zhy_desc.textContent = zhy_item.desc;
+
+            // 代码框
+            var zhy_code = document.createElement('pre');
+            zhy_code.className = 'zhy_code-box';
+            zhy_code.textContent = zhy_item.code;
+
+            zhy_card.appendChild(zhy_header);
+            zhy_card.appendChild(zhy_desc);
+            zhy_card.appendChild(zhy_code);
+
+            // 结果区：普通类型 vs 对象类型
+            if (zhy_item.objectList) {
+                var zhy_list = document.createElement('ul');
+                zhy_list.className = 'zhy_object-list';
+                zhy_item.objectList.forEach(function(zhy_line) {
+                    var zhy_li = document.createElement('li');
+                    zhy_li.textContent = zhy_line;
+                    zhy_list.appendChild(zhy_li);
+                });
+                zhy_card.appendChild(zhy_list);
+            } else {
+                var zhy_row = document.createElement('div');
+                zhy_row.className = 'zhy_result-row';
+
+                var zhy_left = document.createElement('span');
+                zhy_left.className = 'zhy_result-label';
+                zhy_left.textContent = 'typeof 结果 →';
+
+                var zhy_right = document.createElement('span');
+                zhy_right.className = 'zhy_result-value' + (zhy_item.isNull ? ' zhy_null' : '');
+                zhy_right.textContent = '"' + zhy_item.type + '"';
+
+                zhy_row.appendChild(zhy_left);
+                zhy_row.appendChild(zhy_right);
+                zhy_card.appendChild(zhy_row);
+            }
+
+            zhy_grid.appendChild(zhy_card);
+        });
+
+        // 控制台也输出一遍，便于在 F12 里查看
+        console.log('===== JavaScript 六种基本数据类型 =====');
+        console.log('String    →', typeof zhy_str_single);
+        console.log('Number    →', typeof zhy_num_int);
+        console.log('Boolean   →', typeof zhy_bool_true);
+        console.log('Undefined →', typeof zhy_undef);
+        console.log('Null      →', typeof zhy_null_val, '（注意：历史bug，实际是独立类型）');
+        console.log('Object    →', typeof zhy_obj_literal, '| Array:', typeof zhy_arr, '| Function:', typeof zhy_fn);
+    </script>
+</body>
+</html>

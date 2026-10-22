@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -24,25 +24,25 @@
             line-height: 1.7;
         }
 
-        .zhang_page {
+        .zhy_page {
             width: min(1040px, 100%);
             margin: 0 auto;
         }
 
-        .zhang_eyebrow {
+        .zhy_eyebrow {
             margin: 0 0 8px;
             color: #d86d55;
             font: bold 13px/1.2 "Microsoft YaHei", sans-serif;
             letter-spacing: 3px;
         }
 
-        .zhang_title {
+        .zhy_title {
             margin: 0 0 12px;
             font-size: clamp(30px, 5vw, 46px);
             line-height: 1.15;
         }
 
-        .zhang_intro {
+        .zhy_intro {
             max-width: 640px;
             margin: 0 0 34px;
             color: #63707b;
@@ -50,7 +50,7 @@
             font-size: 15px;
         }
 
-        .zhang_section {
+        .zhy_section {
             margin-bottom: 30px;
             padding: 24px 26px 28px;
             background: rgba(255, 253, 248, .94);
@@ -58,24 +58,24 @@
             box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
         }
 
-        .zhang_section-title {
+        .zhy_section-title {
             margin: 0 0 4px;
             font-size: 21px;
         }
 
-        .zhang_section-desc {
+        .zhy_section-desc {
             margin: 0 0 20px;
             color: #63707b;
             font: 13px/1.5 "Microsoft YaHei", sans-serif;
         }
 
-        .zhang_grid {
+        .zhy_grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
             gap: 12px;
         }
 
-        .zhang_icon-card {
+        .zhy_icon-card {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -86,25 +86,25 @@
             transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
         }
 
-        .zhang_icon-card:hover {
+        .zhy_icon-card:hover {
             border-color: #1d5d8f;
             box-shadow: 0 8px 20px rgba(29, 93, 143, .12);
             transform: translateY(-4px);
         }
 
-        .zhang_icon-card i {
+        .zhy_icon-card i {
             font-size: 30px;
             color: #1d5d8f;
         }
 
-        .zhang_icon-card span {
+        .zhy_icon-card span {
             color: #63707b;
             font: 12px/1.3 "Microsoft YaHei", sans-serif;
             text-align: center;
             word-break: break-all;
         }
 
-        .zhang_size-row {
+        .zhy_size-row {
             display: flex;
             align-items: flex-end;
             gap: 26px;
@@ -112,7 +112,7 @@
             padding: 18px 4px 4px;
         }
 
-        .zhang_size-item {
+        .zhy_size-item {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -120,18 +120,18 @@
             color: #1d5d8f;
         }
 
-        .zhang_size-item span {
+        .zhy_size-item span {
             color: #63707b;
             font: 12px/1.2 "Microsoft YaHei", sans-serif;
         }
 
-        .zhang_note {
+        .zhy_note {
             margin: 6px 0 0;
             color: #63707b;
             font: 13px/1.6 "Microsoft YaHei", sans-serif;
         }
 
-        .zhang_note code {
+        .zhy_note code {
             padding: 1px 6px;
             background: #eef3f6;
             border-radius: 4px;
@@ -141,74 +141,75 @@
     </style>
 </head>
 <body>
-    <main class="zhang_page">
-        <p class="zhang_eyebrow">ICON 01 / FONT AWESOME</p>
-        <h1 class="zhang_title">Font Awesome 字体图标</h1>
-        <p class="zhang_intro">
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：Font Awesome 字体图标 -->
+    <main class="zhy_page">
+        <p class="zhy_eyebrow">ICON 01 / FONT AWESOME</p>
+        <h1 class="zhy_title">Font Awesome 字体图标</h1>
+        <p class="zhy_intro">
             本页通过引入本地字体文件（<code>cdn/fontawesome/css/all.min.css</code> 与 <code>webfonts/*.woff2</code>），
             以“字体图标”的方式渲染图标：图标本质是字符，通过 <code>:before</code> 伪元素输出，因此可像文字一样改变字号与颜色。
         </p>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">实线图标 · fas</h2>
-            <p class="zhang_section-desc">font-weight: 900，风格厚重、辨识度高，最常用。</p>
-            <div class="zhang_grid">
-                <div class="zhang_icon-card"><i class="fas fa-house"></i><span>fa-house</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-magnifying-glass"></i><span>fa-magnifying-glass</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-heart"></i><span>fa-heart</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-star"></i><span>fa-star</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-user"></i><span>fa-user</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-envelope"></i><span>fa-envelope</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-cart-shopping"></i><span>fa-cart-shopping</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-gear"></i><span>fa-gear</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-cloud-arrow-up"></i><span>fa-cloud-arrow-up</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-bell"></i><span>fa-bell</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-bolt"></i><span>fa-bolt</span></div>
-                <div class="zhang_icon-card"><i class="fas fa-circle-check"></i><span>fa-circle-check</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">实线图标 · fas</h2>
+            <p class="zhy_section-desc">font-weight: 900，风格厚重、辨识度高，最常用。</p>
+            <div class="zhy_grid">
+                <div class="zhy_icon-card"><i class="fas fa-house"></i><span>fa-house</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-magnifying-glass"></i><span>fa-magnifying-glass</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-heart"></i><span>fa-heart</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-star"></i><span>fa-star</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-user"></i><span>fa-user</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-envelope"></i><span>fa-envelope</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-cart-shopping"></i><span>fa-cart-shopping</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-gear"></i><span>fa-gear</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-cloud-arrow-up"></i><span>fa-cloud-arrow-up</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-bell"></i><span>fa-bell</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-bolt"></i><span>fa-bolt</span></div>
+                <div class="zhy_icon-card"><i class="fas fa-circle-check"></i><span>fa-circle-check</span></div>
             </div>
         </section>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">常规图标 · far</h2>
-            <p class="zhang_section-desc">font-weight: 400，线条留白、更轻盈。</p>
-            <div class="zhang_grid">
-                <div class="zhang_icon-card"><i class="far fa-heart"></i><span>fa-heart</span></div>
-                <div class="zhang_icon-card"><i class="far fa-star"></i><span>fa-star</span></div>
-                <div class="zhang_icon-card"><i class="far fa-user"></i><span>fa-user</span></div>
-                <div class="zhang_icon-card"><i class="far fa-envelope"></i><span>fa-envelope</span></div>
-                <div class="zhang_icon-card"><i class="far fa-circle-check"></i><span>fa-circle-check</span></div>
-                <div class="zhang_icon-card"><i class="far fa-square"></i><span>fa-square</span></div>
-                <div class="zhang_icon-card"><i class="far fa-comment"></i><span>fa-comment</span></div>
-                <div class="zhang_icon-card"><i class="far fa-paper-plane"></i><span>fa-paper-plane</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">常规图标 · far</h2>
+            <p class="zhy_section-desc">font-weight: 400，线条留白、更轻盈。</p>
+            <div class="zhy_grid">
+                <div class="zhy_icon-card"><i class="far fa-heart"></i><span>fa-heart</span></div>
+                <div class="zhy_icon-card"><i class="far fa-star"></i><span>fa-star</span></div>
+                <div class="zhy_icon-card"><i class="far fa-user"></i><span>fa-user</span></div>
+                <div class="zhy_icon-card"><i class="far fa-envelope"></i><span>fa-envelope</span></div>
+                <div class="zhy_icon-card"><i class="far fa-circle-check"></i><span>fa-circle-check</span></div>
+                <div class="zhy_icon-card"><i class="far fa-square"></i><span>fa-square</span></div>
+                <div class="zhy_icon-card"><i class="far fa-comment"></i><span>fa-comment</span></div>
+                <div class="zhy_icon-card"><i class="far fa-paper-plane"></i><span>fa-paper-plane</span></div>
             </div>
         </section>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">品牌图标 · fab</h2>
-            <p class="zhang_section-desc">各类品牌 Logo，font-weight: 400。</p>
-            <div class="zhang_grid">
-                <div class="zhang_icon-card"><i class="fab fa-github"></i><span>fa-github</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-weixin"></i><span>fa-weixin</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-weibo"></i><span>fa-weibo</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-qq"></i><span>fa-qq</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-zhihu"></i><span>fa-zhihu</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-bilibili"></i><span>fa-bilibili</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-css3-alt"></i><span>fa-css3-alt</span></div>
-                <div class="zhang_icon-card"><i class="fab fa-html5"></i><span>fa-html5</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">品牌图标 · fab</h2>
+            <p class="zhy_section-desc">各类品牌 Logo，font-weight: 400。</p>
+            <div class="zhy_grid">
+                <div class="zhy_icon-card"><i class="fab fa-github"></i><span>fa-github</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-weixin"></i><span>fa-weixin</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-weibo"></i><span>fa-weibo</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-qq"></i><span>fa-qq</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-zhihu"></i><span>fa-zhihu</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-bilibili"></i><span>fa-bilibili</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-css3-alt"></i><span>fa-css3-alt</span></div>
+                <div class="zhy_icon-card"><i class="fab fa-html5"></i><span>fa-html5</span></div>
             </div>
         </section>
 
-        <section class="zhang_section">
-            <h2 class="zhang_section-title">尺寸与颜色</h2>
-            <p class="zhang_section-desc">作为字体，图标可直接继承或修改字号、颜色。</p>
-            <div class="zhang_size-row">
-                <div class="zhang_size-item"><i class="fas fa-rocket" style="font-size: 16px;"></i><span>16px</span></div>
-                <div class="zhang_size-item"><i class="fas fa-rocket" style="font-size: 24px;"></i><span>24px</span></div>
-                <div class="zhang_size-item"><i class="fas fa-rocket" style="font-size: 36px;"></i><span>36px</span></div>
-                <div class="zhang_size-item"><i class="fas fa-rocket" style="font-size: 48px;"></i><span>48px</span></div>
-                <div class="zhang_size-item"><i class="fas fa-rocket" style="font-size: 64px; color: #d86d55;"></i><span>64px · 珊瑚色</span></div>
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">尺寸与颜色</h2>
+            <p class="zhy_section-desc">作为字体，图标可直接继承或修改字号、颜色。</p>
+            <div class="zhy_size-row">
+                <div class="zhy_size-item"><i class="fas fa-rocket" style="font-size: 16px;"></i><span>16px</span></div>
+                <div class="zhy_size-item"><i class="fas fa-rocket" style="font-size: 24px;"></i><span>24px</span></div>
+                <div class="zhy_size-item"><i class="fas fa-rocket" style="font-size: 36px;"></i><span>36px</span></div>
+                <div class="zhy_size-item"><i class="fas fa-rocket" style="font-size: 48px;"></i><span>48px</span></div>
+                <div class="zhy_size-item"><i class="fas fa-rocket" style="font-size: 64px; color: #d86d55;"></i><span>64px · 珊瑚色</span></div>
             </div>
-            <p class="zhang_note">用法示例：<code>&lt;i class="fas fa-rocket"&gt;&lt;/i&gt;</code>，配合 <code>font-size</code> 与 <code>color</code> 即可缩放变色。</p>
+            <p class="zhy_note">用法示例：<code>&lt;i class="fas fa-rocket"&gt;&lt;/i&gt;</code>，配合 <code>font-size</code> 与 <code>color</code> 即可缩放变色。</p>
         </section>
     </main>
 </body>

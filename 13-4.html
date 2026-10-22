@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -25,13 +25,13 @@
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
         }
 
-        .zhang_stage {
+        .zhy_stage {
             width: 100%;
             min-height: 100vh;
             background: #f5f7f8;
         }
 
-        .zhang_statusbar {
+        .zhy_statusbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -41,7 +41,7 @@
             font-weight: 700;
         }
 
-        .zhang_header {
+        .zhy_header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -50,18 +50,18 @@
             border-bottom: 1px solid #e6eaec;
         }
 
-        .zhang_header h1 {
+        .zhy_header h1 {
             margin: 0;
             font-size: 17px;
         }
 
-        .zhang_header p {
+        .zhy_header p {
             margin: 2px 0 0;
             color: #8a97a0;
             font-size: 12px;
         }
 
-        .zhang_avatar {
+        .zhy_avatar {
             width: 34px;
             height: 34px;
             background: linear-gradient(135deg, #1d5d8f, #d86d55);
@@ -73,11 +73,11 @@
             text-align: center;
         }
 
-        .zhang_content {
+        .zhy_content {
             padding: 16px 16px 100px;
         }
 
-        .zhang_card {
+        .zhy_card {
             margin-bottom: 14px;
             padding: 16px;
             background: #fff;
@@ -85,19 +85,19 @@
             box-shadow: 0 4px 14px rgba(23, 33, 43, .05);
         }
 
-        .zhang_card h2 {
+        .zhy_card h2 {
             margin: 0 0 6px;
             font-size: 15px;
         }
 
-        .zhang_card p {
+        .zhy_card p {
             margin: 0;
             color: #8a97a0;
             font-size: 12px;
             line-height: 1.8;
         }
 
-        .zhang_card code {
+        .zhy_card code {
             padding: 1px 6px;
             background: #eef3f6;
             border-radius: 4px;
@@ -105,7 +105,7 @@
             font-family: Consolas, monospace;
         }
 
-        .zhang_tag {
+        .zhy_tag {
             display: inline-block;
             margin-bottom: 8px;
             padding: 2px 8px;
@@ -115,7 +115,7 @@
             font-size: 11px;
         }
 
-        .zhang_tabbar {
+        .zhy_tabbar {
             position: fixed;
             bottom: 0;
             left: 50%;
@@ -129,7 +129,7 @@
             transform: translateX(-50%);
         }
 
-        .zhang_tab {
+        .zhy_tab {
             display: flex;
             flex: 1;
             flex-direction: column;
@@ -141,34 +141,34 @@
             transition: color .2s ease;
         }
 
-        .zhang_tab:hover,
-        .zhang_tab.zhang_active {
+        .zhy_tab:hover,
+        .zhy_tab.zhy_active {
             color: #1d5d8f;
         }
 
-        .zhang_tab-icon {
+        .zhy_tab-icon {
             position: relative;
             display: inline-flex;
         }
 
-        .zhang_tab-icon svg {
+        .zhy_tab-icon svg {
             width: 23px;
             height: 23px;
             color: currentColor;
             transition: transform .2s ease;
         }
 
-        .zhang_tab:hover .zhang_tab-icon svg,
-        .zhang_tab.zhang_active .zhang_tab-icon svg {
+        .zhy_tab:hover .zhy_tab-icon svg,
+        .zhy_tab.zhy_active .zhy_tab-icon svg {
             transform: translateY(-2px);
         }
 
-        .zhang_tab-label {
+        .zhy_tab-label {
             font-size: 11px;
             font-weight: 600;
         }
 
-        .zhang_badge {
+        .zhy_badge {
             position: absolute;
             top: -6px;
             right: -10px;
@@ -180,7 +180,7 @@
             box-shadow: 0 0 0 2px #fff;
         }
 
-        .zhang_badge.zhang_badge-num {
+        .zhy_badge.zhy_badge-num {
             min-width: 17px;
             height: 17px;
             padding: 0 5px;
@@ -190,7 +190,7 @@
             line-height: 17px;
         }
 
-        .zhang_badge.zhang_badge-dot {
+        .zhy_badge.zhy_badge-dot {
             width: 9px;
             height: 9px;
             border-radius: 50%;
@@ -198,82 +198,83 @@
     </style>
 </head>
 <body>
-    <div class="zhang_stage">
-        <div class="zhang_statusbar">
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：移动端底部导航 · SVG 图标 -->
+    <div class="zhy_stage">
+        <div class="zhy_statusbar">
             <span>9:41</span>
             <span>5G ▮▮▮</span>
         </div>
 
-        <header class="zhang_header">
+        <header class="zhy_header">
             <div>
                 <h1>张海玉的课堂实践</h1>
                 <p>高级网页设计 · 移动端底部导航</p>
             </div>
-            <div class="zhang_avatar">张</div>
+            <div class="zhy_avatar">张</div>
         </header>
 
-        <main class="zhang_content">
-            <section class="zhang_card">
-                <span class="zhang_tag">SVG 图标</span>
+        <main class="zhy_content">
+            <section class="zhy_card">
+                <span class="zhy_tag">SVG 图标</span>
                 <h2>首页</h2>
                 <p>本页下导航直接使用内联 SVG：每个导航项内嵌一段 <code>&lt;svg&gt;</code>，以 <code>currentColor</code> 描边，随文字颜色变化。</p>
             </section>
-            <section class="zhang_card">
-                <span class="zhang_tag">自适应宽度</span>
+            <section class="zhy_card">
+                <span class="zhy_tag">自适应宽度</span>
                 <h2>四个导航项</h2>
                 <p>导航固定在视口底部，四项以 <code>flex: 1</code> 等分宽度，随屏幕宽度自适应伸缩。</p>
             </section>
-            <section class="zhang_card">
-                <span class="zhang_tag">角标</span>
+            <section class="zhy_card">
+                <span class="zhy_tag">角标</span>
                 <h2>数字徽章与红点</h2>
                 <p>图标右上角通过绝对定位叠加角标：数字徽章显示 <code>99+</code>，红点表示有新消息。</p>
             </section>
-            <section class="zhang_card">
-                <span class="zhang_tag">用法</span>
+            <section class="zhy_card">
+                <span class="zhy_tag">用法</span>
                 <h2>实现要点</h2>
-                <p>SVG 放在 <code>.zhang_tab-icon</code> 内并设为 <code>position: relative</code>，角标用 <code>.zhang_badge-num</code> 与 <code>.zhang_badge-dot</code> 定位到右上角。</p>
+                <p>SVG 放在 <code>.zhy_tab-icon</code> 内并设为 <code>position: relative</code>，角标用 <code>.zhy_badge-num</code> 与 <code>.zhy_badge-dot</code> 定位到右上角。</p>
             </section>
         </main>
     </div>
 
-    <nav class="zhang_tabbar" aria-label="底部导航">
-        <a class="zhang_tab zhang_active" href="#">
-            <span class="zhang_tab-icon">
+    <nav class="zhy_tabbar" aria-label="底部导航">
+        <a class="zhy_tab zhy_active" href="#">
+            <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 10.5 12 3l9 7.5"></path>
                     <path d="M5 9.5V21h14V9.5"></path>
                     <path d="M10 21v-6h4v6"></path>
                 </svg>
             </span>
-            <span class="zhang_tab-label">首页</span>
+            <span class="zhy_tab-label">首页</span>
         </a>
-        <a class="zhang_tab" href="#">
-            <span class="zhang_tab-icon">
+        <a class="zhy_tab" href="#">
+            <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="2" y="6" width="14" height="12" rx="2"></rect>
                     <path d="m16 10 6-3v10l-6-3"></path>
                 </svg>
-                <span class="zhang_badge zhang_badge-dot" aria-label="有新视频"></span>
+                <span class="zhy_badge zhy_badge-dot" aria-label="有新视频"></span>
             </span>
-            <span class="zhang_tab-label">视频</span>
+            <span class="zhy_tab-label">视频</span>
         </a>
-        <a class="zhang_tab" href="#">
-            <span class="zhang_tab-icon">
+        <a class="zhy_tab" href="#">
+            <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H5l-2 2V11.5a8.5 8.5 0 0 1 8.5-8.5h1A8.5 8.5 0 0 1 21 11.5z"></path>
                 </svg>
-                <span class="zhang_badge zhang_badge-num">99+</span>
+                <span class="zhy_badge zhy_badge-num">99+</span>
             </span>
-            <span class="zhang_tab-label">信息</span>
+            <span class="zhy_tab-label">信息</span>
         </a>
-        <a class="zhang_tab" href="#">
-            <span class="zhang_tab-icon">
+        <a class="zhy_tab" href="#">
+            <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <circle cx="12" cy="8" r="4"></circle>
                     <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
                 </svg>
             </span>
-            <span class="zhang_tab-label">我的</span>
+            <span class="zhy_tab-label">我的</span>
         </a>
     </nav>
 </body>

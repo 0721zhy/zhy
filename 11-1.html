@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,7 @@
             line-height: 1.7;
         }
 
-        .page {
+        .zhy_page {
             width: min(960px, calc(100% - 32px));
             margin: 0 auto;
             padding: 40px 0 64px;
@@ -32,7 +32,7 @@
             font-size: 34px;
         }
 
-        .intro {
+        .zhy_intro {
             margin: 0 0 28px;
             color: #63707b;
         }
@@ -87,20 +87,20 @@
             font-family: Consolas, "Courier New", monospace;
         }
 
-        .demo {
+        .zhy_demo {
             margin-top: 18px;
             padding: 16px;
             background: #f6f4ee;
             border: 1px dashed #b9c6cd;
         }
 
-        .demo-title {
+        .zhy_demo-title {
             margin: 0 0 12px;
             font-weight: bold;
             font-size: 14px;
         }
 
-        .bar {
+        .zhy_bar {
             display: flex;
             align-items: center;
             height: 30px;
@@ -110,50 +110,50 @@
             font-size: 13px;
         }
 
-        .px-bar {
+        .zhy_px-bar {
             width: 96px;
             background: #1d5d8f;
         }
 
-        .in-bar {
+        .zhy_in-bar {
             width: 1in;
             background: #397b70;
         }
 
-        .cm-bar {
+        .zhy_cm-bar {
             width: 1cm;
             background: #c75b39;
         }
 
-        .mm-bar {
+        .zhy_mm-bar {
             width: 10mm;
             background: #8a6d39;
         }
 
-        .font-outer {
+        .zhy_font-outer {
             margin: 14px 0 4px;
             padding: 12px;
             border: 1px solid #d9e1e5;
             font-size: 32px;
         }
 
-        .em-box {
+        .zhy_em-box {
             margin: 6px 0;
             padding: 1em;
             background: #dcecf5;
         }
 
-        .rem-box {
+        .zhy_rem-box {
             margin: 6px 0;
             padding: 1rem;
             background: #f9eee8;
         }
 
-        .box-label {
+        .zhy_box-label {
             font-size: 14px;
         }
 
-        .viewport-demo .vw-box {
+        .zhy_viewport-demo .zhy_vw-box {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -164,7 +164,7 @@
             font-size: 14px;
         }
 
-        .viewport-demo .vh-box {
+        .zhy_viewport-demo .zhy_vh-box {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -176,7 +176,7 @@
             font-size: 14px;
         }
 
-        .tip {
+        .zhy_tip {
             margin: 10px 0 0;
             color: #63707b;
             font-size: 13px;
@@ -184,9 +184,10 @@
     </style>
 </head>
 <body>
-    <main class="page">
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：长度单位 -->
+    <main class="zhy_page">
         <h1>Web 前端长度单位</h1>
-        <p class="intro">CSS 中的长度单位分为<b>绝对长度单位</b>与<b>相对长度单位</b>两大类：绝对单位长度固定，相对单位会随字体大小或视口尺寸变化。</p>
+        <p class="zhy_intro">CSS 中的长度单位分为<b>绝对长度单位</b>与<b>相对长度单位</b>两大类：绝对单位长度固定，相对单位会随字体大小或视口尺寸变化。</p>
 
         <section class="card">
             <h2>一、绝对长度单位</h2>
@@ -200,12 +201,12 @@
                 <tr><td><code>pt</code></td><td>点</td><td>1pt = 1/72in</td><td>传统印刷单位</td></tr>
                 <tr><td><code>pc</code></td><td>派卡</td><td>1pc = 12pt</td><td>印刷用，网页中较少使用</td></tr>
             </table>
-            <div class="demo">
-                <p class="demo-title">演示：px、in、cm、mm 的实际长度对比</p>
-                <div class="bar px-bar">96px</div>
-                <div class="bar in-bar">1in（= 96px，与上一行等长）</div>
-                <div class="bar cm-bar">1cm</div>
-                <div class="bar mm-bar">10mm</div>
+            <div class="zhy_demo">
+                <p class="zhy_demo-title">演示：px、in、cm、mm 的实际长度对比</p>
+                <div class="zhy_bar zhy_px-bar">96px</div>
+                <div class="zhy_bar zhy_in-bar">1in（= 96px，与上一行等长）</div>
+                <div class="zhy_bar zhy_cm-bar">1cm</div>
+                <div class="zhy_bar zhy_mm-bar">10mm</div>
             </div>
         </section>
 
@@ -218,11 +219,11 @@
                 <tr><td><code>rem</code></td><td>根元素（html）的 font-size</td><td>不受父级影响，适合整体缩放</td></tr>
                 <tr><td><code>%</code></td><td>父元素的对应属性值</td><td>如 width: 50% 即父元素宽度的一半</td></tr>
             </table>
-            <div class="demo">
-                <p class="demo-title">演示：em 与 rem 的区别（外层字号 32px，根字号 16px）</p>
-                <div class="font-outer">
-                    <div class="em-box"><span class="box-label">padding: 1em = 32px（跟随当前字号）</span></div>
-                    <div class="rem-box"><span class="box-label">padding: 1rem = 16px（固定为根字号）</span></div>
+            <div class="zhy_demo">
+                <p class="zhy_demo-title">演示：em 与 rem 的区别（外层字号 32px，根字号 16px）</p>
+                <div class="zhy_font-outer">
+                    <div class="zhy_em-box"><span class="zhy_box-label">padding: 1em = 32px（跟随当前字号）</span></div>
+                    <div class="zhy_rem-box"><span class="zhy_box-label">padding: 1rem = 16px（固定为根字号）</span></div>
                 </div>
             </div>
         </section>
@@ -237,11 +238,11 @@
                 <tr><td><code>vmin</code></td><td>vw 与 vh 中较小的一个</td></tr>
                 <tr><td><code>vmax</code></td><td>vw 与 vh 中较大的一个</td></tr>
             </table>
-            <div class="demo viewport-demo">
-                <p class="demo-title">演示：调整浏览器窗口，观察两个盒子的变化</p>
-                <div class="vw-box">宽度 50vw</div>
-                <div class="vh-box">高度 25vh</div>
-                <p class="tip">vw 盒子只在窗口宽度变化时改变，vh 盒子只在窗口高度变化时改变。</p>
+            <div class="zhy_demo zhy_viewport-demo">
+                <p class="zhy_demo-title">演示：调整浏览器窗口，观察两个盒子的变化</p>
+                <div class="zhy_vw-box">宽度 50vw</div>
+                <div class="zhy_vh-box">高度 25vh</div>
+                <p class="zhy_tip">vw 盒子只在窗口宽度变化时改变，vh 盒子只在窗口高度变化时改变。</p>
             </div>
         </section>
 

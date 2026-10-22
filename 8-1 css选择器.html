@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,13 +6,13 @@
     <title>Document</title>
 </head>
 <style>
-    .main{
+    .zhy_main{
         /* 背景颜色 */
         background-color: rgb(249, 243, 244);
         display: flex;
         flex-wrap: wrap;
     }
-    .box{
+    .zhy_box{
         width: 25%;
         height: 200px;
         background-color: aquamarine;
@@ -26,50 +26,50 @@
         transform: all 0.6s;
         box-sizing: border-box;
     }
-    .box:first-child:hover{
+    .zhy_box:first-child:hover{
         background-color: rgb(218, 176, 134);
         color: red;
         transform: scale(1.2);
         font-size: 100px;
         border-radius: 30px;
     }
-    .box:nth-child(2n):hover{
+    .zhy_box:nth-child(2n):hover{
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
-         .box:nth-child(3):hover{
+         .zhy_box:nth-child(3):hover{
             text-shadow:100px 0px 20px rgba(142, 86, 86, 0.5);
         }
-        .box:nth-child(4):hover{
+        .zhy_box:nth-child(4):hover{
             border-radius:50%;
         }
 
-        .box:nth-child(5):hover{
+        .zhy_box:nth-child(5):hover{
             /**/
  background: linear-gradient(45deg, red, yellow, blue); 
         }
-        .box:nth-child(6):hover{
+        .zhy_box:nth-child(6):hover{
             /* 镜像渐变 */
             background:radial-gradient(circle,red,yellow);
         }
         /* 相邻兄弟选择器 */
-        .box:nth-of-type(6)+.box:hover{
+        .zhy_box:nth-of-type(6)+.zhy_box:hover{
             transform: scale(1.5);
         }
-        .box:nth-of-type(8):hover{
+        .zhy_box:nth-of-type(8):hover{
             transform:translateX(100px);
         }
-        .box:nth-of-type(9):hover{
+        .zhy_box:nth-of-type(9):hover{
             transform:rotate(-180deg);
         }
-        .box:nth-of-type(10):hover{
+        .zhy_box:nth-of-type(10):hover{
            transform:skewX(30deg);
         }
-        .box:nth-last-child(2):hover{
+        .zhy_box:nth-last-child(2):hover{
             content: 'lay';
             color: rgb(205, 130, 220);
         }
         /* 最后一个 */
-        .box:last-child:hover::after{
+        .zhy_box:last-child:hover::after{
             content: '张海玉';
             font-size: 20px;
             color: white;
@@ -84,7 +84,7 @@
             align-items: center;
             /* 黑底白字，居中圆角，并与盒子内容保持距离 */
         }
-        .box:nth-child(2n):hover{
+        .zhy_box:nth-child(2n):hover{
             border: 3px solid rgb(141, 44, 160);
             background-color: rgb(224, 203, 230);
             transform: translateY(-12px) rotate(3deg);
@@ -93,20 +93,21 @@
         /* 扩展：偶数个盒子悬停时改变颜色、位置、角度和圆角 */
 </style>
 <body>
-    <div class="main">
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：8-1 css选择器 -->
+    <div class="zhy_main">
         <!-- 12个盒子 -->
-        <div class="box">1i</div>
-        <div class="box">2i</div>
-        <div class="box">3i</div>
-        <div class="box">4i</div>
-        <div class="box">5i</div>
-        <div class="box">6i</div>
-        <div class="box">7i</div>
-        <div class="box">8i</div>
-        <div class="box">9i</div>
-        <div class="box">10i</div>
-        <div class="box">11i</div>
-        <div class="box">12i</div>
+        <div class="zhy_box">1i</div>
+        <div class="zhy_box">2i</div>
+        <div class="zhy_box">3i</div>
+        <div class="zhy_box">4i</div>
+        <div class="zhy_box">5i</div>
+        <div class="zhy_box">6i</div>
+        <div class="zhy_box">7i</div>
+        <div class="zhy_box">8i</div>
+        <div class="zhy_box">9i</div>
+        <div class="zhy_box">10i</div>
+        <div class="zhy_box">11i</div>
+        <div class="zhy_box">12i</div>
 
     </div>
 </body>

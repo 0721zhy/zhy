@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -31,15 +31,15 @@
             font-weight: 500;
         }
 
-        .slideshow {
+        .zhy_slideshow {
             overflow: hidden;
             width: 100%;
         }
 
-        .track {
+        .zhy_track {
             display: flex;
             width: 400%;
-            animation: slide-position 16s infinite;
+            animation: zhy_slide-position 16s infinite;
         }
 
         figure {
@@ -56,7 +56,7 @@
             object-fit: cover;
         }
 
-        .name {
+        .zhy_name {
             position: absolute;
             top: 20px;
             left: 22px;
@@ -74,7 +74,7 @@
             font-size: 16px;
         }
 
-        @keyframes slide-position {
+        @keyframes zhy_slide-position {
             0%, 20% {
                 transform: translateX(0);
             }
@@ -101,7 +101,7 @@
                 font-size: 26px;
             }
 
-            .name {
+            .zhy_name {
                 top: 14px;
                 left: 14px;
                 font-size: 24px;
@@ -109,35 +109,36 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .track {
+            .zhy_track {
                 animation: none;
             }
         }
     </style>
 </head>
 <body>
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：张海玉的图片幻灯片 -->
     <main>
         <h1>张海玉的影像集</h1>
-        <section class="slideshow" aria-label="自动播放的图片幻灯片">
-            <div class="track">
+        <section class="zhy_slideshow" aria-label="自动播放的图片幻灯片">
+            <div class="zhy_track">
                 <figure>
                     <img src="img/1.jpg" alt="中国与埃及代表合影">
-                    <span class="name">张海玉</span>
+                    <span class="zhy_name">张海玉</span>
                     <figcaption>中埃友好交流</figcaption>
                 </figure>
                 <figure>
                     <img src="img/2.jpeg" alt="欢迎仪式上的车队">
-                    <span class="name">张海玉</span>
+                    <span class="zhy_name">张海玉</span>
                     <figcaption>礼宾车队巡行</figcaption>
                 </figure>
                 <figure>
                     <img src="img/3.jpg" alt="欢迎仪式现场">
-                    <span class="name">张海玉</span>
+                    <span class="zhy_name">张海玉</span>
                     <figcaption>仪式现场</figcaption>
                 </figure>
                 <figure aria-hidden="true">
                     <img src="img/1.jpg" alt="">
-                    <span class="name">张海玉</span>
+                    <span class="zhy_name">张海玉</span>
                     <figcaption>中埃友好交流</figcaption>
                 </figure>
             </div>

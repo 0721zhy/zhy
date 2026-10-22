@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
             font-family: "Microsoft YaHei", sans-serif;
         }
 
-        .page {
+        .zhy_page {
             width: 100%;
             min-height: 100vh;
             background: #f3f3f3;
@@ -28,7 +28,7 @@
             position: relative;
         }
 
-        .page::before {
+        .zhy_page::before {
             content: "";
             position: absolute;
             top: 0;
@@ -38,7 +38,7 @@
             background: rgba(0, 0, 0, 0.08);
         }
 
-        .workspace {
+        .zhy_workspace {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
@@ -48,7 +48,7 @@
             padding: 0 24px;
         }
 
-        .panel {
+        .zhy_panel {
             width: 48%;
             min-width: 420px;
             height: 420px;
@@ -60,25 +60,25 @@
             position: relative;
         }
 
-        .left-panel {
+        .zhy_left-panel {
             justify-content: center;
             align-items: center;
         }
 
-        .left-panel .square {
+        .zhy_left-panel .zhy_square {
             width: 180px;
             height: 180px;
             background: #d9d9d9;
             border: 2px solid #1d1d1d;
         }
 
-        .right-panel {
+        .zhy_right-panel {
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .stack {
+        .zhy_stack {
             width: 260px;
             display: flex;
             flex-direction: column;
@@ -86,7 +86,7 @@
             gap: 26px;
         }
 
-        .stack .bar {
+        .zhy_stack .zhy_bar {
             width: 220px;
             height: 90px;
             background: #d9d9d9;
@@ -95,15 +95,16 @@
     </style>
 </head>
 <body>
-    <div class="page">
-        <div class="workspace">
-            <div class="panel left-panel">
-                <div class="square"></div>
+    <!-- 姓名：张海玉 日期：2026-10-22 功能：宫格布局练习 -->
+    <div class="zhy_page">
+        <div class="zhy_workspace">
+            <div class="zhy_panel zhy_left-panel">
+                <div class="zhy_square"></div>
             </div>
-            <div class="panel right-panel">
-                <div class="stack">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+            <div class="zhy_panel zhy_right-panel">
+                <div class="zhy_stack">
+                    <div class="zhy_bar"></div>
+                    <div class="zhy_bar"></div>
                 </div>
             </div>
         </div>
