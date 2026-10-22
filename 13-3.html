@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端底部导航 · 字体图标</title>
+    <link rel="stylesheet" href="%E4%B8%89%E7%BA%A7%E9%A1%B9%E7%9B%AE/font_5244699_m6lrs264gp/iconfont.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            background:
+                linear-gradient(90deg, rgba(29, 93, 143, .05) 1px, transparent 1px),
+                linear-gradient(rgba(29, 93, 143, .05) 1px, transparent 1px),
+                linear-gradient(135deg, #e9f2f4 0%, #f6f1ea 100%);
+            background-size: 30px 30px, 30px 30px, auto;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        .zhang_stage {
+            width: 100%;
+            min-height: 100vh;
+            background: #f5f7f8;
+        }
+
+        .zhang_statusbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 22px 8px;
+            color: #17212b;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .zhang_header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: #fff;
+            border-bottom: 1px solid #e6eaec;
+        }
+
+        .zhang_header h1 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .zhang_header p {
+            margin: 2px 0 0;
+            color: #8a97a0;
+            font-size: 12px;
+        }
+
+        .zhang_avatar {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #1d5d8f, #d86d55);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 34px;
+            text-align: center;
+        }
+
+        .zhang_content {
+            padding: 16px 16px 100px;
+        }
+
+        .zhang_card {
+            margin-bottom: 14px;
+            padding: 16px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(23, 33, 43, .05);
+        }
+
+        .zhang_card h2 {
+            margin: 0 0 6px;
+            font-size: 15px;
+        }
+
+        .zhang_card p {
+            margin: 0;
+            color: #8a97a0;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .zhang_card code {
+            padding: 1px 6px;
+            background: #eef3f6;
+            border-radius: 4px;
+            color: #1d5d8f;
+            font-family: Consolas, monospace;
+        }
+
+        .zhang_tag {
+            display: inline-block;
+            margin-bottom: 8px;
+            padding: 2px 8px;
+            background: #dcecf5;
+            border-radius: 6px;
+            color: #1d5d8f;
+            font-size: 11px;
+        }
+
+        .zhang_tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            z-index: 20;
+            display: flex;
+            width: 100%;
+            padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+            background: #fff;
+            border-radius: 22px 22px 0 0;
+            box-shadow: 0 -6px 18px rgba(23, 33, 43, .08);
+            transform: translateX(-50%);
+        }
+
+        .zhang_tab {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+            color: #9aa6ae;
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+
+        .zhang_tab:hover,
+        .zhang_tab.zhang_active {
+            color: #1d5d8f;
+        }
+
+        .zhang_tab-icon {
+            position: relative;
+            display: inline-flex;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .zhang_tab-label {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .zhang_badge {
+            position: absolute;
+            top: -6px;
+            right: -10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ff4d4f;
+            color: #fff;
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        .zhang_badge.zhang_badge-num {
+            min-width: 17px;
+            height: 17px;
+            padding: 0 5px;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 17px;
+        }
+
+        .zhang_badge.zhang_badge-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="zhang_stage">
+        <div class="zhang_statusbar">
+            <span>9:41</span>
+            <span>5G ▮▮▮</span>
+        </div>
+
+        <header class="zhang_header">
+            <div>
+                <h1>张海玉的课堂实践</h1>
+                <p>高级网页设计 · 移动端底部导航</p>
+            </div>
+            <div class="zhang_avatar">张</div>
+        </header>
+
+        <main class="zhang_content">
+            <section class="zhang_card">
+                <span class="zhang_tag">字体图标</span>
+                <h2>首页</h2>
+                <p>本页下导航使用 iconfont 字体图标：<code>icon-shouye</code>、<code>icon-shipin</code>、<code>icon-xinxi</code>、<code>icon-my</code>。</p>
+            </section>
+            <section class="zhang_card">
+                <span class="zhang_tag">自适应宽度</span>
+                <h2>四个导航项</h2>
+                <p>导航固定在视口底部，四项以 <code>flex: 1</code> 等分宽度，随屏幕宽度自适应伸缩。</p>
+            </section>
+            <section class="zhang_card">
+                <span class="zhang_tag">角标</span>
+                <h2>数字徽章与红点</h2>
+                <p>图标右上角通过绝对定位叠加角标：数字徽章显示 <code>99+</code>，红点表示有新消息。</p>
+            </section>
+            <section class="zhang_card">
+                <span class="zhang_tag">用法</span>
+                <h2>实现要点</h2>
+                <p><code>&lt;i class="iconfont icon-shipin"&gt;&lt;/i&gt;</code> 渲染图标，角标用 <code>.zhang_badge-num</code> 与 <code>.zhang_badge-dot</code> 绝对定位到图标右上角。</p>
+            </section>
+        </main>
+    </div>
+
+    <nav class="zhang_tabbar" aria-label="底部导航">
+        <a class="zhang_tab zhang_active" href="#">
+            <span class="zhang_tab-icon"><i class="iconfont icon-shouye" aria-hidden="true"></i></span>
+            <span class="zhang_tab-label">首页</span>
+        </a>
+        <a class="zhang_tab" href="#">
+            <span class="zhang_tab-icon">
+                <i class="iconfont icon-shipin" aria-hidden="true"></i>
+                <span class="zhang_badge zhang_badge-dot" aria-label="有新视频"></span>
+            </span>
+            <span class="zhang_tab-label">视频</span>
+        </a>
+        <a class="zhang_tab" href="#">
+            <span class="zhang_tab-icon">
+                <i class="iconfont icon-xinxi" aria-hidden="true"></i>
+                <span class="zhang_badge zhang_badge-num">99+</span>
+            </span>
+            <span class="zhang_tab-label">信息</span>
+        </a>
+        <a class="zhang_tab" href="#">
+            <span class="zhang_tab-icon"><i class="iconfont icon-my" aria-hidden="true"></i></span>
+            <span class="zhang_tab-label">我的</span>
+        </a>
+    </nav>
+</body>
+</html>

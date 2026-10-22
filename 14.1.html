@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>张海玉的JavaScript</h2>
+    <script>
+        alert('hello world')
+        console.log('hello world')
+        //prompt和confirm方法
+        //prompt方法用于获取用户输入的信息
+        var name = prompt('张海玉')
+        console.log(name)
+        //confirm方法用于确认用户操作
+        var isConfirm = confirm('您确定要删除吗？')
+        console.log(isConfirm)
+        if(isConfirm){
+            alert('删除成功')
+        }else{
+            alert('删除失败')
+        }
+    </script>
+</body>
+</html>
