@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -249,10 +249,11 @@
             <section class="zhy_card">
                 <span class="zhy_tag">字体图标方式</span>
                 <h2>同一组图标 · iconfont 实现</h2>
-                <p>引入 <code>font/iconfont.css</code> 后，用 <code>&lt;i class="iconfont icon-xxx"&gt;&lt;/i&gt;</code> 即可渲染同样的四个导航图标：</p>
+                <p>引入 <code>font/iconfont.css</code> 后，用 <code>&lt;i class="iconfont icon-xxx"&gt;&lt;/i&gt;</code> 即可渲染同样的五个导航图标：</p>
                 <div class="zhy_iconrow">
                     <div class="zhy_iconrow-item"><i class="iconfont icon-shouye" aria-hidden="true"></i><span>shouye</span></div>
                     <div class="zhy_iconrow-item"><i class="iconfont icon-shipin" aria-hidden="true"></i><span>shipin</span></div>
+                    <div class="zhy_iconrow-item"><i class="iconfont icon-faxian" aria-hidden="true"></i><span>faxian</span></div>
                     <div class="zhy_iconrow-item"><i class="iconfont icon-xinxi" aria-hidden="true"></i><span>xinxi</span></div>
                     <div class="zhy_iconrow-item"><i class="iconfont icon-my" aria-hidden="true"></i><span>my</span></div>
                 </div>
@@ -260,20 +261,21 @@
 
             <section class="zhy_card">
                 <span class="zhy_tag">自适应宽度</span>
-                <h2>四个导航项</h2>
-                <p>导航固定在视口底部，四项以 <code>flex: 1</code> 等分宽度，随屏幕宽度自适应伸缩。</p>
+                <h2>五个导航项</h2>
+                <p>导航固定在视口底部，五项以 <code>flex: 1</code> 等分宽度，随屏幕宽度自适应伸缩，点击可切换激活态（与 13-3 配置一致）。</p>
             </section>
 
             <section class="zhy_card">
                 <span class="zhy_tag">角标</span>
                 <h2>数字徽章与红点</h2>
-                <p>图标右上角通过绝对定位叠加角标：数字徽章显示 <code>99+</code>，红点表示有新消息。</p>
+                <p>图标右上角通过绝对定位叠加角标：消息显示数字徽章 <code>408</code>，发现显示红点表示有新内容。</p>
             </section>
         </main>
     </div>
 
     <nav class="zhy_tabbar" aria-label="底部导航">
-        <a class="zhy_tab zhy_active" href="#">
+        <!-- 首页（激活） -->
+        <a class="zhy_tab zhy_active" data-tab="home" href="#">
             <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 10.5 12 3l9 7.5"></path>
@@ -283,34 +285,81 @@
             </span>
             <span class="zhy_tab-label">首页</span>
         </a>
-        <a class="zhy_tab" href="#">
+
+        <!-- 视频 -->
+        <a class="zhy_tab" data-tab="video" href="#">
             <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="2" y="6" width="14" height="12" rx="2"></rect>
                     <path d="m16 10 6-3v10l-6-3"></path>
                 </svg>
-                <span class="zhy_badge zhy_badge-dot" aria-label="有新视频"></span>
             </span>
             <span class="zhy_tab-label">视频</span>
         </a>
-        <a class="zhy_tab" href="#">
+
+        <!-- 发现（红点） -->
+        <a class="zhy_tab" data-tab="discover" href="#">
+            <span class="zhy_tab-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="m14.8 9.2-1.6 4-4 1.6 1.6-4z"></path>
+                </svg>
+                <span class="zhy_badge zhy_badge-dot" aria-label="有新发现"></span>
+            </span>
+            <span class="zhy_tab-label">发现</span>
+        </a>
+
+        <!-- 消息（数字徽章 408） -->
+        <a class="zhy_tab" data-tab="message" href="#">
             <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H5l-2 2V11.5a8.5 8.5 0 0 1 8.5-8.5h1A8.5 8.5 0 0 1 21 11.5z"></path>
                 </svg>
-                <span class="zhy_badge zhy_badge-num">99+</span>
+                <span class="zhy_badge zhy_badge-num" aria-label="408 条未读">408</span>
             </span>
-            <span class="zhy_tab-label">信息</span>
+            <span class="zhy_tab-label">消息</span>
         </a>
-        <a class="zhy_tab" href="#">
+
+        <!-- 我 -->
+        <a class="zhy_tab" data-tab="me" href="#">
             <span class="zhy_tab-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <circle cx="12" cy="8" r="4"></circle>
                     <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
                 </svg>
             </span>
-            <span class="zhy_tab-label">我的</span>
+            <span class="zhy_tab-label">我</span>
         </a>
     </nav>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：底部导航点击切换（与 13-3 配置一致）
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+        var zhyTabs = document.querySelectorAll('.zhy_tab');
+        var zhyTabName = {
+            home:     '首页',
+            video:    '视频',
+            discover: '发现',
+            message:  '消息',
+            me:       '我'
+        };
+
+        zhyTabs.forEach(function(zhyTab) {
+            zhyTab.addEventListener('click', function(zhyEvt) {
+                zhyEvt.preventDefault();
+
+                // 清除所有激活态
+                zhyTabs.forEach(function(t) { t.classList.remove('zhy_active'); });
+
+                // 当前 tab 激活
+                zhyTab.classList.add('zhy_active');
+
+                var zhyKey = zhyTab.getAttribute('data-tab');
+                console.log('[tab] 切换到 →', zhyTabName[zhyKey] || zhyKey);
+            });
+        });
+    </script>
 </body>
 </html>
