@@ -1,7 +1,138 @@
+/* ============================================================
+   css.css —— 全局样式表（张海玉 zhy）
+   说明：本文件为全站公共样式，新页面通过
+   <link rel="stylesheet" href="css.css"> 引入。
+   类名统一使用 zhy_ 前缀；不使用 id 选择器。
+   ============================================================ */
+
+/* ---------- 历史遗留规则（5-1 层叠与继承.html 演示用，勿删） ---------- */
 p{
     color: blue;
 }
 h2{
     text-align: center;
     color: #039;
+}
+
+/* ---------- 全局基础 ---------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+    color: #17212b;
+    background:
+        linear-gradient(90deg, rgba(29, 93, 143, .045) 1px, transparent 1px),
+        linear-gradient(rgba(29, 93, 143, .045) 1px, transparent 1px),
+        linear-gradient(135deg, #f3f8f8 0%, #fffdf8 55%, #f9eee8 100%);
+    background-size: 32px 32px, 32px 32px, auto;
+    font-family: Georgia, "Microsoft YaHei", serif;
+    line-height: 1.7;
+}
+
+code {
+    background: rgba(23, 33, 43, .08);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: "Consolas", monospace;
+    font-size: .92em;
+}
+
+/* ---------- 全局布局 ---------- */
+.zhy_page {
+    width: min(1040px, 100%);
+    margin: 0 auto;
+}
+
+/* ---------- 全局排版组件 ---------- */
+.zhy_eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    color: #d86d55;
+    font: bold 13px/1.2 "Microsoft YaHei", sans-serif;
+    letter-spacing: 3px;
+}
+
+.zhy_eyebrow .iconfont {
+    font-size: 16px;
+    letter-spacing: 0;
+}
+
+.zhy_title {
+    margin: 0 0 12px;
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.15;
+    text-align: left;
+    color: #17212b;
+}
+
+.zhy_intro {
+    max-width: 640px;
+    margin: 0 0 34px;
+    color: #63707b;
+    font-family: "Microsoft YaHei", sans-serif;
+    font-size: 15px;
+}
+
+/* ---------- 全局卡片 / 区块 ---------- */
+.zhy_section {
+    margin-bottom: 30px;
+    padding: 24px 26px 28px;
+    background: rgba(255, 253, 248, .94);
+    border: 1px solid rgba(23, 33, 43, .12);
+    box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
+}
+
+.zhy_section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 4px;
+    font-size: 21px;
+    text-align: left;
+    color: #17212b;
+}
+
+.zhy_section-title .iconfont {
+    font-size: 22px;
+    color: #1d5d8f;
+}
+
+.zhy_section-desc {
+    margin: 0 0 20px;
+    color: #63707b;
+    font: 13px/1.5 "Microsoft YaHei", sans-serif;
+}
+
+/* ---------- 全局代码块 ---------- */
+.zhy_code-box {
+    background: #17212b;
+    color: #dcecf5;
+    padding: 14px 18px;
+    border-radius: 3px;
+    font: 13px/1.7 "Consolas", monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ---------- 全局提示块 ---------- */
+.zhy_footer,
+.zhy_hint {
+    margin-top: 32px;
+    padding: 16px 22px;
+    background: rgba(29, 93, 143, .06);
+    border-left: 4px solid #1d5d8f;
+    font: 13px/1.7 "Microsoft YaHei", sans-serif;
+    color: #17212b;
+}
+
+.zhy_footer .iconfont,
+.zhy_hint .iconfont {
+    color: #1d5d8f;
+    margin-right: 4px;
 }
