@@ -1,72 +1,14 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucide 图标（SVG 方式）</title>
+    <title>iconfont 图标（字体 + SVG 方式）</title>
+    <!-- 全局样式 + 本地 iconfont 字体图标库 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            margin: 0;
-            padding: 40px 20px;
-            color: #17212b;
-            background:
-                linear-gradient(90deg, rgba(29, 93, 143, .045) 1px, transparent 1px),
-                linear-gradient(rgba(29, 93, 143, .045) 1px, transparent 1px),
-                linear-gradient(135deg, #f3f8f8 0%, #fffdf8 55%, #f9eee8 100%);
-            background-size: 32px 32px, 32px 32px, auto;
-            font-family: Georgia, "Microsoft YaHei", serif;
-            line-height: 1.7;
-        }
-
-        .zhy_page {
-            width: min(1040px, 100%);
-            margin: 0 auto;
-        }
-
-        .zhy_eyebrow {
-            margin: 0 0 8px;
-            color: #d86d55;
-            font: bold 13px/1.2 "Microsoft YaHei", sans-serif;
-            letter-spacing: 3px;
-        }
-
-        .zhy_title {
-            margin: 0 0 12px;
-            font-size: clamp(30px, 5vw, 46px);
-            line-height: 1.15;
-        }
-
-        .zhy_intro {
-            max-width: 640px;
-            margin: 0 0 34px;
-            color: #63707b;
-            font-family: "Microsoft YaHei", sans-serif;
-            font-size: 15px;
-        }
-
-        .zhy_section {
-            margin-bottom: 30px;
-            padding: 24px 26px 28px;
-            background: rgba(255, 253, 248, .94);
-            border: 1px solid rgba(23, 33, 43, .12);
-            box-shadow: 8px 8px 0 rgba(29, 93, 143, .08);
-        }
-
-        .zhy_section-title {
-            margin: 0 0 4px;
-            font-size: 21px;
-        }
-
-        .zhy_section-desc {
-            margin: 0 0 20px;
-            color: #63707b;
-            font: 13px/1.5 "Microsoft YaHei", sans-serif;
-        }
+        /* ===== 本页私有样式（公共部分已抽到 css.css 全局样式表） ===== */
 
         .zhy_grid {
             display: grid;
@@ -91,10 +33,8 @@
             transform: translateY(-4px);
         }
 
-        .zhy_icon-card i,
-        .zhy_icon-card svg {
-            width: 30px;
-            height: 30px;
+        .zhy_icon-card .iconfont {
+            font-size: 30px;
             color: #1d5d8f;
         }
 
@@ -105,6 +45,7 @@
             word-break: break-all;
         }
 
+        /* 尺寸演示：字体图标用 font-size 控制 */
         .zhy_size-row {
             display: flex;
             align-items: flex-end;
@@ -126,20 +67,40 @@
             font: 12px/1.2 "Microsoft YaHei", sans-serif;
         }
 
-        .zhy_note {
-            margin: 6px 0 0;
+        .zhy_size-16 { font-size: 16px; }
+        .zhy_size-24 { font-size: 24px; }
+        .zhy_size-36 { font-size: 36px; }
+        .zhy_size-48 { font-size: 48px; }
+        .zhy_size-64 { font-size: 64px; color: #d86d55; }
+
+        /* 颜色演示 */
+        .zhy_color-row {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            flex-wrap: wrap;
+            padding: 18px 4px 4px;
+        }
+
+        .zhy_color-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 30px;
+        }
+
+        .zhy_color-item span {
             color: #63707b;
-            font: 13px/1.6 "Microsoft YaHei", sans-serif;
+            font: 12px/1.2 "Microsoft YaHei", sans-serif;
         }
 
-        .zhy_note code {
-            padding: 1px 6px;
-            background: #eef3f6;
-            border-radius: 4px;
-            color: #1d5d8f;
-            font-family: Consolas, monospace;
-        }
+        .zhy_color-blue  { color: #1d5d8f; }
+        .zhy_color-coral { color: #d86d55; }
+        .zhy_color-green { color: #2ecc71; }
+        .zhy_color-dark  { color: #17212b; }
 
+        /* 手写 SVG 演示 */
         .zhy_svg-demo {
             display: flex;
             align-items: center;
@@ -147,96 +108,114 @@
             padding: 16px 4px;
             color: #d86d55;
         }
+
+        .zhy_note {
+            margin: 6px 0 0;
+            color: #63707b;
+            font: 13px/1.6 "Microsoft YaHei", sans-serif;
+        }
     </style>
 </head>
 <body>
-    <!-- 姓名：张海玉 日期：2026-10-22 功能：Lucide 图标（SVG 方式） -->
+    <!-- 姓名：张海玉 日期：2026-10-23 功能：iconfont 图标（字体 + SVG 方式） -->
     <main class="zhy_page">
-        <p class="zhy_eyebrow">ICON 02 / LUCIDE</p>
-        <h1 class="zhy_title">Lucide 图标（SVG 方式）</h1>
+        <p class="zhy_eyebrow">
+            <i class="iconfont icon-shouye" aria-hidden="true"></i>
+            ICON 02 / ICONFONT · 张海玉
+        </p>
+        <h1 class="zhy_title">iconfont 图标（字体 + SVG 方式）</h1>
         <p class="zhy_intro">
-            本页引入本地脚本 <code>cdn/lucide/lucide.min.js</code>。Lucide 以“SVG 图标”方式工作：
-            只需在元素上标注 <code>data-lucide="图标名"</code>，调用 <code>lucide.createIcons()</code> 后，
-            脚本会把该元素替换为一段内联 SVG，因此图标可随 <code>width</code> / <code>height</code> / <code>color</code> 自由缩放。
+            本页演示项目本地 iconfont 图标库的两种用法：
+            ① <strong>字体图标方式</strong>——引入 <code>font/iconfont.css</code>，用
+            <code>&lt;i class="iconfont icon-xxx"&gt;&lt;/i&gt;</code> 渲染，图标就是字体，可用
+            <code>font-size</code> / <code>color</code> 自由控制；
+            ② <strong>SVG 方式</strong>——直接书写内联 <code>&lt;svg&gt;</code> 矢量标记，样式完全可控。
+            两种方式都不依赖任何第三方库或 CDN。
         </p>
 
         <section class="zhy_section">
-            <h2 class="zhy_section-title">常用图标 · data-lucide</h2>
-            <p class="zhy_section-desc">声明 <code>&lt;i data-lucide="house"&gt;&lt;/i&gt;</code>，由 createIcons 自动替换为 SVG。</p>
+            <h2 class="zhy_section-title">
+                <i class="iconfont icon-tuijian" aria-hidden="true"></i>
+                字体图标 · 全量 21 枚
+            </h2>
+            <p class="zhy_section-desc">font/iconfont.css 中定义的全部图标，类名即图标名。</p>
             <div class="zhy_grid">
-                <div class="zhy_icon-card"><i data-lucide="house"></i><span>house</span></div>
-                <div class="zhy_icon-card"><i data-lucide="search"></i><span>search</span></div>
-                <div class="zhy_icon-card"><i data-lucide="heart"></i><span>heart</span></div>
-                <div class="zhy_icon-card"><i data-lucide="star"></i><span>star</span></div>
-                <div class="zhy_icon-card"><i data-lucide="user"></i><span>user</span></div>
-                <div class="zhy_icon-card"><i data-lucide="mail"></i><span>mail</span></div>
-                <div class="zhy_icon-card"><i data-lucide="shopping-cart"></i><span>shopping-cart</span></div>
-                <div class="zhy_icon-card"><i data-lucide="settings"></i><span>settings</span></div>
-                <div class="zhy_icon-card"><i data-lucide="cloud-upload"></i><span>cloud-upload</span></div>
-                <div class="zhy_icon-card"><i data-lucide="bell"></i><span>bell</span></div>
-                <div class="zhy_icon-card"><i data-lucide="zap"></i><span>zap</span></div>
-                <div class="zhy_icon-card"><i data-lucide="circle-check"></i><span>circle-check</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-shouye" aria-hidden="true"></i><span>shouye 首页</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-shipin" aria-hidden="true"></i><span>shipin 视频</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-faxian" aria-hidden="true"></i><span>faxian 发现</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-faxian1" aria-hidden="true"></i><span>faxian1 发现</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-xinxi" aria-hidden="true"></i><span>xinxi 信息</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-my" aria-hidden="true"></i><span>my 我的</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-sousuo" aria-hidden="true"></i><span>sousuo 搜索</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-xihuan" aria-hidden="true"></i><span>xihuan 喜欢</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-gouwuche" aria-hidden="true"></i><span>gouwuche 购物车</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-guanzhu" aria-hidden="true"></i><span>guanzhu 关注</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-zengjia" aria-hidden="true"></i><span>zengjia 增加</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-shanchu" aria-hidden="true"></i><span>shanchu 删除</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-bianji" aria-hidden="true"></i><span>bianji 编辑</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-tuijian" aria-hidden="true"></i><span>tuijian 推荐</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-gengduo" aria-hidden="true"></i><span>gengduo 更多</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-fanhui" aria-hidden="true"></i><span>fanhui 返回</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-denglu" aria-hidden="true"></i><span>denglu 登录</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-weixin" aria-hidden="true"></i><span>weixin 微信</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-pingguo" aria-hidden="true"></i><span>pingguo 苹果</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-login_logo" aria-hidden="true"></i><span>login_logo</span></div>
+                <div class="zhy_icon-card"><i class="iconfont icon-houtaiLOGO" aria-hidden="true"></i><span>houtaiLOGO</span></div>
             </div>
         </section>
 
         <section class="zhy_section">
-            <h2 class="zhy_section-title">更多图标</h2>
-            <p class="zhy_section-desc">同一套命名规则，按需取用。</p>
-            <div class="zhy_grid">
-                <div class="zhy_icon-card"><i data-lucide="menu"></i><span>menu</span></div>
-                <div class="zhy_icon-card"><i data-lucide="arrow-right"></i><span>arrow-right</span></div>
-                <div class="zhy_icon-card"><i data-lucide="download"></i><span>download</span></div>
-                <div class="zhy_icon-card"><i data-lucide="link-2"></i><span>link-2</span></div>
-                <div class="zhy_icon-card"><i data-lucide="image"></i><span>image</span></div>
-                <div class="zhy_icon-card"><i data-lucide="camera"></i><span>camera</span></div>
-                <div class="zhy_icon-card"><i data-lucide="pencil"></i><span>pencil</span></div>
-                <div class="zhy_icon-card"><i data-lucide="trash-2"></i><span>trash-2</span></div>
-                <div class="zhy_icon-card"><i data-lucide="message-circle"></i><span>message-circle</span></div>
-                <div class="zhy_icon-card"><i data-lucide="send"></i><span>send</span></div>
-                <div class="zhy_icon-card"><i data-lucide="github"></i><span>github</span></div>
-                <div class="zhy_icon-card"><i data-lucide="square"></i><span>square</span></div>
-            </div>
-        </section>
-
-        <section class="zhy_section">
-            <h2 class="zhy_section-title">尺寸与颜色</h2>
-            <p class="zhy_section-desc">SVG 默认 24×24，可传入属性统一调整，也可用 CSS 覆盖。</p>
+            <h2 class="zhy_section-title">
+                <i class="iconfont icon-zengjia" aria-hidden="true"></i>
+                尺寸控制 · font-size
+            </h2>
+            <p class="zhy_section-desc">字体图标本质是文字，用 font-size 即可缩放，永远清晰不失真。</p>
             <div class="zhy_size-row">
-                <div class="zhy_size-item"><i data-lucide="rocket" data-size="16"></i><span>16</span></div>
-                <div class="zhy_size-item"><i data-lucide="rocket" data-size="24"></i><span>24</span></div>
-                <div class="zhy_size-item"><i data-lucide="rocket" data-size="36"></i><span>36</span></div>
-                <div class="zhy_size-item"><i data-lucide="rocket" data-size="48"></i><span>48</span></div>
-                <div class="zhy_size-item"><i data-lucide="rocket" data-size="64" data-color="coral"></i><span>64 · 珊瑚色</span></div>
+                <div class="zhy_size-item"><i class="iconfont icon-xihuan zhy_size-16" aria-hidden="true"></i><span>16px</span></div>
+                <div class="zhy_size-item"><i class="iconfont icon-xihuan zhy_size-24" aria-hidden="true"></i><span>24px</span></div>
+                <div class="zhy_size-item"><i class="iconfont icon-xihuan zhy_size-36" aria-hidden="true"></i><span>36px</span></div>
+                <div class="zhy_size-item"><i class="iconfont icon-xihuan zhy_size-48" aria-hidden="true"></i><span>48px</span></div>
+                <div class="zhy_size-item"><i class="iconfont icon-xihuan zhy_size-64" aria-hidden="true"></i><span>64px · 珊瑚色</span></div>
             </div>
-            <p class="zhy_note">调用示例：<code>lucide.createIcons({ attrs: { width: 32, height: 32 } })</code></p>
+            <p class="zhy_note">写法示例：<code>&lt;i class="iconfont icon-xihuan" style="font-size:36px"&gt;&lt;/i&gt;</code></p>
         </section>
 
         <section class="zhy_section">
-            <h2 class="zhy_section-title">手写内联 SVG</h2>
-            <p class="zhy_section-desc">SVG 图标的本质就是一段内联矢量标记，也可以不依赖脚本直接书写。</p>
+            <h2 class="zhy_section-title">
+                <i class="iconfont icon-bianji" aria-hidden="true"></i>
+                颜色控制 · color
+            </h2>
+            <p class="zhy_section-desc">与文字一样，用 color 属性换色，也可以通过 CSS 类统一管理。</p>
+            <div class="zhy_color-row">
+                <div class="zhy_color-item zhy_color-blue"><i class="iconfont icon-gouwuche" aria-hidden="true"></i><span>#1d5d8f 主蓝</span></div>
+                <div class="zhy_color-item zhy_color-coral"><i class="iconfont icon-gouwuche" aria-hidden="true"></i><span>#d86d55 珊瑚</span></div>
+                <div class="zhy_color-item zhy_color-green"><i class="iconfont icon-gouwuche" aria-hidden="true"></i><span>#2ecc71 绿色</span></div>
+                <div class="zhy_color-item zhy_color-dark"><i class="iconfont icon-gouwuche" aria-hidden="true"></i><span>#17212b 深灰</span></div>
+            </div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title">
+                <i class="iconfont icon-faxian" aria-hidden="true"></i>
+                SVG 方式 · 手写内联矢量
+            </h2>
+            <p class="zhy_section-desc">SVG 图标的本质是一段内联矢量标记，不依赖字体文件，可直接书写。</p>
             <div class="zhy_svg-demo">
                 <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <span>Home 图标（24×24，描边式）</span>
+                <span>Home 图标（24×24，描边式，stroke 随 color 变化）</span>
             </div>
             <p class="zhy_note">手写 SVG 可直接在 <code>&lt;svg&gt;</code> 上设置 <code>width</code>、<code>height</code>、<code>fill</code>、<code>stroke</code> 等属性，实现完全可控的图标样式。</p>
         </section>
-    </main>
 
-    <script src="cdn/lucide/lucide.min.js"></script>
-    <script>
-        (function () {
-            lucide.createIcons();
-            document.querySelectorAll(".lucide[data-size]").forEach(function (zhy_el) {
-                zhy_el.setAttribute("width", zhy_el.getAttribute("data-size"));
-                zhy_el.setAttribute("height", zhy_el.getAttribute("data-size"));
-            });
-            document.querySelectorAll('.lucide[data-color="coral"]').forEach(function (zhy_el) {
-                zhy_el.style.color = "#d86d55";
-            });
-        })();
-    </script>
+        <div class="zhy_footer">
+            <strong><i class="iconfont icon-faxian" aria-hidden="true"></i>两种方式对比：</strong><br>
+            ① 字体图标：引入一个 CSS 即可全站使用，类名调用最方便，适合导航、按钮等 UI 图标；<br>
+            ② SVG 方式：无字体文件依赖、支持多色与复杂图形，适合插画级图标；<br>
+            ③ 本项目统一使用 <code>font/</code> 目录下的本地 iconfont 库，禁止引用第三方图标库与 CDN。
+        </div>
+    </main>
 </body>
 </html>
