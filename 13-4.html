@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>移动端底部导航 · SVG 图标</title>
+    <title>移动端底部导航 · SVG + iconfont 图标</title>
+    <!-- 全局样式 + 本地 iconfont 字体图标库 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        /* ===== 本页私有样式（公共部分已抽到 css.css 全局样式表） ===== */
 
-        html,
+        /* 覆盖全局 body 留白，移动端页面需要撑满全屏 */
         body {
-            margin: 0;
-        }
-
-        body {
-            min-height: 100vh;
-            color: #17212b;
+            padding: 0;
             background:
                 linear-gradient(90deg, rgba(29, 93, 143, .05) 1px, transparent 1px),
                 linear-gradient(rgba(29, 93, 143, .05) 1px, transparent 1px),
@@ -53,6 +49,8 @@
         .zhy_header h1 {
             margin: 0;
             font-size: 17px;
+            text-align: left;
+            color: #17212b;
         }
 
         .zhy_header p {
@@ -85,9 +83,12 @@
             box-shadow: 0 4px 14px rgba(23, 33, 43, .05);
         }
 
+        /* 覆盖 css.css 中 h2 遗留规则 */
         .zhy_card h2 {
             margin: 0 0 6px;
             font-size: 15px;
+            text-align: left;
+            color: #17212b;
         }
 
         .zhy_card p {
@@ -112,6 +113,31 @@
             background: #dcecf5;
             border-radius: 6px;
             color: #1d5d8f;
+            font-size: 11px;
+        }
+
+        /* iconfont 字体图标演示行 */
+        .zhy_iconrow {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 12px 4px 4px;
+        }
+
+        .zhy_iconrow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #1d5d8f;
+        }
+
+        .zhy_iconrow-item .iconfont {
+            font-size: 26px;
+        }
+
+        .zhy_iconrow-item span {
+            color: #8a97a0;
             font-size: 11px;
         }
 
@@ -198,7 +224,7 @@
     </style>
 </head>
 <body>
-    <!-- 姓名：张海玉 日期：2026-10-22 功能：移动端底部导航 · SVG 图标 -->
+    <!-- 姓名：张海玉 日期：2026-10-23 功能：移动端底部导航 · SVG + iconfont 图标 -->
     <div class="zhy_stage">
         <div class="zhy_statusbar">
             <span>9:41</span>
@@ -215,24 +241,33 @@
 
         <main class="zhy_content">
             <section class="zhy_card">
-                <span class="zhy_tag">SVG 图标</span>
-                <h2>首页</h2>
-                <p>本页下导航直接使用内联 SVG：每个导航项内嵌一段 <code>&lt;svg&gt;</code>，以 <code>currentColor</code> 描边，随文字颜色变化。</p>
+                <span class="zhy_tag">SVG 方式</span>
+                <h2>底部导航 · 手写内联 SVG</h2>
+                <p>本页底部导航直接使用内联 SVG：每个导航项内嵌一段 <code>&lt;svg&gt;</code>，以 <code>currentColor</code> 描边，随文字颜色变化，无需任何图标库。</p>
             </section>
+
+            <section class="zhy_card">
+                <span class="zhy_tag">字体图标方式</span>
+                <h2>同一组图标 · iconfont 实现</h2>
+                <p>引入 <code>font/iconfont.css</code> 后，用 <code>&lt;i class="iconfont icon-xxx"&gt;&lt;/i&gt;</code> 即可渲染同样的四个导航图标：</p>
+                <div class="zhy_iconrow">
+                    <div class="zhy_iconrow-item"><i class="iconfont icon-shouye" aria-hidden="true"></i><span>shouye</span></div>
+                    <div class="zhy_iconrow-item"><i class="iconfont icon-shipin" aria-hidden="true"></i><span>shipin</span></div>
+                    <div class="zhy_iconrow-item"><i class="iconfont icon-xinxi" aria-hidden="true"></i><span>xinxi</span></div>
+                    <div class="zhy_iconrow-item"><i class="iconfont icon-my" aria-hidden="true"></i><span>my</span></div>
+                </div>
+            </section>
+
             <section class="zhy_card">
                 <span class="zhy_tag">自适应宽度</span>
                 <h2>四个导航项</h2>
                 <p>导航固定在视口底部，四项以 <code>flex: 1</code> 等分宽度，随屏幕宽度自适应伸缩。</p>
             </section>
+
             <section class="zhy_card">
                 <span class="zhy_tag">角标</span>
                 <h2>数字徽章与红点</h2>
                 <p>图标右上角通过绝对定位叠加角标：数字徽章显示 <code>99+</code>，红点表示有新消息。</p>
-            </section>
-            <section class="zhy_card">
-                <span class="zhy_tag">用法</span>
-                <h2>实现要点</h2>
-                <p>SVG 放在 <code>.zhy_tab-icon</code> 内并设为 <code>position: relative</code>，角标用 <code>.zhy_badge-num</code> 与 <code>.zhy_badge-dot</code> 定位到右上角。</p>
             </section>
         </main>
     </div>
