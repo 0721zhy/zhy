@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>逢七过 · 一百个盒子</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* ===== 本页私有样式（公共部分来自 css.css 全局样式表） ===== */
+
+        /* 工具栏按钮 */
+        .zhy_toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 600 13px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: background .2s ease, transform .15s ease;
+        }
+
+        .zhy_btn:hover {
+            background: #164a73;
+            transform: translateY(-1px);
+        }
+
+        .zhy_btn .iconfont {
+            font-size: 15px;
+        }
+
+        .zhy_btn.zhy_btn-ghost {
+            background: rgba(255, 253, 248, .95);
+            color: #1d5d8f;
+            box-shadow: inset 0 0 0 1px #c9dbe8;
+        }
+
+        .zhy_btn.zhy_btn-ghost:hover {
+            background: #eef5f9;
+        }
+
+        /* 统计条 */
+        .zhy_stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .zhy_stat {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 14px;
+            background: rgba(255, 253, 248, .95);
+            border: 1px solid rgba(23, 33, 43, .12);
+            text-align: center;
+        }
+
+        .zhy_stat-num {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1d5d8f;
+        }
+
+        .zhy_stat.zhy_stat-warm .zhy_stat-num {
+            color: #d86d55;
+        }
+
+        .zhy_stat-label {
+            color: #63707b;
+            font: 12px "Microsoft YaHei", sans-serif;
+        }
+
+        /* 100 个盒子的方阵 */
+        .zhy_grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 720px) {
+            .zhy_grid {
+                grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            }
+        }
+
+        .zhy_box {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: #fff;
+            border: 1px solid #d8e4ec;
+            border-radius: 10px;
+            color: #1d5d8f;
+            font: 700 15px "Consolas", monospace;
+            cursor: default;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .zhy_box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(23, 33, 43, .10);
+        }
+
+        /* 遇 7 的空盒子：默认空白 */
+        .zhy_box.zhy_lucky {
+            background: #fdf0eb;
+            border: 1px dashed #ecb8a6;
+            cursor: pointer;
+        }
+
+        /* 空盒被点击 / 揭示答案后显示隐藏数字 */
+        .zhy_box.zhy_revealed {
+            background: #fce4da;
+            border-style: solid;
+            color: #d86d55;
+        }
+
+        /* 图例 */
+        .zhy_legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            padding: 12px 16px;
+            background: rgba(255, 253, 248, .95);
+            border: 1px solid rgba(23, 33, 43, .12);
+            color: #5b6b76;
+            font: 13px "Microsoft YaHei", sans-serif;
+        }
+
+        .zhy_legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zhy_legend-box {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            background: #fff;
+            border: 1px solid #d8e4ec;
+        }
+
+        .zhy_legend-box.zhy_legend-warm {
+            background: #fdf0eb;
+            border: 1px dashed #ecb8a6;
+        }
+
+        .zhy_legend-box.zhy_legend-reveal {
+            background: #fce4da;
+            border: 1px solid #ecb8a6;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 日期：2026-10-26 功能：逢七过 · 一百个盒子 -->
+    <div class="zhy_page">
+        <header>
+            <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i>课堂实践 15-1</p>
+            <h1 class="zhy_title">逢七过 · 一百个盒子</h1>
+            <p class="zhy_intro">编号 1 ~ 100 的盒子排成方阵：凡是 <strong>7 的倍数</strong>或<strong>含数字 7</strong>（个位或十位）的盒子保持空盒，其余盒子显示自己的编号。点击任意空盒可以验看被藏起来的数字。</p>
+        </header>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-tuijian" aria-hidden="true"></i>游戏规则（数七 / 逢七过）</h2>
+            <p class="zhy_section-desc">报数 1 ~ 100 时，遇到下面三类数字就要喊"过"，本页用空盒子表示：</p>
+            <div class="zhy_code-box">① 7 的倍数   → 7、14、21、28、35 … 98
+② 个位是 7  → 7、17、27、37、47 … 97
+③ 十位是 7  → 70、71、72 … 79</div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-sousuo" aria-hidden="true"></i>一百个盒子</h2>
+            <p class="zhy_section-desc">默认状态即题目要求的效果：遇 7 空盒，其余显示数字。</p>
+
+            <div class="zhy_toolbar">
+                <button type="button" class="zhy_btn zhy_btn-reveal">
+                    <i class="iconfont icon-faxian" aria-hidden="true"></i>显示答案
+                </button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_btn-reset">
+                    <i class="iconfont icon-shanchu" aria-hidden="true"></i>重置
+                </button>
+            </div>
+
+            <div class="zhy_stats">
+                <div class="zhy_stat">
+                    <span class="zhy_stat-num zhy_num-total">100</span>
+                    <span class="zhy_stat-label">盒子总数</span>
+                </div>
+                <div class="zhy_stat zhy_stat-warm">
+                    <span class="zhy_stat-num zhy_num-lucky">0</span>
+                    <span class="zhy_stat-label">遇 7 空盒（过）</span>
+                </div>
+                <div class="zhy_stat">
+                    <span class="zhy_stat-num zhy_num-normal">0</span>
+                    <span class="zhy_stat-label">显示数字</span>
+                </div>
+            </div>
+
+            <div class="zhy_grid"></div>
+
+            <div class="zhy_legend">
+                <span class="zhy_legend-item"><span class="zhy_legend-box"></span>正常盒子（显示数字）</span>
+                <span class="zhy_legend-item"><span class="zhy_legend-box zhy_legend-warm"></span>遇 7 空盒（点击验看）</span>
+                <span class="zhy_legend-item"><span class="zhy_legend-box zhy_legend-reveal"></span>已揭示的隐藏数字</span>
+            </div>
+        </section>
+
+        <p class="zhy_footer"><i class="iconfont icon-xihuan" aria-hidden="true"></i>判断逻辑：<code>n % 7 === 0 || n % 10 === 7 || Math.floor(n / 10) === 7</code>，三条满足任意一条即为"遇 7"。打开 F12 控制台可查看统计输出。</p>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：逢七过 · 生成 100 个盒子并判断"遇 7"
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+        var zhyGrid = document.querySelector('.zhy_grid');
+        var zhyRevealBtn = document.querySelector('.zhy_btn-reveal');
+        var zhyResetBtn = document.querySelector('.zhy_btn-reset');
+        var zhyLuckyStat = document.querySelector('.zhy_num-lucky');
+        var zhyNormalStat = document.querySelector('.zhy_num-normal');
+        var zhyBoxes = [];        // 全部盒子
+        var zhyLuckyBoxes = [];   // 遇 7 的空盒子
+        var zhyRevealed = false;  // 是否处于"显示答案"状态
+
+        // 判断 n 是否"遇 7"：7 的倍数 / 个位是 7 / 十位是 7
+        function zhyIsSeven(zhyN) {
+            return zhyN % 7 === 0 || zhyN % 10 === 7 || Math.floor(zhyN / 10) === 7;
+        }
+
+        // 生成 100 个盒子：满足要求的显示空盒，不满足的显示数字
+        for (var zhyI = 1; zhyI <= 100; zhyI++) {
+            var zhyBox = document.createElement('button');
+            zhyBox.type = 'button';
+            zhyBox.className = 'zhy_box';
+
+            if (zhyIsSeven(zhyI)) {
+                // 遇 7：空盒子，把数字藏进 data 属性备用
+                zhyBox.classList.add('zhy_lucky');
+                zhyBox.dataset.num = zhyI;
+                zhyBox.title = '第 ' + zhyI + ' 号：遇 7，空盒（点击验看）';
+                zhyLuckyBoxes.push(zhyBox);
+            } else {
+                zhyBox.textContent = zhyI;
+                zhyBox.title = '第 ' + zhyI + ' 号：正常报数';
+            }
+
+            zhyBoxes.push(zhyBox);
+            zhyGrid.appendChild(zhyBox);
+        }
+
+        // 统计数字
+        zhyLuckyStat.textContent = zhyLuckyBoxes.length;
+        zhyNormalStat.textContent = 100 - zhyLuckyBoxes.length;
+
+        // 单个空盒：点击显示 / 藏起数字
+        zhyLuckyBoxes.forEach(function (zhyBox) {
+            zhyBox.addEventListener('click', function () {
+                zhyBox.classList.toggle('zhy_revealed');
+                zhyBox.textContent = zhyBox.classList.contains('zhy_revealed') ? zhyBox.dataset.num : '';
+                console.log('[逢七过] 第 ' + zhyBox.dataset.num + ' 号盒 ' + (zhyBox.classList.contains('zhy_revealed') ? '揭示' : '藏起'));
+            });
+        });
+
+        // 显示 / 隐藏全部答案
+        zhyRevealBtn.addEventListener('click', function () {
+            zhyRevealed = !zhyRevealed;
+            zhyLuckyBoxes.forEach(function (zhyBox) {
+                zhyBox.classList.toggle('zhy_revealed', zhyRevealed);
+                zhyBox.textContent = zhyRevealed ? zhyBox.dataset.num : '';
+            });
+            zhyRevealBtn.innerHTML = '<i class="iconfont icon-faxian" aria-hidden="true"></i>' + (zhyRevealed ? '隐藏答案' : '显示答案');
+            console.log('[逢七过] 张海玉：' + (zhyRevealed ? '显示' : '隐藏') + '全部 ' + zhyLuckyBoxes.length + ' 个空盒的数字');
+        });
+
+        // 重置：恢复初始状态
+        zhyResetBtn.addEventListener('click', function () {
+            zhyRevealed = false;
+            zhyLuckyBoxes.forEach(function (zhyBox) {
+                zhyBox.classList.remove('zhy_revealed');
+                zhyBox.textContent = '';
+            });
+            zhyRevealBtn.innerHTML = '<i class="iconfont icon-faxian" aria-hidden="true"></i>显示答案';
+            console.log('[逢七过] 已重置为初始状态');
+        });
+
+        console.log('[逢七过] 张海玉：共 100 盒，其中遇 7 空盒 ' + zhyLuckyBoxes.length + ' 个，显示数字 ' + (100 - zhyLuckyBoxes.length) + ' 个');
+    </script>
+</body>
+</html>
