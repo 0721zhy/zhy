@@ -8,7 +8,7 @@ Static HTML/CSS coursework site (张海玉 · 《高级网页设计》课堂实�
 - **图标规范**：项目图标统一使用 `font/` 目录下的 iconfont 字体图标。在 `<head>` 中引入 `<link rel="stylesheet" href="font/iconfont.css">`，元素上用 `<i class="iconfont icon-xxx"></i>` 渲染。iconfont 的 `icon-` 前缀是图标库的类名约定，**豁免**下方 `zhy_` 前缀规则。
 - 内容为中文 (`lang="zh-CN"`)；编辑时沿用已有语气和术语。
 - **命名规范**：所有自定义 CSS 类名、id 名、CSS 自定义属性、JS 变量必须带 `zhy_` 前缀（例：`.zhy_page`、`#zhy_title`、`--zhy_ink`、`var zhy_data`）。内置标签（`div`、`p`）、第三方库约定类名（iconfont 的 `iconfont`、`icon-xxx`）、浏览器内置对象（`document`、`Date`、`Math`）豁免此规则。
-- **页面注释**：每个 HTML 页面 `<body>` 之后必须紧跟一条注释：`<!-- 姓名：张海玉 日期：YYYY-MM-DD 功能：xxx -->`。
+- **页面注释**：每个**新建** HTML 页面 `<body>` 之后必须紧跟一条注释，包含姓名、建立时间、所用大模型、功能名称四项：`<!-- 姓名：张海玉 建立时间：YYYY-MM-DD 大模型：<模型名> 功能：xxx -->`。`<模型名>` 填写实际使用的 AI 模型（如 `GLM-5.3-Flash`、`Kimi-K3`）。已有页面的旧格式注释（`<!-- 姓名：张海玉 日期：... 功能：... -->`）保持不变，不强制追溯。
 
 ### 历史页面例外
 
