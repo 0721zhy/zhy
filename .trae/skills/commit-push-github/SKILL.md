@@ -9,17 +9,16 @@ description: 提交并推送项目到 GitHub 仓库. Use when the user asks to c
 
 ## 远程仓库
 
-`git@github.com:0721zhy/zhy.git`（SSH，公钥已配置）
-
-如需改用 HTTPS：`https://github.com/0721zhy/zhy.git`
+- 实测可用（本机 22 端口被封，走 443）：`ssh://git@ssh.github.com:443/0721zhy/zhy.git`
+- 等价 SSH 地址（需 ~/.ssh/config 将 github.com 指到 ssh.github.com:443）：`git@github.com:0721zhy/zhy.git`
+- HTTPS 备用：`https://github.com/0721zhy/zhy.git`（需 Token，且本机有 SSL 拦截问题）
 
 ## 步骤
 
 1. 检查当前分支：`git branch --show-current`
 2. 检查现有 remote：`git remote -v`
 3. 若 remote 已存在 origin 指向 Gitee，新增 GitHub 为 `upstream`：
-   `git remote add upstream git@github.com:0721zhy/zhy.git`
-   若要把 origin 直接换成 GitHub：`git remote set-url origin git@github.com:0721zhy/zhy.git`
+   `git remote add upstream ssh://git@ssh.github.com:443/0721zhy/zhy.git`
 4. 暂存所有文件：`git add -A`
 5. 提交：`git commit -m "<描述性提交信息>"`（PowerShell 环境下用单行 `-m`，不要用 bash heredoc）
 6. 推送到 GitHub：`git push -u upstream master` 或 `git push -u origin master`

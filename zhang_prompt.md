@@ -193,3 +193,19 @@
 **提示词：**
 
 > 修改规则，再新建一个html文件时，都要加入注释，注释包括：张海玉，建立时间，使用的大模型的功能名称
+
+## 2026-10-26
+
+**模型：** GLM-5.3-Flash
+
+**提示词：**
+
+> 创建技能skill，提交到github，commit和push整个项目到 https://github.com/0721zhy/zhy.git，公钥已创建
+
+## 2026-10-26
+
+**模型：** GLM-5.3-FlashX
+
+**提示词：**
+
+> 创建技能skill，提交到github，commit和push整个项目到 https://github.com/0721zhy/zhy ，公钥已创建
