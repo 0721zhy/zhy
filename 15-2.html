@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 程序结构 · 循环与条件</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* ===== 本页私有样式（公共部分来自 css.css 全局样式表） ===== */
+
+        /* 演示操作行 */
+        .zhy_demo-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 600 13px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: background .2s ease, transform .15s ease;
+        }
+
+        .zhy_btn:hover {
+            background: #164a73;
+            transform: translateY(-1px);
+        }
+
+        .zhy_btn .iconfont {
+            font-size: 15px;
+        }
+
+        .zhy_btn.zhy_btn-ghost {
+            background: rgba(255, 253, 248, .95);
+            color: #1d5d8f;
+            box-shadow: inset 0 0 0 1px #c9dbe8;
+        }
+
+        .zhy_btn.zhy_btn-ghost:hover {
+            background: #eef5f9;
+        }
+
+        .zhy_input,
+        .zhy_select {
+            padding: 8px 12px;
+            border: 1px solid #c9dbe8;
+            border-radius: 8px;
+            background: #fff;
+            color: #17212b;
+            font: 600 14px "Microsoft YaHei", sans-serif;
+            outline: none;
+        }
+
+        .zhy_input:focus,
+        .zhy_select:focus {
+            border-color: #1d5d8f;
+        }
+
+        .zhy_input {
+            width: 120px;
+        }
+
+        /* 结果输出框 */
+        .zhy_result {
+            padding: 12px 16px;
+            background: rgba(29, 93, 143, .06);
+            border-left: 4px solid #1d5d8f;
+            color: #17212b;
+            font: 600 14px/1.7 "Microsoft YaHei", sans-serif;
+            min-height: 22px;
+        }
+
+        .zhy_result.zhy_result-warm {
+            background: rgba(216, 109, 85, .10);
+            border-left-color: #d86d55;
+            color: #b5503c;
+        }
+
+        /* 九九乘法表 */
+        .zhy_table99 {
+            margin-top: 6px;
+            overflow-x: auto;
+        }
+
+        .zhy_row99 {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .zhy_cell99 {
+            flex: 1;
+            min-width: 72px;
+            padding: 5px 2px;
+            background: #fff;
+            border: 1px solid #d8e4ec;
+            border-radius: 6px;
+            color: #1d5d8f;
+            font: 11px/1.4 Consolas, monospace;
+            text-align: center;
+        }
+
+        .zhy_cell99.zhy_cell99-head {
+            background: #dcecf5;
+            border-color: #b9d4e6;
+            color: #164a73;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-10-26 大模型：GLM-5.3-FlashX 功能：JS 程序结构 · 循环与条件 -->
+    <div class="zhy_page">
+        <header>
+            <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i>课堂实践 15-2</p>
+            <h1 class="zhy_title">JS 程序结构 · 循环与条件</h1>
+            <p class="zhy_intro">程序三大结构：顺序、<strong>条件（分支）</strong>、<strong>循环</strong>。本页用 4 个可交互小演示展示 if/else、switch、for、while 的实际用法，所有结果同时输出到 F12 控制台。</p>
+        </header>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-bianji" aria-hidden="true"></i>条件判断 · if / else if / else</h2>
+            <p class="zhy_section-desc">输入一个 0 ~ 100 的分数，程序按区间链式判断，输出等级：</p>
+            <div class="zhy_code-box">if (score >= 90)      grade = '优秀';
+else if (score >= 80) grade = '良好';
+else if (score >= 70) grade = '中等';
+else if (score >= 60) grade = '及格';
+else                  grade = '不及格';</div>
+            <div class="zhy_demo-row">
+                <input type="number" class="zhy_input zhy_score-input" placeholder="如 85" min="0" max="100">
+                <button type="button" class="zhy_btn zhy_btn-grade"><i class="iconfont icon-sousuo" aria-hidden="true"></i>判定等级</button>
+            </div>
+            <div class="zhy_result zhy_grade-result">等待输入…</div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-tuijian" aria-hidden="true"></i>条件判断 · switch 多分支</h2>
+            <p class="zhy_section-desc">选择数字 1 ~ 7，switch 按分支精确匹配，注意 <code>break</code> 的作用：</p>
+            <div class="zhy_code-box">switch (day) {
+    case 6:
+    case 7: name = '周末'; break;   // 落空共享分支
+    case 1: name = '星期一'; break;
+    // …
+    default: name = '输入无效';
+}</div>
+            <div class="zhy_demo-row">
+                <select class="zhy_select zhy_day-select">
+                    <option value="">选择 1 ~ 7</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+                <button type="button" class="zhy_btn zhy_btn-day"><i class="iconfont icon-faxian" aria-hidden="true"></i>switch 匹配</button>
+            </div>
+            <div class="zhy_result zhy_day-result">等待选择…</div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-zengjia" aria-hidden="true"></i>循环 · for 打印九九乘法表</h2>
+            <p class="zhy_section-desc">双重 for 循环：外层控制行 i = 1~9，内层控制列 j = 1~i：</p>
+            <div class="zhy_code-box">for (var i = 1; i <= 9; i++) {
+    for (var j = 1; j <= i; j++) {
+        print(j + '×' + i + '=' + (i * j));
+    }
+}</div>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_btn-table99"><i class="iconfont icon-gouwuche" aria-hidden="true"></i>生成乘法表</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_btn-table99-clear"><i class="iconfont icon-shanchu" aria-hidden="true"></i>清空</button>
+            </div>
+            <div class="zhy_table99"></div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-gengduo" aria-hidden="true"></i>循环 · for 求和 与 while 倒计时</h2>
+            <p class="zhy_section-desc">for 适合已知次数；while 适合"满足条件就继续"的未知次数场景：</p>
+            <div class="zhy_code-box">var sum = 0;
+for (var n = 1; n <= 100; n++) sum += n;   // → 5050
+
+var t = 5;
+while (t > 0) { print(t); t--; }           // 倒计时</div>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_btn-sum"><i class="iconfont icon-xihuan" aria-hidden="true"></i>for 求 1~100 的和</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_btn-countdown"><i class="iconfont icon-shipin" aria-hidden="true"></i>while 倒计时</button>
+            </div>
+            <div class="zhy_result zhy_loop-result">等待执行…</div>
+        </section>
+
+        <p class="zhy_footer"><i class="iconfont icon-xihuan" aria-hidden="true"></i>三种结构可以互相嵌套：本页乘法表就是"循环里套输出、外层套条件"的组合。打开 F12 控制台查看同步日志。</p>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：JS 程序结构 · 循环与条件 交互演示
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 演示一：if / else if / else 判定等级 ---------- */
+        var zhyScoreInput = document.querySelector('.zhy_score-input');
+        var zhyGradeBtn = document.querySelector('.zhy_btn-grade');
+        var zhyGradeResult = document.querySelector('.zhy_grade-result');
+
+        zhyGradeBtn.addEventListener('click', function () {
+            var zhyScore = Number(zhyScoreInput.value);
+            var zhyGrade;
+
+            // 条件守卫：非法输入直接返回
+            if (zhyScoreInput.value.trim() === '' || isNaN(zhyScore) || zhyScore < 0 || zhyScore > 100) {
+                zhyGradeResult.textContent = '请输入 0 ~ 100 之间的有效分数';
+                zhyGradeResult.classList.add('zhy_result-warm');
+                console.log('[if] 非法输入：', zhyScoreInput.value);
+                return;
+            }
+
+            // 链式条件判断
+            if (zhyScore >= 90) {
+                zhyGrade = '优秀';
+            } else if (zhyScore >= 80) {
+                zhyGrade = '良好';
+            } else if (zhyScore >= 70) {
+                zhyGrade = '中等';
+            } else if (zhyScore >= 60) {
+                zhyGrade = '及格';
+            } else {
+                zhyGrade = '不及格';
+            }
+
+            zhyGradeResult.classList.remove('zhy_result-warm');
+            zhyGradeResult.textContent = '分数 ' + zhyScore + ' → 等级：' + zhyGrade;
+            console.log('[if] 分数 ' + zhyScore + ' → ' + zhyGrade);
+        });
+
+        /* ---------- 演示二：switch 多分支匹配星期 ---------- */
+        var zhyDaySelect = document.querySelector('.zhy_day-select');
+        var zhyDayBtn = document.querySelector('.zhy_btn-day');
+        var zhyDayResult = document.querySelector('.zhy_day-result');
+
+        zhyDayBtn.addEventListener('click', function () {
+            var zhyDay = Number(zhyDaySelect.value);
+            var zhyName;
+
+            switch (zhyDay) {
+                case 6:
+                case 7:
+                    zhyName = '周末（6、7 落空共享同一分支）';
+                    break;
+                case 1: zhyName = '星期一'; break;
+                case 2: zhyName = '星期二'; break;
+                case 3: zhyName = '星期三'; break;
+                case 4: zhyName = '星期四'; break;
+                case 5: zhyName = '星期五'; break;
+                default: zhyName = null;
+            }
+
+            if (zhyName === null) {
+                zhyDayResult.textContent = '请先选择 1 ~ 7 的数字';
+                zhyDayResult.classList.add('zhy_result-warm');
+            } else {
+                zhyDayResult.classList.remove('zhy_result-warm');
+                zhyDayResult.textContent = 'switch 匹配数字 ' + zhyDay + ' → ' + zhyName;
+            }
+            console.log('[switch] day=' + zhyDay + ' →', zhyName || '无效');
+        });
+
+        /* ---------- 演示三：双重 for 循环打印九九乘法表 ---------- */
+        var zhyTable99 = document.querySelector('.zhy_table99');
+        var zhyTableBtn = document.querySelector('.zhy_btn-table99');
+        var zhyTableClearBtn = document.querySelector('.zhy_btn-table99-clear');
+
+        zhyTableBtn.addEventListener('click', function () {
+            zhyTable99.innerHTML = '';
+            var zhyCount = 0;
+
+            // 外层循环：行
+            for (var zhyI = 1; zhyI <= 9; zhyI++) {
+                var zhyRow = document.createElement('div');
+                zhyRow.className = 'zhy_row99';
+
+                // 内层循环：列（j <= i，只生成下三角）
+                for (var zhyJ = 1; zhyJ <= zhyI; zhyJ++) {
+                    var zhyCell = document.createElement('span');
+                    zhyCell.className = 'zhy_cell99' + (zhyJ === zhyI ? ' zhy_cell99-head' : '');
+                    zhyCell.textContent = zhyJ + '×' + zhyI + '=' + (zhyI * zhyJ);
+                    zhyRow.appendChild(zhyCell);
+                    zhyCount++;
+                }
+
+                zhyTable99.appendChild(zhyRow);
+            }
+
+            console.log('[for] 九九乘法表已生成，共 ' + zhyCount + ' 个算式');
+        });
+
+        zhyTableClearBtn.addEventListener('click', function () {
+            zhyTable99.innerHTML = '';
+            console.log('[for] 乘法表已清空');
+        });
+
+        /* ---------- 演示四：for 求和 与 while 倒计时 ---------- */
+        var zhyLoopBtn = document.querySelector('.zhy_btn-sum');
+        var zhyCountdownBtn = document.querySelector('.zhy_btn-countdown');
+        var zhyLoopResult = document.querySelector('.zhy_loop-result');
+
+        zhyLoopBtn.addEventListener('click', function () {
+            var zhySum = 0;
+            for (var zhyN = 1; zhyN <= 100; zhyN++) {
+                zhySum += zhyN;
+            }
+            zhyLoopResult.classList.remove('zhy_result-warm');
+            zhyLoopResult.textContent = 'for 循环：1 + 2 + … + 100 = ' + zhySum;
+            console.log('[for] 1~100 求和 =', zhySum);
+        });
+
+        zhyCountdownBtn.addEventListener('click', function () {
+            var zhySteps = [];
+            var zhyT = 5;
+            while (zhyT > 0) {
+                zhySteps.push(zhyT);
+                zhyT--;   // 忘记自增会死循环！
+            }
+            zhyLoopResult.classList.remove('zhy_result-warm');
+            zhyLoopResult.textContent = 'while 倒计时：' + zhySteps.join(' → ') + ' → 发射！';
+            console.log('[while] 倒计时', zhySteps.join(' → '));
+        });
+
+        console.log('[15-2] 张海玉：循环与条件演示页加载完成');
+    </script>
+</body>
+</html>

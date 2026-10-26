@@ -209,3 +209,11 @@
 **提示词：**
 
 > 创建技能skill，提交到github，commit和push整个项目到 https://github.com/0721zhy/zhy ，公钥已创建
+
+## 2026-10-26
+
+**模型：** GLM-5.3-FlashX
+
+**提示词：**
+
+> 完成15-2html，展示JavaScript程序结构：循环，条件。然后提交到github。
