@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 对象 · 创建访问增删与内置对象</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：JS 对象演示
+           亮点：对象状态实时可视化（属性增删改后键值卡片自动刷新）
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 对象状态可视化：键值卡片 ---------- */
+        .zhy_obj-view {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .zhy_prop {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: #f0f6fb;
+            border: 1px solid #cfe3f2;
+            border-radius: 8px;
+            font: 600 14px Consolas, "Microsoft YaHei", monospace;
+            animation: zhy_pop .25s ease;
+        }
+
+        @keyframes zhy_pop {
+            from { transform: scale(.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .zhy_prop .zhy_prop-key { color: #1d5d8f; }
+
+        .zhy_prop .zhy_prop-val { color: #d86d55; }
+
+        /* ---------- 代码框 + 输出框 ---------- */
+        .zhy_code-box {
+            margin: 14px 0 0;
+            padding: 14px 16px;
+            background: #1c2733;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.9 Consolas, monospace;
+            overflow-x: auto;
+        }
+
+        .zhy_code-box .zhy_c-kw { color: #6fb3e0; }
+
+        .zhy_code-box .zhy_c-str { color: #9ed58b; }
+
+        .zhy_code-box .zhy_c-cm { color: #7a8a99; }
+
+        .zhy_out {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #fdf6ec;
+            border-left: 3px solid #e8a13a;
+            border-radius: 8px;
+            color: #8a6d3b;
+            font: 13px/1.9 Consolas, "Microsoft YaHei", monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* ---------- 按钮组 ---------- */
+        .zhy_btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+        .zhy_btn {
+            padding: 9px 18px;
+            background: #fff;
+            border: 1.5px solid #1d5d8f;
+            border-radius: 19px;
+            color: #1d5d8f;
+            font: 600 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_btn:hover { background: #1d5d8f; color: #fff; transform: translateY(-2px); }
+
+        .zhy_btn.zhy_btn-danger { border-color: #d86d55; color: #d86d55; }
+
+        .zhy_btn.zhy_btn-danger:hover { background: #d86d55; color: #fff; }
+
+        .zhy_btn.zhy_btn-ok { border-color: #3a9d5d; color: #3a9d5d; }
+
+        .zhy_btn.zhy_btn-ok:hover { background: #3a9d5d; color: #fff; }
+
+        /* ---------- 遍历结果表格 ---------- */
+        .zhy_loop-table {
+            width: 100%;
+            margin-top: 12px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .zhy_loop-table th,
+        .zhy_loop-table td {
+            padding: 8px 12px;
+            border: 1px solid #e3ebf1;
+            text-align: left;
+        }
+
+        .zhy_loop-table th { background: #eef5fa; color: #1d5d8f; }
+
+        .zhy_loop-table td { font-family: Consolas, monospace; }
+
+        .zhy_loop-table .zhy_td-type { color: #8a97a0; }
+
+        /* ---------- 内置对象结果 ---------- */
+        .zhy_builtin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .zhy_builtin-cell {
+            padding: 12px 14px;
+            background: #f0f6fb;
+            border-radius: 8px;
+            font: 600 13px Consolas, monospace;
+            color: #1d5d8f;
+        }
+
+        .zhy_builtin-cell strong {
+            display: block;
+            margin-top: 4px;
+            font: 700 17px Consolas, monospace;
+            color: #d86d55;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-10-29 大模型：GLM-5.3-FlashX 功能：JavaScript 对象演示 -->
+
+    <div class="zhy_page">
+        <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 16-2 · JavaScript 程序设计</p>
+        <h1 class="zhy_title">JavaScript 对象：属性、方法与内置对象</h1>
+        <p class="zhy_intro">对象是"属性 + 方法"的集合。本页以一个学生对象为例，演示创建、访问、增删改查、遍历以及 Math / Date 内置对象。</p>
+
+        <!-- ========== 演示一：创建对象的三种方式 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 一、创建对象的三种方式</h2>
+            <div class="zhy_code-box"><span class="zhy_c-cm">// ① 对象字面量（最常用）</span>
+<span class="zhy_c-kw">var</span> zhyStudent = {
+    name: <span class="zhy_c-str">'张海玉'</span>,
+    zhyStudentId: <span class="zhy_c-str">'20230101'</span>,
+    study: <span class="zhy_c-kw">function</span> () { <span class="zhy_c-kw">return</span> <span class="zhy_c-str">'正在学习 JS 对象'</span>; }
+};
+
+<span class="zhy_c-cm">// ② new Object()</span>
+<span class="zhy_c-kw">var</span> zhyBook = <span class="zhy_c-kw">new</span> Object();
+zhyBook.title = <span class="zhy_c-str">'高级网页设计'</span>;
+
+<span class="zhy_c-cm">// ③ 自定义构造函数（可批量生产）</span>
+<span class="zhy_c-kw">function</span> ZhyLaptop(brand, ram) {
+    <span class="zhy_c-kw">this</span>.brand = brand;
+    <span class="zhy_c-kw">this</span>.ram = ram;
+}
+<span class="zhy_c-kw">var</span> zhyPc = <span class="zhy_c-kw">new</span> ZhyLaptop(<span class="zhy_c-str">'Lenovo'</span>, 16);</div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn" data-zhy-demo="create">创建并查看三种对象</button>
+            </div>
+            <div class="zhy_out" data-zhy-out="create">点击按钮查看创建结果…</div>
+        </section>
+
+        <!-- ========== 对象状态实时可视化 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 二、对象当前状态（增删改后实时刷新）</h2>
+            <div class="zhy_obj-view" data-zhy-view></div>
+            <p class="zhy_intro" style="margin-top:10px">下面三区的按钮都会修改这个对象，观察上方卡片的实时变化。</p>
+        </section>
+
+        <!-- ========== 演示三：访问属性与方法 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-faxian" aria-hidden="true"></i> 三、访问属性：点语法 vs 方括号</h2>
+            <div class="zhy_code-box">zhyStudent.name            <span class="zhy_c-cm">// 点语法：常用</span>
+zhyStudent[<span class="zhy_c-str">'name'</span>]       <span class="zhy_c-cm">// 方括号：属性名是字符串</span>
+zhyStudent[zhyKeyName]     <span class="zhy_c-cm">// 方括号：可以用变量动态取</span>
+zhyStudent.study()         <span class="zhy_c-cm">// 调用方法（this 指向对象自身）</span></div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn" data-zhy-demo="dot">点语法访问</button>
+                <button type="button" class="zhy_btn" data-zhy-demo="bracket">方括号 + 动态属性名</button>
+                <button type="button" class="zhy_btn" data-zhy-demo="method">调用方法（this）</button>
+            </div>
+            <div class="zhy_out" data-zhy-out="access">点击按钮查看访问结果…</div>
+        </section>
+
+        <!-- ========== 演示四：增删改查 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-zengjia" aria-hidden="true"></i> 四、增删改查属性</h2>
+            <div class="zhy_code-box">zhyStudent.age = 20;              <span class="zhy_c-cm">// 增</span>
+zhyStudent.age = 21;              <span class="zhy_c-cm">// 改（同名覆盖）</span>
+<span class="zhy_c-kw">delete</span> zhyStudent.age;            <span class="zhy_c-cm">// 删</span>
+<span class="zhy_c-str">'age'</span> <span class="zhy_c-kw">in</span> zhyStudent               <span class="zhy_c-cm">// 查：true / false</span></div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn zhy_btn-ok" data-zhy-demo="add">增：添加 age / grade</button>
+                <button type="button" class="zhy_btn" data-zhy-demo="update">改：age 改为 21</button>
+                <button type="button" class="zhy_btn zhy_btn-danger" data-zhy-demo="del">删：delete age</button>
+                <button type="button" class="zhy_btn" data-zhy-demo="check">查：'age' in 对象</button>
+            </div>
+            <div class="zhy_out" data-zhy-out="crud">点击按钮执行操作，注意上方对象卡片变化…</div>
+        </section>
+
+        <!-- ========== 演示五：for...in 遍历 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 五、for...in 遍历对象</h2>
+            <div class="zhy_code-box"><span class="zhy_c-kw">for</span> (<span class="zhy_c-kw">var</span> zhyKey <span class="zhy_c-kw">in</span> zhyStudent) {
+    console.log(zhyKey, zhyStudent[zhyKey]);
+}</div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn" data-zhy-demo="loop">遍历当前对象</button>
+            </div>
+            <table class="zhy_loop-table" data-zhy-table hidden>
+                <thead><tr><th>序号</th><th>属性名 zhyKey</th><th>值</th><th>类型</th></tr></thead>
+                <tbody data-zhy-tbody></tbody>
+            </table>
+        </section>
+
+        <!-- ========== 演示六：内置对象 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> 六、常用内置对象：Math 与 Date</h2>
+            <div class="zhy_code-box">Math.random()          <span class="zhy_c-cm">// [0,1) 随机数</span>
+Math.floor(x)          <span class="zhy_c-cm">// 向下取整</span>
+Math.max(a, b)         <span class="zhy_c-cm">// 最大值</span>
+<span class="zhy_c-kw">new</span> Date()             <span class="zhy_c-cm">// 当前时间对象</span></div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn" data-zhy-demo="math">掷骰子：随机 1~6</button>
+                <button type="button" class="zhy_btn" data-zhy-demo="date">Date 显示当前时间</button>
+            </div>
+            <div class="zhy_builtin-grid" data-zhy-grid hidden>
+                <div class="zhy_builtin-cell">Math.random()<strong data-zhy-val="random">-</strong></div>
+                <div class="zhy_builtin-cell">Math.floor(x10)<strong data-zhy-val="floor">-</strong></div>
+                <div class="zhy_builtin-cell">Math.max / min<strong data-zhy-val="maxmin">-</strong></div>
+                <div class="zhy_builtin-cell">Date 当前时间<strong data-zhy-val="date">-</strong></div>
+            </div>
+        </section>
+
+        <section class="zhy_footer-note">提示：所有演示都会在 F12 控制台同步输出，可打开开发者工具对照查看。</section>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：JavaScript 对象演示脚本
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 核心对象：学生（字面量创建） ---------- */
+        var zhyStudent = {
+            name: '张海玉',
+            zhyStudentId: '20230101',
+            major: '计算机科学与技术',
+            zhyStudy: function () {
+                return this.name + ' 正在《高级网页设计》课上演示 JS 对象';
+            }
+        };
+
+        /* ---------- 工具：渲染对象状态卡片 ---------- */
+        function zhyRenderObj() {
+            var zhyView = document.querySelector('[data-zhy-view]');
+            var zhyHtml = '';
+            for (var zhyKey in zhyStudent) {
+                var zhyVal = zhyStudent[zhyKey];
+                if (typeof zhyVal === 'function') {
+                    zhyVal = 'ƒ 方法';
+                }
+                zhyHtml += '<span class="zhy_prop">'
+                    + '<span class="zhy_prop-key">' + zhyKey + '</span>'
+                    + '<span>:</span>'
+                    + '<span class="zhy_prop-val">' + zhyVal + '</span>'
+                    + '</span>';
+            }
+            zhyView.innerHTML = zhyHtml;
+        }
+
+        zhyRenderObj();
+
+        /* ---------- 工具：写入输出框 + 控制台 ---------- */
+        function zhyEcho(zhyName, zhyText) {
+            var zhyOut = document.querySelector('[data-zhy-out="' + zhyName + '"]');
+            if (zhyOut) {
+                zhyOut.textContent = zhyText;
+            }
+            console.log('[16-2]', zhyText);
+        }
+
+        /* ---------- 按钮事件分发 ---------- */
+        var zhyBtns = document.querySelectorAll('[data-zhy-demo]');
+        Array.prototype.forEach.call(zhyBtns, function (zhyBtn) {
+            zhyBtn.addEventListener('click', function () {
+                zhyHandle(zhyBtn.getAttribute('data-zhy-demo'));
+            });
+        });
+
+        function zhyHandle(zhyDemo) {
+            var zhyMsg = '';
+            switch (zhyDemo) {
+            case 'create':
+                var zhyBook = new Object();
+                zhyBook.title = '高级网页设计';
+                function ZhyLaptop(brand, ram) {
+                    this.brand = brand;
+                    this.ram = ram;
+                }
+                var zhyPc = new ZhyLaptop('Lenovo', 16);
+                zhyMsg = '① 字面量  → ' + JSON.stringify(zhyStudent)
+                    + '\n② new Object() → ' + JSON.stringify(zhyBook)
+                    + '\n③ 构造函数 new ZhyLaptop(...) → ' + JSON.stringify(zhyPc);
+                break;
+
+            case 'dot':
+                zhyMsg = '点语法：zhyStudent.name = "' + zhyStudent.name + '"，学号 = "' + zhyStudent.zhyStudentId + '"';
+                break;
+
+            case 'bracket':
+                var zhyKeyName = 'major';
+                zhyMsg = "方括号动态取值：zhyStudent['name'] = \"" + zhyStudent['name']
+                    + '"\nzhyKeyName = "major" → zhyStudent[zhyKeyName] = "' + zhyStudent[zhyKeyName] + '"';
+                break;
+
+            case 'method':
+                zhyMsg = '调用方法：zhyStudent.zhyStudy() → ' + zhyStudent.zhyStudy() + '（方法内 this.name 取到自身属性）';
+                break;
+
+            case 'add':
+                zhyStudent.age = 20;
+                zhyStudent.grade = '大三';
+                zhyMsg = '增：zhyStudent.age = 20; zhyStudent.grade = "大三";\n当前对象：' + JSON.stringify(zhyStudent);
+                break;
+
+            case 'update':
+                if (zhyStudent.age === undefined) {
+                    zhyMsg = '改：对象还没有 age，请先点【增】';
+                    break;
+                }
+                zhyStudent.age = 21;
+                zhyMsg = '改：zhyStudent.age = 21（同名属性直接覆盖）';
+                break;
+
+            case 'del':
+                if (zhyStudent.age === undefined) {
+                    zhyMsg = '删：age 本就不存在，请先点【增】';
+                    break;
+                }
+                delete zhyStudent.age;
+                zhyMsg = '删：delete zhyStudent.age 成功';
+                break;
+
+            case 'check':
+                zhyMsg = "查：'age' in zhyStudent → " + ('age' in zhyStudent)
+                    + "\n'name' in zhyStudent → " + ('name' in zhyStudent);
+                break;
+
+            case 'loop':
+                var zhyTable = document.querySelector('[data-zhy-table]');
+                var zhyTbody = document.querySelector('[data-zhy-tbody]');
+                var zhyRows = '';
+                var zhyIndex = 1;
+                for (var zhyKey in zhyStudent) {
+                    var zhyVal = zhyStudent[zhyKey];
+                    var zhyType = typeof zhyVal;
+                    var zhyShow = zhyType === 'function' ? 'ƒ zhyStudy()' : String(zhyVal);
+                    zhyRows += '<tr><td>' + (zhyIndex++) + '</td><td>' + zhyKey
+                        + '</td><td>' + zhyShow + '</td><td class="zhy_td-type">' + zhyType + '</td></tr>';
+                }
+                zhyTbody.innerHTML = zhyRows;
+                zhyTable.hidden = false;
+                zhyMsg = 'for...in 共遍历出 ' + (zhyIndex - 1) + ' 个成员，结果见下表（方法也是对象成员）';
+                break;
+
+            case 'math':
+                var zhyGrid = document.querySelector('[data-zhy-grid]');
+                zhyGrid.hidden = false;
+                var zhyRandom = Math.random();
+                var zhyDice = Math.floor(zhyRandom * 6) + 1;
+                var zhyMax = Math.max(3, 18, 7);
+                var zhyMin = Math.min(3, 18, 7);
+                document.querySelector('[data-zhy-val="random"]').textContent = zhyRandom.toFixed(4);
+                document.querySelector('[data-zhy-val="floor"]').textContent = zhyDice;
+                document.querySelector('[data-zhy-val="maxmin"]').textContent = zhyMax + ' / ' + zhyMin;
+                zhyMsg = '随机掷骰子 → ' + zhyDice + ' 点（Math.floor(Math.random() * 6) + 1）';
+                break;
+
+            case 'date':
+                var zhyNow = new Date();
+                var zhyTime = zhyNow.getFullYear() + '-' + (zhyNow.getMonth() + 1) + '-' + zhyNow.getDate()
+                    + ' ' + zhyNow.getHours() + ':' + zhyNow.getMinutes() + ':' + zhyNow.getSeconds();
+                document.querySelector('[data-zhy-grid]').hidden = false;
+                document.querySelector('[data-zhy-val="date"]').textContent = zhyTime;
+                zhyMsg = 'new Date() → ' + zhyTime;
+                break;
+            }
+            zhyEcho(zhyDemo === 'loop' ? 'loop' : 'crud', zhyMsg);
+            if (zhyDemo === 'add' || zhyDemo === 'update' || zhyDemo === 'del') {
+                zhyRenderObj();
+            }
+        }
+
+        console.log('[16-2] 张海玉：JS 对象演示页加载完成');
+    </script>
+</body>
+</html>
