@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿微博网页版 · 首页设计</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* ===== 本页私有样式：仿微博网页版布局 ===== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            background: #f2f2f5;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #333;
+        }
+
+        /* ---------- 顶部地球横幅 ---------- */
+        .zhy_banner {
+            position: relative;
+            height: 240px;
+            background:
+                radial-gradient(ellipse 160% 90% at 50% 130%, #2a5d8f 0%, #123a5e 45%, transparent 70%),
+                radial-gradient(circle 3px at 12% 22%, rgba(255,255,255,.9) 50%, transparent 51%),
+                radial-gradient(circle 2px at 28% 12%, rgba(255,255,255,.7) 50%, transparent 51%),
+                radial-gradient(circle 2px at 74% 18%, rgba(255,255,255,.8) 50%, transparent 51%),
+                radial-gradient(circle 3px at 88% 30%, rgba(255,255,255,.6) 50%, transparent 51%),
+                radial-gradient(circle 2px at 55% 8%, rgba(255,255,255,.75) 50%, transparent 51%),
+                linear-gradient(180deg, #04070f 0%, #0a1526 55%, #123a5e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+        }
+
+        .zhy_logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        /* 纯 CSS 画的微博"眼睛"logo */
+        .zhy_logo-eye {
+            position: relative;
+            width: 52px;
+            height: 36px;
+            border: 4px solid #fff;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        }
+
+        .zhy_logo-eye::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 7px;
+            width: 14px;
+            height: 14px;
+            background: #ff8200;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .zhy_logo-name {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            line-height: 1;
+        }
+
+        .zhy_logo-name small {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            opacity: .8;
+        }
+
+        /* 搜索框 */
+        .zhy_search {
+            display: flex;
+            width: 460px;
+            max-width: 86%;
+            border-radius: 21px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,.3);
+        }
+
+        .zhy_search-input {
+            flex: 1;
+            padding: 11px 18px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .zhy_search-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0 24px;
+            background: #ff8200;
+            border: none;
+            color: #fff;
+            font: 700 15px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .zhy_search-btn:hover { background: #eb7350; }
+
+        /* ---------- 三栏主体 ---------- */
+        .zhy_layout {
+            display: grid;
+            grid-template-columns: 190px minmax(0, 1fr) 280px;
+            gap: 16px;
+            max-width: 1100px;
+            margin: 16px auto 40px;
+            padding: 0 14px;
+            align-items: start;
+        }
+
+        .zhy_card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+        }
+
+        /* ---------- 左栏菜单 ---------- */
+        .zhy_side-menu { padding: 8px 0; }
+
+        .zhy_side-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .zhy_side-item .iconfont { font-size: 17px; color: #ff8200; }
+
+        .zhy_side-item.zhy_side-strong { font-weight: 700; }
+
+        .zhy_side-item:hover,
+        .zhy_side-item.zhy_side-on {
+            background: #fff4ea;
+            color: #ff8200;
+        }
+
+        .zhy_side-dot {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zhy_side-dot::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #c8c8ce;
+        }
+
+        /* ---------- 中栏 ---------- */
+        .zhy_tabs {
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            background: #fff;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 1px solid #f0f0f0;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+        }
+
+        .zhy_tab {
+            padding: 13px 15px;
+            color: #333;
+            font-size: 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: color .15s ease;
+        }
+
+        .zhy_tab:hover { color: #ff8200; }
+
+        .zhy_tab.zhy_tab-on {
+            color: #ff8200;
+            font-weight: 700;
+            border-bottom-color: #ff8200;
+        }
+
+        .zhy_tab-more {
+            margin-left: auto;
+            padding: 13px 10px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .zhy_feed { border-radius: 0 0 10px 10px; box-shadow: none; }
+
+        /* ---------- 微博卡片 ---------- */
+        .zhy_weibo {
+            padding: 16px 18px 0;
+            background: #fff;
+            border-bottom: 8px solid #f2f2f5;
+        }
+
+        .zhy_weibo:last-child { border-bottom: none; border-radius: 0 0 10px 10px; }
+
+        .zhy_wb-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zhy_avatar {
+            position: relative;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            color: #fff;
+            font: 700 17px/46px "Microsoft YaHei", sans-serif;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .zhy_avatar.zhy_av-autumn { background: linear-gradient(135deg, #d98b5f, #8f5a3c); }
+
+        .zhy_avatar.zhy_av-nba { background: linear-gradient(135deg, #1d5d8f, #17212b); font-size: 13px; }
+
+        .zhy_v-badge {
+            position: absolute;
+            right: -3px;
+            bottom: -1px;
+            width: 16px;
+            height: 16px;
+            background: #ffae00;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            color: #fff;
+            font: 700 9px/12px sans-serif;
+            text-align: center;
+        }
+
+        .zhy_wb-user { flex: 1; min-width: 0; }
+
+        .zhy_wb-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .zhy_wb-name .zhy_wb-topic-tag {
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        .zhy_wb-topic-tag {
+            color: #eb7350;
+            background: #fdf0ec;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .zhy_wb-meta { color: #999; font-size: 12px; margin-top: 3px; }
+
+        .zhy_follow-btn {
+            padding: 5px 16px;
+            background: #ff8200;
+            border: 1px solid #ff8200;
+            border-radius: 15px;
+            color: #fff;
+            font: 600 13px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .zhy_follow-btn:hover { background: #eb7350; border-color: #eb7350; }
+
+        .zhy_follow-btn.zhy_followed {
+            background: #fff;
+            color: #999;
+            border-color: #d9d9d9;
+        }
+
+        /* 正文 */
+        .zhy_wb-text {
+            margin: 12px 0 0;
+            font-size: 14px;
+            line-height: 1.75;
+            color: #333;
+        }
+
+        .zhy_wb-text .zhy_topic { color: #eb7350; }
+
+        /* 配图 */
+        .zhy_wb-img {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            margin-top: 12px;
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+        }
+
+        /* 操作栏 */
+        .zhy_wb-actions {
+            display: flex;
+            margin-top: 10px;
+            border-top: 1px solid #f5f5f7;
+        }
+
+        .zhy_act {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px 0;
+            color: #808080;
+            font-size: 13px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color .15s ease;
+        }
+
+        .zhy_act .iconfont { font-size: 16px; }
+
+        .zhy_act:hover { color: #ff8200; }
+
+        .zhy_act.zhy_act-on { color: #ff8200; font-weight: 700; }
+
+        /* ---------- 右栏 ---------- */
+        .zhy_side-right { display: grid; gap: 16px; }
+
+        .zhy_fresh-card {
+            padding: 26px 20px;
+            background: linear-gradient(150deg, #ffb35c, #ff8200 55%, #eb7350);
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 130, 0, .25);
+        }
+
+        .zhy_fresh-card .zhy_fresh-slogan {
+            margin: 0 0 16px;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1.55;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 3px rgba(180, 80, 0, .35);
+        }
+
+        .zhy_fresh-card .zhy_fresh-btn {
+            padding: 8px 34px;
+            background: #fff;
+            border: none;
+            border-radius: 18px;
+            color: #ff8200;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: transform .15s ease;
+        }
+
+        .zhy_fresh-card .zhy_fresh-btn:hover { transform: scale(1.04); }
+
+        /* 热搜卡 */
+        .zhy_hot-head {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 13px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .zhy_hot-head .iconfont { color: #ff8200; font-size: 17px; }
+
+        .zhy_hot-head .zhy_hot-refresh {
+            margin-left: auto;
+            color: #999;
+            font-size: 13px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .zhy_hot-head .zhy_hot-refresh:hover { color: #ff8200; }
+
+        .zhy_hot-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 16px;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            transition: background .12s ease;
+        }
+
+        .zhy_hot-item:hover { background: #fff4ea; }
+
+        .zhy_hot-rank {
+            width: 18px;
+            font: 700 14px Consolas, sans-serif;
+            font-style: italic;
+            color: #b8b8c0;
+            text-align: center;
+        }
+
+        .zhy_hot-item:nth-child(2) .zhy_hot-rank { color: #ff3b30; }
+        .zhy_hot-item:nth-child(3) .zhy_hot-rank { color: #ff7a3c; }
+        .zhy_hot-item:nth-child(4) .zhy_hot-rank { color: #ffae00; }
+
+        .zhy_hot-text {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .zhy_hot-badge {
+            flex-shrink: 0;
+            padding: 0 4px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 10px;
+            line-height: 15px;
+        }
+
+        .zhy_hot-badge.zhy_b-hot { background: #ff3b30; }
+
+        .zhy_hot-badge.zhy_b-new { background: #ffae00; }
+
+        .zhy_hot-badge.zhy_b-rec { background: #3a9d5d; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-10-29 大模型：GLM-5.3-Flash 功能：仿微博网页版首页设计 -->
+    <header class="zhy_banner">
+        <div class="zhy_logo">
+            <span class="zhy_logo-eye" aria-hidden="true"></span>
+            <span class="zhy_logo-name">微博<small>weibo.com</small></span>
+        </div>
+        <div class="zhy_search">
+            <input type="text" class="zhy_search-input" placeholder="搜索微博">
+            <button type="button" class="zhy_search-btn"><i class="iconfont icon-sousuo" aria-hidden="true"></i>搜索</button>
+        </div>
+    </header>
+
+    <div class="zhy_layout">
+        <!-- 左栏：导航菜单 -->
+        <aside class="zhy_card zhy_side-menu" aria-label="左侧导航">
+            <a class="zhy_side-item zhy_side-strong zhy_side-on"><i class="iconfont icon-tuijian" aria-hidden="true"></i>我的推荐</a>
+            <a class="zhy_side-item"><i class="iconfont icon-faxian" aria-hidden="true"></i>热门榜单</a>
+            <a class="zhy_side-item"><i class="iconfont icon-sousuo" aria-hidden="true"></i>微博热搜</a>
+            <a class="zhy_side-item zhy_side-dot">我的</a>
+            <a class="zhy_side-item zhy_side-dot">热榜</a>
+            <a class="zhy_side-item zhy_side-dot">文娱</a>
+            <a class="zhy_side-item zhy_side-dot">社会</a>
+            <a class="zhy_side-item zhy_side-dot">科技</a>
+            <a class="zhy_side-item zhy_side-dot">生活</a>
+            <a class="zhy_side-item zhy_side-dot">体育</a>
+            <a class="zhy_side-item zhy_side-dot">ACG</a>
+        </aside>
+
+        <!-- 中栏：信息流 -->
+        <main>
+            <nav class="zhy_tabs" aria-label="频道切换">
+                <span class="zhy_tab zhy_tab-on">热门</span>
+                <span class="zhy_tab">同城</span>
+                <span class="zhy_tab">实时</span>
+                <span class="zhy_tab">S16</span>
+                <span class="zhy_tab">视界大会</span>
+                <span class="zhy_tab">榜单</span>
+                <span class="zhy_tab">明星</span>
+                <span class="zhy_tab-more"><i class="iconfont icon-gengduo" aria-hidden="true"></i></span>
+            </nav>
+
+            <div class="zhy_feed">
+                <!-- 微博一 -->
+                <article class="zhy_weibo">
+                    <div class="zhy_wb-head">
+                        <span class="zhy_avatar zhy_av-autumn">秋<span class="zhy_v-badge">V</span></span>
+                        <div class="zhy_wb-user">
+                            <div class="zhy_wb-name">秋色赋潮汐光</div>
+                            <div class="zhy_wb-meta">2小时前</div>
+                        </div>
+                        <button type="button" class="zhy_follow-btn">+关注</button>
+                    </div>
+                    <p class="zhy_wb-text">
+                        <span class="zhy_topic">#王一挪威内涵演#王一倒在说谁#</span><br>
+                        王一挪威这回在内涵谁？他发文，说所有作品的要求就是演员听话、敬业，每个阶段投资几个亿，我决定不会把资源压在不合适的演员身上。
+                    </p>
+                    <img class="zhy_wb-img" src="./img/1.jpg" alt="微博配图">
+                    <div class="zhy_wb-actions">
+                        <button type="button" class="zhy_act"><i class="iconfont icon-bianji" aria-hidden="true"></i>转发 13</button>
+                        <button type="button" class="zhy_act"><i class="iconfont icon-xinxi" aria-hidden="true"></i>评论 125</button>
+                        <button type="button" class="zhy_act zhy_like"><i class="iconfont icon-xihuan" aria-hidden="true"></i>赞 <span class="zhy_like-num">1984</span></button>
+                    </div>
+                </article>
+
+                <!-- 微博二 -->
+                <article class="zhy_weibo">
+                    <div class="zhy_wb-head">
+                        <span class="zhy_avatar zhy_av-nba">NBA</span>
+                        <div class="zhy_wb-user">
+                            <div class="zhy_wb-name">NBA <span class="zhy_wb-topic-tag">NBA超话</span></div>
+                            <div class="zhy_wb-meta">5分钟前 来自微博网页版</div>
+                        </div>
+                        <button type="button" class="zhy_follow-btn">+关注</button>
+                    </div>
+                    <p class="zhy_wb-text">
+                        <span class="zhy_topic">【库里半节中5记三分】</span>库里第二节单节轰火，外线飙进5记三分，单节5记！帮助勇士上一分差。上半场篮球23分！#库里半节11分# NBA超话的微博视频
+                    </p>
+                    <img class="zhy_wb-img" src="./img/2.jpeg" alt="微博配图">
+                    <div class="zhy_wb-actions">
+                        <button type="button" class="zhy_act"><i class="iconfont icon-bianji" aria-hidden="true"></i>转发 302</button>
+                        <button type="button" class="zhy_act"><i class="iconfont icon-xinxi" aria-hidden="true"></i>评论 861</button>
+                        <button type="button" class="zhy_act zhy_like"><i class="iconfont icon-xihuan" aria-hidden="true"></i>赞 <span class="zhy_like-num">4207</span></button>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <!-- 右栏：新鲜事 + 热搜 -->
+        <aside class="zhy_side-right" aria-label="右侧栏">
+            <section class="zhy_fresh-card">
+                <p class="zhy_fresh-slogan">随时随地<br>发现新鲜事</p>
+                <button type="button" class="zhy_fresh-btn">登录注册</button>
+            </section>
+
+            <section class="zhy_card">
+                <div class="zhy_hot-head">
+                    <i class="iconfont icon-faxian" aria-hidden="true"></i>微博热搜
+                    <span class="zhy_hot-refresh"><i class="iconfont icon-gengduo" aria-hidden="true"></i> 换一换</span>
+                </div>
+                <div class="zhy_hot-item"><span class="zhy_hot-rank">1</span><span class="zhy_hot-text">在自己我念中不断激发蓬勃生长</span><span class="zhy_hot-badge zhy_b-hot">热</span></div>
+                <div class="zhy_hot-item"><span class="zhy_hot-rank">2</span><span class="zhy_hot-text">三丽鸥致歉</span><span class="zhy_hot-badge zhy_b-hot">爆</span></div>
+                <div class="zhy_hot-item"><span class="zhy_hot-rank">3</span><span class="zhy_hot-text">不会对方还在女主播 Name 各种...</span><span class="zhy_hot-badge zhy_b-new">新</span></div>
+                <div class="zhy_hot-item"><span class="zhy_hot-rank">4</span><span class="zhy_hot-text">我国农产品全面越过防线增长..</span><span class="zhy_hot-badge zhy_b-rec">荐</span></div>
+                <div class="zhy_hot-item"><span class="zhy_hot-rank">5</span><span class="zhy_hot-text">GDP 十强城市大洗牌</span></div>
+            </section>
+        </aside>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：仿微博网页版首页交互
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 顶部搜索 ---------- */
+        var zhySearchBtn = document.querySelector('.zhy_search-btn');
+        var zhySearchInput = document.querySelector('.zhy_search-input');
+
+        zhySearchBtn.addEventListener('click', function () {
+            var zhyKw = zhySearchInput.value.trim() || '搜索微博';
+            console.log('[搜索] 关键词：', zhyKw);
+        });
+
+        /* ---------- 中栏频道 tab 切换 ---------- */
+        var zhyTabs = document.querySelectorAll('.zhy_tab');
+        Array.prototype.forEach.call(zhyTabs, function (zhyTab) {
+            zhyTab.addEventListener('click', function () {
+                Array.prototype.forEach.call(zhyTabs, function (zhyT) {
+                    zhyT.classList.remove('zhy_tab-on');
+                });
+                zhyTab.classList.add('zhy_tab-on');
+                console.log('[频道] 切换到 →', zhyTab.textContent);
+            });
+        });
+
+        /* ---------- 关注按钮 ---------- */
+        var zhyFollowBtns = document.querySelectorAll('.zhy_follow-btn');
+        Array.prototype.forEach.call(zhyFollowBtns, function (zhyBtn) {
+            zhyBtn.addEventListener('click', function () {
+                var zhyFollowed = zhyBtn.classList.toggle('zhy_followed');
+                zhyBtn.textContent = zhyFollowed ? '已关注' : '+关注';
+                console.log('[关注]', zhyFollowed ? '已关注' : '取消关注');
+            });
+        });
+
+        /* ---------- 点赞：再点一次取消 ---------- */
+        var zhyLikeBtns = document.querySelectorAll('.zhy_like');
+        Array.prototype.forEach.call(zhyLikeBtns, function (zhyBtn) {
+            zhyBtn.addEventListener('click', function () {
+                var zhyNumEl = zhyBtn.querySelector('.zhy_like-num');
+                var zhyOn = zhyBtn.classList.toggle('zhy_act-on');
+                zhyNumEl.textContent = Number(zhyNumEl.textContent) + (zhyOn ? 1 : -1);
+                console.log('[点赞]', zhyOn ? '+1' : '-1', '当前', zhyNumEl.textContent);
+            });
+        });
+
+        /* ---------- 左栏菜单与热搜条目 ---------- */
+        var zhySideItems = document.querySelectorAll('.zhy_side-item');
+        Array.prototype.forEach.call(zhySideItems, function (zhyItem) {
+            zhyItem.addEventListener('click', function () {
+                console.log('[菜单]', zhyItem.textContent.trim());
+            });
+        });
+
+        var zhyHotItems = document.querySelectorAll('.zhy_hot-item');
+        Array.prototype.forEach.call(zhyHotItems, function (zhyItem) {
+            zhyItem.addEventListener('click', function () {
+                console.log('[热搜]', zhyItem.querySelector('.zhy_hot-text').textContent);
+            });
+        });
+
+        console.log('[13.5] 张海玉：仿微博首页加载完成');
+    </script>
+</body>
+</html>
