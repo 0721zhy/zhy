@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 数组方法 · 可视化演示</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* ===== 本页私有样式（公共部分来自 css.css 全局样式表） ===== */
+
+        .zhy_section-desc {
+            margin: 0 0 12px;
+            color: #5b6b76;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* ---------- 数组可视化条 ---------- */
+        .zhy_arr-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: rgba(29, 93, 143, .05);
+            border: 1px dashed #b9d4e6;
+            border-radius: 12px;
+            min-height: 64px;
+        }
+
+        .zhy_cell {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            min-width: 64px;
+            padding: 10px 12px 8px;
+            background: #fff;
+            border: 1.5px solid #c9dbe8;
+            border-radius: 10px;
+            color: #1d5d8f;
+            font: 700 14px/1.2 "Microsoft YaHei", sans-serif;
+            box-shadow: 0 2px 6px rgba(23, 33, 43, .05);
+        }
+
+        /* 索引标签 */
+        .zhy_cell em {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            padding: 0 6px;
+            background: #1d5d8f;
+            border-radius: 7px;
+            color: #fff;
+            font: 700 10px/14px Consolas, monospace;
+            font-style: normal;
+            transform: translateX(-50%);
+        }
+
+        .zhy_cell.zhy_cell-empty {
+            border-style: dashed;
+            color: #9aa6ae;
+            font-weight: 400;
+        }
+
+        /* 新增元素：绿色弹入 */
+        .zhy_cell.zhy_cell-new {
+            border-color: #3a9d5d;
+            color: #2c7a47;
+            background: #ecf9f1;
+            animation: zhy_pop-in .45s ease;
+        }
+
+        /* 命中元素：黄色闪烁 */
+        .zhy_cell.zhy_cell-hit {
+            border-color: #e8a13a;
+            color: #b0731a;
+            background: #fdf6e6;
+            animation: zhy_flash .8s ease 2;
+        }
+
+        /* 淘汰元素：灰色降级 */
+        .zhy_cell.zhy_cell-dim {
+            border-color: #d8dee2;
+            background: #f2f4f5;
+            color: #9aa6ae;
+            text-decoration: line-through;
+            opacity: .65;
+        }
+
+        @keyframes zhy_pop-in {
+            0%   { transform: scale(.3) translateY(8px); opacity: 0; }
+            70%  { transform: scale(1.12); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes zhy_flash {
+            0%, 100% { background: #fdf6e6; }
+            50%      { background: #ffe9b3; }
+        }
+
+        /* ---------- 操作行与按钮 ---------- */
+        .zhy_demo-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 13px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 600 13px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: background .2s ease, transform .15s ease;
+        }
+
+        .zhy_btn:hover { background: #164a73; transform: translateY(-1px); }
+
+        .zhy_btn .iconfont { font-size: 14px; }
+
+        .zhy_btn.zhy_btn-ghost {
+            background: #fff;
+            color: #1d5d8f;
+            box-shadow: inset 0 0 0 1px #c9dbe8;
+        }
+
+        .zhy_btn.zhy_btn-ghost:hover { background: #eef5f9; }
+
+        .zhy_btn.zhy_btn-warn { background: #d86d55; }
+
+        .zhy_btn.zhy_btn-warn:hover { background: #b5503c; }
+
+        .zhy_code-inline {
+            padding: 1px 7px;
+            background: #eef3f6;
+            border-radius: 5px;
+            color: #1d5d8f;
+            font: 600 12px Consolas, monospace;
+        }
+
+        /* ---------- 结果输出 ---------- */
+        .zhy_result {
+            padding: 11px 15px;
+            background: rgba(29, 93, 143, .06);
+            border-left: 4px solid #1d5d8f;
+            color: #17212b;
+            font: 600 13px/1.8 "Microsoft YaHei", sans-serif;
+            min-height: 20px;
+        }
+
+        .zhy_result .zhy_ret { color: #b5503c; }
+
+        /* 流程箭头（map / join 等展示） */
+        .zhy_flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            font: 700 15px "Microsoft YaHei", sans-serif;
+            color: #1d5d8f;
+        }
+
+        .zhy_flow .zhy_arrow {
+            color: #d86d55;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-10-29 大模型：GLM-5.3-Flash 功能：JS 数组主要方法可视化演示 -->
+    <div class="zhy_page">
+        <header>
+            <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i>课堂实践 16-1</p>
+            <h1 class="zhy_title">JS 数组方法 · 可视化演示</h1>
+            <p class="zhy_intro">数组是最常用的数据结构。本页把数组画成<strong>带索引的方块条</strong>：绿色弹入 = 新增，黄色闪烁 = 命中，灰色划线 = 淘汰。每个方法都可点击运行，结果同步打印到 F12 控制台。</p>
+        </header>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-zengjia" aria-hidden="true"></i>一、增删四方法 · push / pop / unshift / shift</h2>
+            <p class="zhy_section-desc"><code class="zhy_code-inline">push</code> 尾部加、<code class="zhy_code-inline">pop</code> 尾部删（栈）；<code class="zhy_code-inline">unshift</code> 头部加、<code class="zhy_code-inline">shift</code> 头部删（队列）。除 push 外都<strong>返回被删的那个元素</strong>。</p>
+            <div class="zhy_arr-bar zhy_bar-stack"></div>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_op-push"><i class="iconfont icon-zengjia" aria-hidden="true"></i>push('草莓')</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-pop"><i class="iconfont icon-shanchu" aria-hidden="true"></i>pop()</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-unshift"><i class="iconfont icon-zengjia" aria-hidden="true"></i>unshift('西瓜')</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-shift"><i class="iconfont icon-shanchu" aria-hidden="true"></i>shift()</button>
+            </div>
+            <div class="zhy_result zhy_result-stack">点击按钮试试，注意数组长度与索引的变化…</div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-gengduo" aria-hidden="true"></i>二、查找 · indexOf / includes</h2>
+            <p class="zhy_section-desc"><code class="zhy_code-inline">indexOf(x)</code> 返回第一次出现的索引（找不到返回 -1）；<code class="zhy_code-inline">includes(x)</code> 只回答"有没有"（true / false）。命中的方块会黄色闪烁。</p>
+            <div class="zhy_arr-bar zhy_bar-find"></div>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_op-indexof"><i class="iconfont icon-sousuo" aria-hidden="true"></i>indexOf('香蕉')</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-includes-yes"><i class="iconfont icon-faxian" aria-hidden="true"></i>includes('葡萄')</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-includes-no"><i class="iconfont icon-faxian" aria-hidden="true"></i>includes('榴莲')</button>
+            </div>
+            <div class="zhy_result zhy_result-find">等待查找…</div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-bianji" aria-hidden="true"></i>三、截取 · slice 与 splice 的区别</h2>
+            <p class="zhy_section-desc"><code class="zhy_code-inline">slice(1, 3)</code> 是"复印机"——剪出副本，<strong>原数组不变</strong>；<code class="zhy_code-inline">splice(1, 1, '…')</code> 是"手术刀"——<strong>直接修改原数组</strong>，还能顺带插入。点击后对比两组数组条。</p>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_op-slice"><i class="iconfont icon-tuijian" aria-hidden="true"></i>slice(1, 3)</button>
+                <button type="button" class="zhy_btn zhy_btn-warn zhy_op-splice"><i class="iconfont icon-shanchu" aria-hidden="true"></i>splice(1, 1, '芒果')</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-reset3"><i class="iconfont icon-gengduo" aria-hidden="true"></i>复位数组</button>
+            </div>
+            <div class="zhy_result">slice 组：原数组 <span class="zhy_bar-slice-src" style="font-weight:700"></span></div>
+            <div class="zhy_arr-bar zhy_bar-slice-new"></div>
+            <div class="zhy_result">splice 组：原数组 <span class="zhy_bar-splice-src" style="font-weight:700"></span></div>
+            <div class="zhy_arr-bar zhy_bar-splice-new"></div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-gouwuche" aria-hidden="true"></i>四、转换 · join / reverse / sort 排序的坑</h2>
+            <p class="zhy_section-desc"><code class="zhy_code-inline">join('→')</code> 把数组连成字符串；<code class="zhy_code-inline">reverse()</code> 原地翻转。<strong>重点演示 sort 的坑</strong>：默认按字典序比较，<code class="zhy_code-inline">[10,9,88,25].sort()</code> 会得到 <code class="zhy_code-inline">[10,25,88,9]</code>——数字必须传比较函数！</p>
+            <div class="zhy_arr-bar zhy_bar-conv"></div>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_op-join"><i class="iconfont icon-xinxi" aria-hidden="true"></i>join(' → ')</button>
+                <button type="button" class="zhy_btn zhy_btn-ghost zhy_op-reverse"><i class="iconfont icon-shipin" aria-hidden="true"></i>reverse()</button>
+                <button type="button" class="zhy_btn zhy_btn-warn zhy_op-sort-bad"><i class="iconfont icon-shanchu" aria-hidden="true"></i>sort() 默认（错误示范）</button>
+                <button type="button" class="zhy_btn zhy_op-sort-good"><i class="iconfont icon-xihuan" aria-hidden="true"></i>sort((a,b) =&gt; a-b)（正确）</button>
+            </div>
+            <div class="zhy_result zhy_result-conv">等待操作…</div>
+            <div class="zhy_flow zhy_flow-conv"></div>
+        </section>
+
+        <section class="zhy_section">
+            <h2 class="zhy_section-title"><i class="iconfont icon-my" aria-hidden="true"></i>五、迭代四剑客 · forEach / map / filter / reduce</h2>
+            <p class="zhy_section-desc">以成绩数组 <code class="zhy_code-inline">[88, 45, 92, 67, 73]</code> 为例：<code class="zhy_code-inline">forEach</code> 逐个遍历；<code class="zhy_code-inline">map</code> 一对一加工出新数组；<code class="zhy_code-inline">filter</code> 按条件筛选（不达标划线降级）；<code class="zhy_code-inline">reduce</code> 滚雪球式累计。</p>
+            <div class="zhy_arr-bar zhy_bar-iter"></div>
+            <div class="zhy_demo-row">
+                <button type="button" class="zhy_btn zhy_op-foreach"><i class="iconfont icon-bianji" aria-hidden="true"></i>forEach 打印</button>
+                <button type="button" class="zhy_btn zhy_op-map"><i class="iconfont icon-zengjia" aria-hidden="true"></i>map 全部加 5 分</button>
+                <button type="button" class="zhy_btn zhy_op-filter"><i class="iconfont icon-faxian" aria-hidden="true"></i>filter 筛出 ≥70</button>
+                <button type="button" class="zhy_btn zhy_op-reduce"><i class="iconfont icon-gouwuche" aria-hidden="true"></i>reduce 求总分</button>
+            </div>
+            <div class="zhy_result zhy_result-iter">等待迭代…</div>
+            <div class="zhy_flow zhy_flow-iter"></div>
+        </section>
+
+        <p class="zhy_footer"><i class="iconfont icon-xihuan" aria-hidden="true"></i>记忆口诀：push/pop 管尾巴，unshift/shift 管脑袋；slice 复印不改原件，splice 动刀原数组变；map 加工、filter 挑拣、reduce 汇总。</p>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：JS 数组主要方法可视化演示
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 通用工具：把数组渲染成带索引的方块条 ---------- */
+        function zhyRenderBar(zhyBox, zhyArr, zhyMark) {
+            // zhyMark: { new: 索引数组 } 需要绿色弹入的元素
+            zhyMark = zhyMark || {};
+            zhyBox.innerHTML = '';
+
+            if (!zhyArr.length) {
+                zhyBox.innerHTML = '<span class="zhy_cell zhy_cell-empty">（空数组）</span>';
+                return;
+            }
+            zhyArr.forEach(function (zhyVal, zhyIdx) {
+                var zhyCell = document.createElement('span');
+                zhyCell.className = 'zhy_cell';
+                if ((zhyMark.new || []).indexOf(zhyIdx) > -1) zhyCell.classList.add('zhy_cell-new');
+                if ((zhyMark.hit || []).indexOf(zhyIdx) > -1) zhyCell.classList.add('zhy_cell-hit');
+                if ((zhyMark.dim || []).indexOf(zhyIdx) > -1) zhyCell.classList.add('zhy_cell-dim');
+                var zhyIdxTag = document.createElement('em');
+                zhyIdxTag.textContent = zhyIdx;
+                zhyCell.appendChild(zhyIdxTag);
+                zhyCell.appendChild(document.createTextNode(zhyVal));
+                zhyBox.appendChild(zhyCell);
+            });
+        }
+
+        function zhyBox(zhyCls) { return document.querySelector(zhyCls); }
+        function zhyShow(zhyCls, zhyHtml) { zhyBox(zhyCls).innerHTML = zhyHtml; }
+
+        /* ================= 演示一：增删四方法 ================= */
+        var zhyStack = ['苹果', '香蕉', '葡萄'];
+        var zhyStackBar = zhyBox('.zhy_bar-stack');
+        var zhyStackResult = '.zhy_result-stack';
+
+        function zhyDrawStack() {
+            zhyRenderBar(zhyStackBar, zhyStack, { new: [zhyStack._zhyNewIdx] });
+            delete zhyStack._zhyNewIdx;
+        }
+        zhyDrawStack();
+
+        zhyBox('.zhy_op-push').addEventListener('click', function () {
+            var zhyLen = zhyStack.push('草莓');
+            zhyStack._zhyNewIdx = zhyStack.length - 1;
+            zhyDrawStack();
+            zhyShow(zhyStackResult, 'push 在<strong>尾部</strong>加入"草莓"，返回新长度 = <span class="zhy_ret">' + zhyLen + '</span>');
+            console.log('[push]', zhyStack.join(','), '→ 长度', zhyLen);
+        });
+
+        zhyBox('.zhy_op-pop').addEventListener('click', function () {
+            if (!zhyStack.length) { zhyShow(zhyStackResult, '数组已空，pop 无物可删'); return; }
+            var zhyGone = zhyStack.pop();
+            zhyDrawStack();
+            zhyShow(zhyStackResult, 'pop 从<strong>尾部</strong>删除并返回：<span class="zhy_ret">' + zhyGone + '</span>');
+            console.log('[pop] 删除', zhyGone, '→ 剩余', zhyStack.join(','));
+        });
+
+        zhyBox('.zhy_op-unshift').addEventListener('click', function () {
+            var zhyLen = zhyStack.unshift('西瓜');
+            zhyStack._zhyNewIdx = 0;
+            zhyDrawStack();
+            zhyShow(zhyStackResult, 'unshift 在<strong>头部</strong>插入"西瓜"，后面元素索引全部 +1，返回新长度 = <span class="zhy_ret">' + zhyLen + '</span>');
+            console.log('[unshift]', zhyStack.join(','), '→ 长度', zhyLen);
+        });
+
+        zhyBox('.zhy_op-shift').addEventListener('click', function () {
+            if (!zhyStack.length) { zhyShow(zhyStackResult, '数组已空，shift 无物可删'); return; }
+            var zhyGone = zhyStack.shift();
+            zhyDrawStack();
+            zhyShow(zhyStackResult, 'shift 从<strong>头部</strong>删除并返回：<span class="zhy_ret">' + zhyGone + '</span>，后面元素索引全部 -1');
+            console.log('[shift] 删除', zhyGone, '→ 剩余', zhyStack.join(','));
+        });
+
+        /* ================= 演示二：查找 ================= */
+        var zhyFruits = ['苹果', '香蕉', '葡萄', '橙子', '香蕉'];
+        var zhyFindBar = zhyBox('.zhy_bar-find');
+        var zhyFindResult = '.zhy_result-find';
+
+        function zhyDrawFind(zhyMark) {
+            zhyRenderBar(zhyFindBar, zhyFruits, zhyMark);
+        }
+        zhyDrawFind();
+
+        zhyBox('.zhy_op-indexof').addEventListener('click', function () {
+            var zhyIdx = zhyFruits.indexOf('香蕉');
+            zhyDrawFind({ hit: [zhyIdx] });
+            zhyShow(zhyFindResult, "indexOf('香蕉') = <span class='zhy_ret'>" + zhyIdx + "</span> —— 只认<strong>第一个</strong>命中的，后面索引 4 的『香蕉』被无视");
+            console.log('[indexOf] 香蕉 →', zhyIdx);
+        });
+
+        zhyBox('.zhy_op-includes-yes').addEventListener('click', function () {
+            var zhyHas = zhyFruits.includes('葡萄');
+            zhyDrawFind({ hit: [2] });
+            zhyShow(zhyFindResult, "includes('葡萄') = <span class='zhy_ret'>" + zhyHas + "</span> —— 只判断存在性，不需要知道位置");
+            console.log('[includes] 葡萄 →', zhyHas);
+        });
+
+        zhyBox('.zhy_op-includes-no').addEventListener('click', function () {
+            var zhyHas = zhyFruits.includes('榴莲');
+            zhyDrawFind();
+            zhyShow(zhyFindResult, "includes('榴莲') = <span class='zhy_ret'>" + zhyHas + "</span> —— 不存在；若用 indexOf 会返回 <strong>-1</strong>");
+            console.log('[includes] 榴莲 →', zhyHas);
+        });
+
+        /* ================= 演示三：slice 与 splice ================= */
+        var zhySliceArr, zhySpliceArr;
+        var zhySliceNewBar = zhyBox('.zhy_bar-slice-new');
+        var zhySpliceNewBar = zhyBox('.zhy_bar-splice-new');
+
+        function zhyReset3() {
+            zhySliceArr = ['苹果', '香蕉', '葡萄', '橙子', '西瓜'];
+            zhySpliceArr = ['苹果', '香蕉', '葡萄', '橙子', '西瓜'];
+            zhyShow('.zhy_bar-slice-src', '[' + zhySliceArr.join(', ') + ']');
+            zhyShow('.zhy_bar-splice-src', '[' + zhySpliceArr.join(', ') + ']');
+            zhyRenderBar(zhySliceNewBar, zhySliceArr);
+            zhyRenderBar(zhySpliceNewBar, zhySpliceArr);
+        }
+        zhyReset3();
+
+        zhyBox('.zhy_op-slice').addEventListener('click', function () {
+            var zhyPart = zhySliceArr.slice(1, 3);   // 取索引 1、2，不含 3
+            zhyShow('.zhy_bar-slice-src', '[' + zhySliceArr.join(', ') + ']（原数组<b>纹丝不动</b>）');
+            zhyRenderBar(zhySliceNewBar, zhyPart, { new: [0, 1] });
+            console.log('[slice] 截取', zhyPart.join(','));
+        });
+
+        zhyBox('.zhy_op-splice').addEventListener('click', function () {
+            var zhyGone = zhySpliceArr.splice(1, 1, '芒果');   // 从索引 1 删 1 个，再插入
+            zhyShow('.zhy_bar-splice-src', '[' + zhySpliceArr.join(', ') + ']（原数组<b>已被修改</b>！）');
+            zhyRenderBar(zhySpliceNewBar, zhySpliceArr, { new: [1] });
+            console.log('[splice] 删除', zhyGone.join(','), '→', zhySpliceArr.join(','));
+        });
+
+        zhyBox('.zhy_op-reset3').addEventListener('click', function () {
+            zhyReset3();
+            console.log('[reset] 两组数组已复位');
+        });
+
+        /* ================= 演示四：join / reverse / sort ================= */
+        var zhyConvArr = [10, 9, 88, 25];
+        var zhyConvBar = zhyBox('.zhy_bar-conv');
+        var zhyConvFlow = zhyBox('.zhy_flow-conv');
+
+        function zhyDrawConv() { zhyRenderBar(zhyConvBar, zhyConvArr); }
+        zhyDrawConv();
+
+        zhyBox('.zhy_op-join').addEventListener('click', function () {
+            var zhyStr = zhyConvArr.join(' → ');
+            zhyShow('.zhy_result-conv', "join(' → ') 返回<strong>字符串</strong>：<span class='zhy_ret'>" + zhyStr + "</span>，数组本身不变");
+            zhyConvFlow.innerHTML = '<span>' + zhyStr + '</span>';
+            console.log('[join]', zhyStr);
+        });
+
+        zhyBox('.zhy_op-reverse').addEventListener('click', function () {
+            zhyConvArr.reverse();
+            zhyDrawConv();
+            zhyShow('.zhy_result-conv', 'reverse() <strong>原地翻转</strong>，首尾互换，返回翻转后的同一数组');
+            zhyConvFlow.innerHTML = '';
+            console.log('[reverse]', zhyConvArr.join(','));
+        });
+
+        zhyBox('.zhy_op-sort-bad').addEventListener('click', function () {
+            zhyConvArr.sort();   // 字典序！
+            zhyDrawConv();
+            zhyShow('.zhy_result-conv', 'sort() 默认把数字<strong>当字符串按字典序</strong>排：10 开头 "1" 排最前、9 排最后 → 结果 <span class="zhy_ret">[' + zhyConvArr.join(', ') + ']</span>，这就是经典的排序坑！');
+            zhyConvFlow.innerHTML = '';
+            console.log('[sort 默认] ', zhyConvArr.join(','), '← 错误的数字顺序');
+        });
+
+        zhyBox('.zhy_op-sort-good').addEventListener('click', function () {
+            zhyConvArr.sort(function (zhyA, zhyB) { return zhyA - zhyB; });
+            zhyDrawConv();
+            zhyShow('.zhy_result-conv', 'sort((a,b) =&gt; a-b) 按数值升序 → <span class="zhy_ret">[' + zhyConvArr.join(', ') + ']</span>，记忆：<strong>a-b 升序，b-a 降序</strong>');
+            console.log('[sort 比较] ', zhyConvArr.join(','));
+        });
+
+        /* ================= 演示五：迭代四剑客 ================= */
+        var zhyScores = [88, 45, 92, 67, 73];
+        var zhyIterBar = zhyBox('.zhy_bar-iter');
+        var zhyIterFlow = zhyBox('.zhy_flow-iter');
+
+        function zhyDrawIter(zhyMark) { zhyRenderBar(zhyIterBar, zhyScores, zhyMark); }
+        zhyDrawIter();
+
+        zhyBox('.zhy_op-foreach').addEventListener('click', function () {
+            var zhyLogs = [];
+            zhyScores.forEach(function (zhyS, zhyI) {
+                zhyLogs.push('第' + (zhyI + 1) + '个：' + zhyS + '分');
+            });
+            zhyDrawIter({ hit: [0, 1, 2, 3, 4] });
+            zhyShow('.zhy_result-iter', 'forEach 依次访问每个元素（无返回值）：<span class="zhy_ret">' + zhyLogs.join('；') + '</span>');
+            zhyIterFlow.innerHTML = '';
+            console.log('[forEach]', zhyLogs);
+        });
+
+        zhyBox('.zhy_op-map').addEventListener('click', function () {
+            var zhyPlus5 = zhyScores.map(function (zhyS) { return zhyS + 5; });
+            zhyDrawIter();
+            zhyShow('.zhy_result-iter', 'map 对每个元素加 5 分，返回<strong>等长新数组</strong>：[' + zhyPlus5.join(', ') + ']，原数组不变');
+            zhyIterFlow.innerHTML = '<span>[' + zhyScores.join(', ') + ']</span><span class="zhy_arrow">→ +5 →</span><span>[' + zhyPlus5.join(', ') + ']</span>';
+            console.log('[map]', zhyPlus5.join(','));
+        });
+
+        zhyBox('.zhy_op-filter').addEventListener('click', function () {
+            var zhyDimIdx = [];
+            zhyScores.forEach(function (zhyS, zhyI) { if (zhyS < 70) zhyDimIdx.push(zhyI); });
+            var zhyPassed = zhyScores.filter(function (zhyS) { return zhyS >= 70; });
+            zhyDrawIter({ dim: zhyDimIdx });
+            zhyShow('.zhy_result-iter', 'filter 保留 <code class="zhy_code-inline">score &gt;= 70</code> 的元素：<span class="zhy_ret">[' + zhyPassed.join(', ') + ']</span>，灰色划线的是被淘汰的');
+            zhyIterFlow.innerHTML = '<span>[' + zhyScores.join(', ') + ']</span><span class="zhy_arrow">→ ≥70 →</span><span>[' + zhyPassed.join(', ') + ']</span>';
+            console.log('[filter ≥70]', zhyPassed.join(','));
+        });
+
+        zhyBox('.zhy_op-reduce').addEventListener('click', function () {
+            var zhyTotal = zhyScores.reduce(function (zhyAcc, zhyS) { return zhyAcc + zhyS; }, 0);
+            zhyDrawIter();
+            zhyShow('.zhy_result-iter', 'reduce 像滚雪球，累加器逐个吞入元素：<span class="zhy_ret">' + zhyScores.join(' + ') + ' = ' + zhyTotal + '</span>');
+            zhyIterFlow.innerHTML = '<span>' + zhyScores.join(' + ') + '</span><span class="zhy_arrow">→</span><span>= ' + zhyTotal + '</span>';
+            console.log('[reduce] 总分', zhyTotal);
+        });
+
+        console.log('[16-1] 张海玉：数组方法可视化演示页加载完成');
+    </script>
+</body>
+</html>
