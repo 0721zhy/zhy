@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻排行榜 · tab 切换面板</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：仿新闻排行榜组件（双 tab 切换）
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 16px;
+            background: #f4f5f7;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #333;
+        }
+
+        /* ---------- 排行榜组件 ---------- */
+        .zhy_rank {
+            width: 400px;
+            background: #fff;
+            border: 1px solid #d4d9e0;
+            box-shadow: 0 2px 8px rgba(30, 50, 90, .08);
+        }
+
+        /* tab 栏：两个等宽格 */
+        .zhy_rank-tabs {
+            display: flex;
+            border-bottom: 2px solid #c8d4e4;
+        }
+
+        .zhy_rank-tab {
+            flex: 1;
+            padding: 11px 0;
+            background: #dce8f5;
+            border: none;
+            border-right: 1px solid #c8d4e4;
+            color: #33517e;
+            font: 700 15px "Microsoft YaHei", sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background .18s ease, color .18s ease;
+        }
+
+        .zhy_rank-tab:last-child { border-right: none; }
+
+        .zhy_rank-tab .iconfont { margin-right: 6px; font-size: 15px; }
+
+        .zhy_rank-tab:hover { background: #cfe0f2; }
+
+        .zhy_rank-tab.zhy_tab-on {
+            background: #fff;
+            color: #17212b;
+        }
+
+        /* ---------- 列表 ---------- */
+        .zhy_rank-list {
+            margin: 0;
+            padding: 4px 0;
+            list-style: none;
+        }
+
+        .zhy_rank-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px 9px 12px;
+            border-bottom: 1px solid #f2f4f7;
+            cursor: pointer;
+            transition: background .12s ease;
+        }
+
+        .zhy_rank-item:last-child { border-bottom: none; }
+
+        .zhy_rank-item:hover { background: #f4f8fc; }
+
+        .zhy_rank-item:hover .zhy_rank-title { color: #e8642c; }
+
+        /* 序号：红橙数字 */
+        .zhy_rank-no {
+            width: 20px;
+            flex-shrink: 0;
+            color: #e8402c;
+            font: 700 italic 15px Consolas, sans-serif;
+            text-align: center;
+        }
+
+        .zhy_rank-no.zhy_no-warm { color: #f07830; }
+
+        .zhy_rank-no.zhy_no-grey { color: #b8bcc4; }
+
+        /* 标题 */
+        .zhy_rank-title {
+            flex: 1;
+            color: #1f3f7a;
+            font-size: 13px;
+            line-height: 1.55;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            transition: color .15s ease;
+        }
+
+        /* 右侧数字 */
+        .zhy_rank-count {
+            flex-shrink: 0;
+            font: 600 13px Consolas, monospace;
+            color: #e8402c;
+        }
+
+        .zhy_rank-count.zhy_count-warm { color: #f07830; }
+
+        .zhy_rank-count.zhy_count-green { color: #3a9d5d; }
+
+        .zhy_rank-count.zhy_count-blue { color: #3b7cc4; }
+
+        .zhy_rank-count.zhy_count-grey { color: #9aa2ad; }
+
+        /* ---------- 面板切换动画 ---------- */
+        .zhy_rank-panel { display: none; }
+
+        .zhy_rank-panel.zhy_panel-on {
+            display: block;
+            animation: zhy_fade .25s ease;
+        }
+
+        @keyframes zhy_fade {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .zhy_tip {
+            margin-top: 14px;
+            color: #98a1ac;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-10-29 大模型：GLM-5.3-FlashX 功能：新闻排行榜 · 双 tab 点击切换面板 -->
+
+    <div>
+        <section class="zhy_rank">
+            <!-- tab 栏 -->
+            <div class="zhy_rank-tabs" role="tablist">
+                <button type="button" class="zhy_rank-tab zhy_tab-on" data-zhy-panel="click" role="tab">
+                    <i class="iconfont icon-tuijian" aria-hidden="true"></i>点击排行
+                </button>
+                <button type="button" class="zhy_rank-tab" data-zhy-panel="comment" role="tab">
+                    <i class="iconfont icon-xinxi" aria-hidden="true"></i>评论排行
+                </button>
+            </div>
+
+            <!-- 面板一：点击排行 -->
+            <div class="zhy_rank-panel zhy_panel-on" data-zhy-view="click">
+                <ul class="zhy_rank-list" data-zhy-list="click"></ul>
+            </div>
+
+            <!-- 面板二：评论排行 -->
+            <div class="zhy_rank-panel" data-zhy-view="comment">
+                <ul class="zhy_rank-list" data-zhy-list="comment"></ul>
+            </div>
+        </section>
+
+        <p class="zhy_tip">点击顶部"点击排行 / 评论排行"可切换画面 · 数据由 JS 数组渲染</p>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：排行榜双 tab 切换
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 数据：点击排行 / 评论排行 ---------- */
+        var zhyClickData = [
+            { title: '中国各城市房子还要涨多少年？（详细数据）', num: 187706, tone: 'hot' },
+            { title: '佐忠瑞：60多年来 我不知道国企给了我们什么', num: 171180, tone: 'hot' },
+            { title: '三精制药跳楼总裁被查 因病房简陋？（图）', num: 127631, tone: 'hot' },
+            { title: '内地17省铺开不动产统一登记职责整合工作', num: 113865, tone: 'warm' },
+            { title: '山西煤老板抛售整套109套二手房 8年投资翻倍', num: 82770, tone: 'grey' },
+            { title: '北京城南楼市"论跑"变相降价措施加码', num: 82971, tone: 'hot' },
+            { title: '中国3D打印技术取得重大突破 近1200人连线观摩', num: 27456, tone: 'green' },
+            { title: '重磅利空突袭全球期权股 A股或迎黑色周五', num: 25322, tone: 'blue' },
+            { title: '七匹狼早盘上演奇葩一幕：单笔4手买单刷屏', num: 20912, tone: 'blue' },
+            { title: '长油小股东股东大会 当场"炮轰"董事长', num: 11667, tone: 'grey' }
+        ];
+
+        var zhyCommentData = [
+            { title: '延迟退休方案征求意见，你怎么看？', num: 45231, tone: 'hot' },
+            { title: '多地出台楼市新政：取消限购限售', num: 39870, tone: 'hot' },
+            { title: '专家建议每周 4.5 天工作制，网友吵翻', num: 31642, tone: 'warm' },
+            { title: '国产大飞机 C919 新航线首飞成功', num: 28415, tone: 'green' },
+            { title: '新能源汽车购置税减免政策延续', num: 24098, tone: 'blue' },
+            { title: '高校食堂"平价菜窗口"走红网络', num: 19376, tone: 'blue' },
+            { title: '人工智能进课堂：是助力还是隐忧？', num: 15780, tone: 'hot' },
+            { title: '快递新规施行，末端派送如何落地', num: 12354, tone: 'grey' },
+            { title: '寒潮来袭，多地迎今年首场大雪', num: 9871, tone: 'grey' },
+            { title: '乡村振兴致富经：小蘑菇撑起大产业', num: 6420, tone: 'green' }
+        ];
+
+        /* ---------- 数字配色映射（hot 为默认红色，无需附加类） ---------- */
+        var zhyToneClass = {
+            hot: '',
+            warm: ' zhy_count-warm',
+            green: ' zhy_count-green',
+            blue: ' zhy_count-blue',
+            grey: ' zhy_count-grey'
+        };
+
+        var zhyNoClass = { 1: '', 2: '', 3: '', 4: ' zhy_no-warm' };
+
+        /* ---------- 渲染列表 ---------- */
+        function zhyRenderList(zhyKey, zhyData) {
+            var zhyUl = document.querySelector('[data-zhy-list="' + zhyKey + '"]');
+            var zhyHtml = '';
+            for (var zhyI = 0; zhyI < zhyData.length; zhyI++) {
+                var zhyItem = zhyData[zhyI];
+                var zhyRank = zhyI + 1;
+                var zhyNoCls = zhyNoClass[zhyRank] !== undefined ? zhyNoClass[zhyRank] : ' zhy_no-grey';
+                zhyHtml += '<li class="zhy_rank-item" data-zhy-index="' + zhyRank + '">'
+                    + '<span class="zhy_rank-no' + zhyNoCls + '">' + zhyRank + '</span>'
+                    + '<span class="zhy_rank-title">' + zhyItem.title + '</span>'
+                    + '<span class="zhy_rank-count' + zhyToneClass[zhyItem.tone] + '">' + zhyItem.num + '</span>'
+                    + '</li>';
+            }
+            zhyUl.innerHTML = zhyHtml;
+        }
+
+        zhyRenderList('click', zhyClickData);
+        zhyRenderList('comment', zhyCommentData);
+
+        /* ---------- tab 切换画面 ---------- */
+        var zhyTabs = document.querySelectorAll('.zhy_rank-tab');
+        Array.prototype.forEach.call(zhyTabs, function (zhyTab) {
+            zhyTab.addEventListener('click', function () {
+                var zhyKey = zhyTab.getAttribute('data-zhy-panel');
+
+                Array.prototype.forEach.call(zhyTabs, function (zhyT) {
+                    zhyT.classList.remove('zhy_tab-on');
+                });
+                zhyTab.classList.add('zhy_tab-on');
+
+                var zhyPanels = document.querySelectorAll('.zhy_rank-panel');
+                Array.prototype.forEach.call(zhyPanels, function (zhyPanel) {
+                    zhyPanel.classList.toggle('zhy_panel-on', zhyPanel.getAttribute('data-zhy-view') === zhyKey);
+                });
+
+                console.log('[16-4] 切换画面 →', zhyTab.textContent.trim());
+            });
+        });
+
+        /* ---------- 点击列表条目 ---------- */
+        var zhyRank = document.querySelector('.zhy_rank');
+        zhyRank.addEventListener('click', function (zhyEvent) {
+            var zhyLi = zhyEvent.target.closest('.zhy_rank-item');
+            if (!zhyLi) {
+                return;
+            }
+            console.log('[16-4] 打开第 ' + zhyLi.getAttribute('data-zhy-index') + ' 条：'
+                + zhyLi.querySelector('.zhy_rank-title').textContent);
+        });
+
+        console.log('[16-4] 张海玉：排行榜切换页加载完成');
+    </script>
+</body>
+</html>
