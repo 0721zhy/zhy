@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿龙腾网首页 · 网页元素设计</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：仿龙腾网（ltaaa.cn）首页
+           典型部分：① 导航 ② 列表（翻译文章榜） ③ 图文卡片（趣闻）
+           布局技术：flex + grid，不使用 float
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            background: #f0f1f5;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #333;
+        }
+
+        /* ---------- 顶部白色细条 ---------- */
+        .zhy_topline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6px 14px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .zhy_topline .zhy_top-brand { color: #3b5c9b; font-weight: 700; }
+
+        .zhy_topline span { cursor: pointer; }
+
+        .zhy_topline span:hover { color: #3b5c9b; }
+
+        /* ========== 典型部分①：导航（蓝色主条） ========== */
+        .zhy_navbar {
+            background: #3b5c9b;
+            padding: 14px 0;
+        }
+
+        .zhy_nav-inner {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 14px;
+        }
+
+        /* logo：橙红圆 + 龙字 + 两行白字 */
+        .zhy_logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .zhy_logo-dragon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(145deg, #ffb03a, #e8642c);
+            border-radius: 50%;
+            color: #fff;
+            font: 700 26px/52px "Microsoft YaHei", sans-serif;
+            text-align: center;
+            box-shadow: inset 0 -4px 8px rgba(150, 50, 0, .35);
+        }
+
+        .zhy_logo-name {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+
+        .zhy_logo-name small {
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            opacity: .85;
+        }
+
+        /* 导航菜单：分组标签 + 链接，两行 flex wrap */
+        .zhy_nav-groups {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 14px;
+            flex: 1;
+        }
+
+        .zhy_nav-tag {
+            padding: 3px 9px;
+            background: #2c477e;
+            border-radius: 4px;
+            color: #ffd9a0;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .zhy_nav-link {
+            position: relative;
+            color: #fff;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color .15s ease;
+        }
+
+        .zhy_nav-link:hover { color: #ffd9a0; }
+
+        /* 红点角标（聚问则问 N） */
+        .zhy_nav-link.zhy_nav-dot::after {
+            content: 'N';
+            position: absolute;
+            top: -9px;
+            right: -14px;
+            padding: 0 4px;
+            background: #e64c3c;
+            border-radius: 7px;
+            color: #fff;
+            font-size: 10px;
+            line-height: 13px;
+            font-style: normal;
+        }
+
+        /* ---------- 三栏主体（grid） ---------- */
+        .zhy_layout {
+            display: grid;
+            grid-template-columns: 232px minmax(0, 1fr) 232px;
+            gap: 14px;
+            max-width: 1200px;
+            margin: 14px auto 24px;
+            padding: 0 14px;
+            align-items: start;
+        }
+
+        .zhy_card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+        }
+
+        .zhy_col-left,
+        .zhy_col-right { display: grid; gap: 14px; }
+
+        /* ---------- 左栏：翻译平台特价专区 ---------- */
+        .zhy_promo-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid #f2f2f2;
+            font-size: 15px;
+            font-weight: 700;
+            color: #3b5c9b;
+        }
+
+        .zhy_promo-head .iconfont { color: #e8642c; font-size: 18px; }
+
+        .zhy_promo-list { padding: 12px 16px 0; display: grid; gap: 10px; }
+
+        .zhy_promo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            background: #f6f7fa;
+            border: 1px solid #e8ebf2;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: border-color .15s ease;
+        }
+
+        .zhy_promo-item:hover { border-color: #3b5c9b; }
+
+        .zhy_promo-item .iconfont { color: #e8642c; font-size: 16px; }
+
+        .zhy_promo-item .zhy_promo-num {
+            margin-left: auto;
+            color: #999;
+            font: 600 13px Consolas, monospace;
+        }
+
+        .zhy_promo-more {
+            display: block;
+            margin: 12px 16px 16px;
+            padding: 9px 0;
+            background: #e64c3c;
+            border: none;
+            border-radius: 18px;
+            color: #fff;
+            font: 600 14px "Microsoft YaHei", sans-serif;
+            text-align: center;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .zhy_promo-more:hover { background: #c93a2b; }
+
+        /* 左栏：蓝色贡献才气横条 */
+        .zhy_gongxian {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 0;
+            background: #3b5c9b;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 700 15px "Microsoft YaHei", sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .zhy_gongxian:hover { background: #2c477e; }
+
+        .zhy_gongxian .iconfont { font-size: 17px; }
+
+        /* 左栏：二维码卡 */
+        .zhy_qr-box {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .zhy_qr-tabs {
+            display: grid;
+            gap: 8px;
+        }
+
+        .zhy_qr-tab {
+            padding: 6px 10px;
+            background: #3b5c9b;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background .15s ease;
+        }
+
+        .zhy_qr-tab:hover { background: #2c477e; }
+
+        .zhy_qr-tab .iconfont { margin-right: 4px; font-size: 12px; }
+
+        /* CSS 画的伪二维码：网格纹理 + 三个角定位块 */
+        .zhy_qr {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            margin-left: auto;
+            background:
+                repeating-linear-gradient(0deg, #26262b 0 4px, #fff 4px 8px),
+                repeating-linear-gradient(90deg, #26262b 0 4px, #fff 4px 8px);
+            background-blend-mode: multiply;
+            border: 3px solid #26262b;
+        }
+
+        .zhy_qr::before,
+        .zhy_qr::after,
+        .zhy_qr em {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: #26262b;
+            box-shadow: inset 0 0 0 4px #26262b, inset 0 0 0 8px #fff, inset 0 0 0 11px #26262b;
+        }
+
+        .zhy_qr::before { top: 2px; left: 2px; }
+
+        .zhy_qr::after { top: 2px; right: 2px; }
+
+        .zhy_qr em { bottom: 2px; left: 2px; }
+
+        .zhy_qr-note {
+            padding: 0 16px 14px;
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* 左栏：9月之星榜单（列表） */
+        .zhy_star-head {
+            display: flex;
+            align-items: center;
+            padding: 13px 16px;
+            border-bottom: 1px solid #f2f2f2;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .zhy_star-head .iconfont {
+            margin-left: auto;
+            color: #bbb;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .zhy_star-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        .zhy_star-rank {
+            width: 18px;
+            color: #e64c3c;
+            font: 700 italic 15px Consolas, sans-serif;
+            text-align: center;
+        }
+
+        .zhy_star-ava {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            color: #fff;
+            font: 700 13px/34px "Microsoft YaHei", sans-serif;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .zhy_star-ava.zhy_ava-1 { background: linear-gradient(135deg, #67a3e0, #3b5c9b); }
+
+        .zhy_star-ava.zhy_ava-2 { background: linear-gradient(135deg, #ffb03a, #e8642c); }
+
+        .zhy_star-ava.zhy_ava-3 { background: linear-gradient(135deg, #58c08a, #2f8f5b); }
+
+        .zhy_star-name {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .zhy_star-coin { color: #e8a13a; font-size: 12px; }
+
+        /* ---------- 中栏：轮播大图（上图下文） ---------- */
+        .zhy_banner {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+
+        .zhy_banner img {
+            display: block;
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+
+        .zhy_banner-tag {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 5px 12px;
+            background: rgba(59, 92, 155, .92);
+            border-radius: 4px;
+            color: #ffd9a0;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .zhy_banner-title {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 34px 18px 14px;
+            background: linear-gradient(transparent, rgba(0,0,0,.72));
+            color: #fff;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .zhy_banner-title em { color: #ffd04a; font-style: normal; }
+
+        .zhy_banner-arrow {
+            position: absolute;
+            top: 50%;
+            width: 34px;
+            height: 56px;
+            background: rgba(20, 20, 20, .45);
+            border: none;
+            color: #fff;
+            font: 700 26px/56px Consolas, sans-serif;
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: background .15s ease;
+        }
+
+        .zhy_banner-arrow:hover { background: rgba(20, 20, 20, .7); }
+
+        .zhy_banner-arrow.zhy_arrow-left { left: 0; border-radius: 0 4px 4px 0; }
+
+        .zhy_banner-arrow.zhy_arrow-right { right: 0; border-radius: 4px 0 0 4px; }
+
+        /* ---------- 典型部分②：网站翻译文章列表 ---------- */
+        .zhy_list-head {
+            display: flex;
+            align-items: center;
+            padding: 15px 18px 4px;
+        }
+
+        .zhy_list-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .zhy_list-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: #3b5c9b;
+            border-radius: 2px;
+        }
+
+        .zhy_list-tip {
+            margin-left: auto;
+            color: #e8642c;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .zhy_list-tip .iconfont { margin-right: 3px; font-size: 12px; }
+
+        .zhy_article {
+            display: flex;
+            gap: 12px;
+            padding: 13px 18px;
+            border-bottom: 1px dashed #eee;
+            cursor: pointer;
+        }
+
+        .zhy_article:last-child { border-bottom: none; }
+
+        .zhy_article:hover { background: #f8f9fc; }
+
+        /* 左图右文：来源网站小圆标 */
+        .zhy_site-ico {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            color: #fff;
+            font: 700 15px/38px "Microsoft YaHei", sans-serif;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .zhy_site-ico.zhy_ico-red { background: linear-gradient(135deg, #e64c3c, #a92c20); }
+
+        .zhy_site-ico.zhy_ico-blue { background: linear-gradient(135deg, #67a3e0, #3b5c9b); }
+
+        .zhy_site-ico.zhy_ico-orange { background: linear-gradient(135deg, #ffb03a, #e8642c); }
+
+        .zhy_site-ico.zhy_ico-green { background: linear-gradient(135deg, #58c08a, #2f8f5b); }
+
+        .zhy_site-ico.zhy_ico-purple { background: linear-gradient(135deg, #9a7be0, #6a4bb8); }
+
+        .zhy_art-body { flex: 1; min-width: 0; }
+
+        .zhy_art-title {
+            margin: 0 0 7px;
+            color: #333;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.55;
+        }
+
+        .zhy_art-title:hover { color: #3b5c9b; }
+
+        .zhy_art-title em {
+            color: #e64c3c;
+            font-style: normal;
+        }
+
+        .zhy_art-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #a5a5ad;
+            font-size: 12px;
+        }
+
+        .zhy_art-meta .zhy_meta-src { color: #8aa0c8; }
+
+        .zhy_art-meta .iconfont { font-size: 13px; margin-right: 2px; }
+
+        .zhy_art-meta .zhy_meta-num { color: #a5a5ad; }
+
+        /* ---------- 典型部分③：趣闻（图文卡片） ---------- */
+        .zhy_quwen-head {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid #f2f2f2;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .zhy_quwen-head .iconfont {
+            margin-left: auto;
+            color: #3b5c9b;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .zhy_quwen-item { padding: 12px 14px 4px; cursor: pointer; }
+
+        .zhy_quwen-item img {
+            display: block;
+            width: 100%;
+            height: 128px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .zhy_quwen-text {
+            margin: 8px 0 12px;
+            color: #555;
+            font-size: 13px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .zhy_quwen-item:hover .zhy_quwen-text { color: #3b5c9b; }
+
+        /* ---------- 底部深蓝 footer ---------- */
+        .zhy_footer {
+            background: #2c477e;
+            color: rgba(255, 255, 255, .75);
+            font-size: 12px;
+            text-align: center;
+            padding: 12px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-10-29 大模型：GLM-5.3-Flash 功能：仿龙腾网首页 · 网页元素设计（导航 / 列表 / 图文卡片） -->
+
+    <!-- 顶部白色细条 -->
+    <div class="zhy_topline">
+        <span class="zhy_top-brand">龙腾网</span>
+        <span><span class="zhy_top-login">登录</span> · <span>注册</span></span>
+    </div>
+
+    <!-- ============ 典型部分①：导航 ============ -->
+    <header class="zhy_navbar">
+        <div class="zhy_nav-inner">
+            <div class="zhy_logo">
+                <span class="zhy_logo-dragon" aria-hidden="true">龙</span>
+                <span class="zhy_logo-name">龙腾网<small>www.ltaaa.cn</small></span>
+            </div>
+            <nav class="zhy_nav-groups" aria-label="主导航">
+                <span class="zhy_nav-tag">热门</span>
+                <span class="zhy_nav-link">网站翻译</span>
+                <span class="zhy_nav-link">娱乐译文</span>
+                <span class="zhy_nav-link">趣闻译文</span>
+                <span class="zhy_nav-link">科技译文</span>
+                <span class="zhy_nav-tag">其他</span>
+                <span class="zhy_nav-link">龙腾微涛</span>
+                <span class="zhy_nav-link">公众号</span>
+                <span class="zhy_nav-link">小程序</span>
+                <span class="zhy_nav-link">APP</span>
+                <span class="zhy_nav-tag">特色</span>
+                <span class="zhy_nav-link">翻译平台</span>
+                <span class="zhy_nav-link">翻译加工厂</span>
+                <span class="zhy_nav-link">意见反馈</span>
+                <span class="zhy_nav-link">发布翻译</span>
+                <span class="zhy_nav-link zhy_nav-dot">聚问则问</span>
+                <span class="zhy_nav-tag">帮助</span>
+                <span class="zhy_nav-link">用户中心</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="zhy_layout">
+        <!-- 左栏 -->
+        <aside class="zhy_col-left" aria-label="左侧栏">
+            <section class="zhy_card">
+                <div class="zhy_promo-head"><i class="iconfont icon-tuijian" aria-hidden="true"></i>翻译平台特价专区</div>
+                <div class="zhy_promo-list">
+                    <div class="zhy_promo-item"><i class="iconfont icon-gouwuche" aria-hidden="true"></i>8折专区<span class="zhy_promo-num">738</span></div>
+                    <div class="zhy_promo-item"><i class="iconfont icon-gouwuche" aria-hidden="true"></i>5折专区<span class="zhy_promo-num">977</span></div>
+                    <div class="zhy_promo-item"><i class="iconfont icon-gouwuche" aria-hidden="true"></i>1折专区<span class="zhy_promo-num">11420</span></div>
+                </div>
+                <button type="button" class="zhy_promo-more">更多翻译平台译文</button>
+            </section>
+
+            <button type="button" class="zhy_gongxian"><i class="iconfont icon-bianji" aria-hidden="true"></i>进入翻译加工厂 贡献才气</button>
+
+            <section class="zhy_card">
+                <div class="zhy_qr-box">
+                    <div class="zhy_qr-tabs">
+                        <span class="zhy_qr-tab"><i class="iconfont icon-xinxi" aria-hidden="true"></i>微博</span>
+                        <span class="zhy_qr-tab"><i class="iconfont icon-faxian" aria-hidden="true"></i>公众号</span>
+                        <span class="zhy_qr-tab"><i class="iconfont icon-gengduo" aria-hidden="true"></i>小程序</span>
+                        <span class="zhy_qr-tab"><i class="iconfont icon-shouye" aria-hidden="true"></i>安卓APP</span>
+                    </div>
+                    <span class="zhy_qr" aria-label="二维码示意"><em></em></span>
+                </div>
+                <p class="zhy_qr-note">扫一扫关注龙腾网官方微博</p>
+            </section>
+
+            <section class="zhy_card">
+                <div class="zhy_star-head">9月之星<i class="iconfont icon-gengduo" aria-hidden="true"></i></div>
+                <div class="zhy_star-item"><span class="zhy_star-rank">1</span><span class="zhy_star-ava zhy_ava-1">云</span><span class="zhy_star-name">云卷云舒花自开</span><span class="zhy_star-coin">50 阅读币</span></div>
+                <div class="zhy_star-item"><span class="zhy_star-rank">2</span><span class="zhy_star-ava zhy_ava-2">饮</span><span class="zhy_star-name">饮错止药</span><span class="zhy_star-coin">50 阅读币</span></div>
+                <div class="zhy_star-item"><span class="zhy_star-rank">3</span><span class="zhy_star-ava zhy_ava-3">凤</span><span class="zhy_star-name">凤凰勇</span><span class="zhy_star-coin">50 阅读币</span></div>
+            </section>
+        </aside>
+
+        <!-- 中栏 -->
+        <main>
+            <!-- 轮播大图：上图下文 -->
+            <section class="zhy_banner">
+                <img src="./img/1.2.webp" alt="中国阅兵式导弹方阵">
+                <span class="zhy_banner-tag">网站翻译</span>
+                <span class="zhy_banner-arrow zhy_arrow-left" aria-label="上一张">&#8249;</span>
+                <span class="zhy_banner-arrow zhy_arrow-right" aria-label="下一张">&#8250;</span>
+                <p class="zhy_banner-title"><em>外国人看中国阅兵：</em>这样的工业化排面，全世界找不出第二个</p>
+            </section>
+
+            <!-- ============ 典型部分②：列表 ============ -->
+            <section class="zhy_card" style="margin-top:14px">
+                <div class="zhy_list-head">
+                    <span class="zhy_list-title">网站翻译</span>
+                    <span class="zhy_list-tip"><i class="iconfont icon-bianji" aria-hidden="true"></i>新手翻译说明</span>
+                </div>
+
+                <article class="zhy_article">
+                    <span class="zhy_site-ico zhy_ico-red">X</span>
+                    <div class="zhy_art-body">
+                        <h3 class="zhy_art-title">X 上外网<em>热议中国阅兵</em>方阵，帖子下外国网友感叹：这样的动员能力，除了中国没几个国家做得到</h3>
+                        <div class="zhy_art-meta">
+                            <span>2026-10-29</span>
+                            <span class="zhy_meta-src">环球网-军事</span>
+                            <span><i class="iconfont icon-my" aria-hidden="true"></i><span class="zhy_meta-num">6703</span></span>
+                            <span><i class="iconfont icon-xinxi" aria-hidden="true"></i><span class="zhy_meta-num">51</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="zhy_article">
+                    <span class="zhy_site-ico zhy_ico-orange">土</span>
+                    <div class="zhy_art-body">
+                        <h3 class="zhy_art-title">土耳其资深军迷看完阅兵式表示，中国装备的先进程度跟大片里似的，不知道的还以为在拍科幻电影</h3>
+                        <div class="zhy_art-meta">
+                            <span>2026-10-29</span>
+                            <span class="zhy_meta-src">知远防务</span>
+                            <span><i class="iconfont icon-my" aria-hidden="true"></i><span class="zhy_meta-num">3671</span></span>
+                            <span><i class="iconfont icon-xinxi" aria-hidden="true"></i><span class="zhy_meta-num">3</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="zhy_article">
+                    <span class="zhy_site-ico zhy_ico-blue">观</span>
+                    <div class="zhy_art-body">
+                        <h3 class="zhy_art-title">我们当年搞工业化，都以为是国产手机先走出去了，看完这次阅兵直播才发现，真正让外人震撼的是这些大家伙</h3>
+                        <div class="zhy_art-meta">
+                            <span>2026-10-29</span>
+                            <span class="zhy_meta-src">观察者网</span>
+                            <span><i class="iconfont icon-my" aria-hidden="true"></i><span class="zhy_meta-num">2246</span></span>
+                            <span><i class="iconfont icon-xinxi" aria-hidden="true"></i><span class="zhy_meta-num">13</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="zhy_article">
+                    <span class="zhy_site-ico zhy_ico-green">越</span>
+                    <div class="zhy_art-body">
+                        <h3 class="zhy_art-title">中国正在加紧建设<em>交通强国</em>，越南网友看完阅兵评论：纪律、秩序与组织力，感叹"这排面太整齐了"</h3>
+                        <div class="zhy_art-meta">
+                            <span>2026-10-29</span>
+                            <span class="zhy_meta-src">分惋理</span>
+                            <span><i class="iconfont icon-my" aria-hidden="true"></i><span class="zhy_meta-num">1639</span></span>
+                            <span><i class="iconfont icon-xinxi" aria-hidden="true"></i><span class="zhy_meta-num">16</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="zhy_article">
+                    <span class="zhy_site-ico zhy_ico-purple">韩</span>
+                    <div class="zhy_art-body">
+                        <h3 class="zhy_art-title">韩国、法国论坛里热议大阅兵，人们渴望更多的高清大图，网友评论：这种规模的仪式感只此一家</h3>
+                        <div class="zhy_art-meta">
+                            <span>2026-10-29</span>
+                            <span class="zhy_meta-src">知远防务</span>
+                            <span><i class="iconfont icon-my" aria-hidden="true"></i><span class="zhy_meta-num">1367</span></span>
+                            <span><i class="iconfont icon-xinxi" aria-hidden="true"></i><span class="zhy_meta-num">9</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="zhy_article">
+                    <span class="zhy_site-ico zhy_ico-red">俄</span>
+                    <div class="zhy_art-body">
+                        <h3 class="zhy_art-title">俄网友：中国阅兵装备清一色国产，<em>这不是展示</em>，这是整个工业体系的实力</h3>
+                        <div class="zhy_art-meta">
+                            <span>2026-10-29</span>
+                            <span class="zhy_meta-src">观察者网</span>
+                            <span><i class="iconfont icon-my" aria-hidden="true"></i><span class="zhy_meta-num">982</span></span>
+                            <span><i class="iconfont icon-xinxi" aria-hidden="true"></i><span class="zhy_meta-num">4</span></span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <!-- 右栏 -->
+        <aside class="zhy_col-right" aria-label="右侧栏">
+            <!-- ============ 典型部分③：图文卡片 ============ -->
+            <section class="zhy_card">
+                <div class="zhy_quwen-head">趣闻<i class="iconfont icon-gengduo" aria-hidden="true"></i></div>
+
+                <div class="zhy_quwen-item">
+                    <img src="./img/2.jpeg" alt="欢迎仪式现场：车队与两国国旗">
+                    <p class="zhy_quwen-text">现场实拍：隆重的欢迎仪式，车队所过之处两国旗海飘扬</p>
+                </div>
+
+                <div class="zhy_quwen-item">
+                    <img src="./img/1.3.webp" alt="新型发射车细节特写">
+                    <p class="zhy_quwen-text">装备控福利：新型发射车细节特写，外国网友直呼大开眼界</p>
+                </div>
+
+                <div class="zhy_quwen-item">
+                    <img src="./img/7.2.png" alt="电视理论专题片《伟大转折》封面">
+                    <p class="zhy_quwen-text">专题片《伟大转折》上线，金色光影再现峥嵘岁月</p>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <footer class="zhy_footer">仿龙腾网首页练习 · HTML/CSS 网页元素设计 · 张海玉 · 大连东软信息学院</footer>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：仿龙腾网首页少量增强交互
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 轮播箭头 ---------- */
+        var zhyArrows = document.querySelectorAll('.zhy_banner-arrow');
+        Array.prototype.forEach.call(zhyArrows, function (zhyArrow) {
+            zhyArrow.addEventListener('click', function () {
+                console.log('[轮播]', zhyArrow.getAttribute('aria-label'));
+            });
+        });
+
+        /* ---------- 导航 / 菜单 / 列表条目 ---------- */
+        var zhyNavLinks = document.querySelectorAll('.zhy_nav-link');
+        Array.prototype.forEach.call(zhyNavLinks, function (zhyLink) {
+            zhyLink.addEventListener('click', function () {
+                console.log('[导航]', zhyLink.textContent);
+            });
+        });
+
+        var zhyArticles = document.querySelectorAll('.zhy_article');
+        Array.prototype.forEach.call(zhyArticles, function (zhyArt) {
+            zhyArt.addEventListener('click', function () {
+                console.log('[文章]', zhyArt.querySelector('.zhy_art-title').textContent.slice(0, 18) + '…');
+            });
+        });
+
+        console.log('[16-3] 张海玉：仿龙腾网首页加载完成');
+    </script>
+</body>
+</html>
