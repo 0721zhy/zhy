@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fetch 获取网络接口数据 · 随机狗狗图片</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：Dog CEO 公开接口 fetch 实战
+           接口：https://dog.ceo/api/breeds/image/random
+           返回：{ "message": "图片URL", "status": "success" }
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 接口说明卡 ---------- */
+        .zhy_api-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 14px;
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #1c2733;
+            border-radius: 10px;
+            font: 13px/1.8 Consolas, monospace;
+        }
+
+        .zhy_api-method {
+            padding: 3px 10px;
+            background: #3a9d5d;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .zhy_api-url { color: #cfe3f2; word-break: break-all; }
+
+        .zhy_api-url em { color: #9ed58b; font-style: normal; }
+
+        /* ---------- 代码框 / 状态条 ---------- */
+        .zhy_code-box {
+            margin: 14px 0 0;
+            padding: 14px 16px;
+            background: #1c2733;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.9 Consolas, monospace;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .zhy_code-box .zhy_c-kw { color: #6fb3e0; }
+
+        .zhy_code-box .zhy_c-str { color: #9ed58b; }
+
+        .zhy_code-box .zhy_c-cm { color: #7a8a99; }
+
+        .zhy_status {
+            margin-top: 14px;
+            padding: 10px 16px;
+            border-left: 3px solid #b8c2cc;
+            border-radius: 8px;
+            background: #f0f2f5;
+            color: #5a6570;
+            font: 600 13px Consolas, "Microsoft YaHei", monospace;
+            transition: all .2s ease;
+        }
+
+        .zhy_status.zhy_st-load {
+            background: #eef5fa;
+            border-left-color: #1d5d8f;
+            color: #1d5d8f;
+        }
+
+        .zhy_status.zhy_st-ok {
+            background: #eef9f1;
+            border-left-color: #3a9d5d;
+            color: #2f7d4b;
+        }
+
+        .zhy_status.zhy_st-bad {
+            background: #fdf0ee;
+            border-left-color: #d86d55;
+            color: #b04534;
+        }
+
+        /* ---------- 狗狗图片展示区 ---------- */
+        .zhy_dog-stage {
+            position: relative;
+            margin-top: 14px;
+            height: 340px;
+            background: repeating-conic-gradient(#f2f4f7 0 25%, #fafbfc 0 50%) 0 0 / 26px 26px;
+            border: 1.5px dashed #cfd8e0;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zhy_dog-stage img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: zhy_fadein .35s ease;
+        }
+
+        @keyframes zhy_fadein {
+            from { opacity: 0; transform: scale(.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .zhy_dog-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: #98a2ad;
+            font-size: 14px;
+        }
+
+        .zhy_dog-placeholder .iconfont { font-size: 44px; }
+
+        .zhy_dog-spin {
+            width: 34px;
+            height: 34px;
+            border: 3.5px solid #d5dce3;
+            border-top-color: #1d5d8f;
+            border-radius: 50%;
+            animation: zhy_spin .8s linear infinite;
+        }
+
+        @keyframes zhy_spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 图片上的品种标签 */
+        .zhy_dog-breed {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            max-width: 80%;
+            padding: 6px 14px;
+            background: rgba(23, 33, 43, .82);
+            border-radius: 17px;
+            color: #fff;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+        }
+
+        .zhy_dog-breed em {
+            color: #ffd04a;
+            font-style: normal;
+        }
+
+        /* ---------- 信息格 ---------- */
+        .zhy_info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .zhy_info-cell {
+            padding: 11px 14px;
+            background: #f0f6fb;
+            border-radius: 8px;
+            font: 600 13px Consolas, "Microsoft YaHei", monospace;
+            color: #1d5d8f;
+        }
+
+        .zhy_info-cell strong {
+            display: block;
+            margin-top: 4px;
+            font: 700 15px Consolas, monospace;
+            color: #d86d55;
+            word-break: break-all;
+        }
+
+        .zhy_info-cell a { color: #d86d55; }
+
+        /* ---------- 历史缩略图 ---------- */
+        .zhy_history {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            min-height: 74px;
+        }
+
+        .zhy_history img {
+            width: 96px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1.5px solid #dfe6ec;
+            cursor: pointer;
+            transition: transform .15s ease;
+        }
+
+        .zhy_history img:hover { transform: translateY(-3px); border-color: #1d5d8f; }
+
+        /* ---------- 按钮组 ---------- */
+        .zhy_btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+        .zhy_btn {
+            padding: 9px 18px;
+            background: #fff;
+            border: 1.5px solid #1d5d8f;
+            border-radius: 19px;
+            color: #1d5d8f;
+            font: 600 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_btn:hover { background: #1d5d8f; color: #fff; transform: translateY(-2px); }
+
+        .zhy_btn.zhy_btn-primary {
+            background: #d86d55;
+            border-color: #d86d55;
+            color: #fff;
+        }
+
+        .zhy_btn.zhy_btn-primary:hover { background: #c2543c; }
+
+        .zhy_btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-11-02 大模型：GLM-5.3-FlashX 功能：fetch 获取 Dog CEO 随机狗狗图片接口并展示 -->
+
+    <div class="zhy_page">
+        <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 17-2 · JavaScript 网络请求</p>
+        <h1 class="zhy_title">fetch 获取接口数据：随机狗狗图片</h1>
+        <p class="zhy_intro">该接口允许跨域访问（响应头含 Access-Control-Allow-Origin: *），双击本页用 file:// 打开也能正常请求，是练习 fetch 的理想接口。</p>
+
+        <!-- ========== 一、接口说明 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-faxian" aria-hidden="true"></i> 一、接口说明</h2>
+            <div class="zhy_api-card">
+                <span class="zhy_api-method">GET</span>
+                <span class="zhy_api-url">https://dog.ceo/api/breeds/image/random<br>返回：<em>{ "message": "图片URL", "status": "success" }</em></span>
+            </div>
+            <div class="zhy_code-box"><span class="zhy_c-kw">async function</span> zhyLoadDog() {
+    <span class="zhy_c-kw">var</span> zhyResp = <span class="zhy_c-kw">await</span> fetch(<span class="zhy_c-str">'https://dog.ceo/api/breeds/image/random'</span>);
+    <span class="zhy_c-kw">var</span> zhyData = <span class="zhy_c-kw">await</span> zhyResp.json();   <span class="zhy_c-cm">// 把 JSON 文本解析成对象</span>
+    console.log(zhyData.message);         <span class="zhy_c-cm">// 图片地址</span>
+}</div>
+        </section>
+
+        <!-- ========== 二、请求状态 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 二、请求演示</h2>
+            <div class="zhy_status" data-zhy-status>等待发起请求…</div>
+
+            <div class="zhy_dog-stage" data-zhy-stage>
+                <div class="zhy_dog-placeholder" data-zhy-placeholder>
+                    <i class="iconfont icon-xihuan" aria-hidden="true"></i>
+                    <span>页面加载 400ms 后自动请求第一张狗狗图片</span>
+                </div>
+            </div>
+            <span class="zhy_dog-breed" data-zhy-breed hidden></span>
+
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn zhy_btn-primary" data-zhy-action="load"><i class="iconfont icon-zengjia" aria-hidden="true"></i> 再来一张狗狗</button>
+            </div>
+
+            <div class="zhy_info-grid">
+                <div class="zhy_info-cell">请求次数<strong data-zhy-val="count">0</strong></div>
+                <div class="zhy_info-cell">HTTP 状态码<strong data-zhy-val="code">-</strong></div>
+                <div class="zhy_info-cell">接口 status<strong data-zhy-val="status">-</strong></div>
+                <div class="zhy_info-cell">当前品种<strong data-zhy-val="breed">-</strong></div>
+                <div class="zhy_info-cell">图片直链<strong data-zhy-val="link"><a href="#" target="_blank" rel="noopener" data-zhy-href>-</a></strong></div>
+            </div>
+
+            <p class="zhy_intro" style="margin-top:16px">最近请求历史（点击缩略图可回看）：</p>
+            <div class="zhy_history" data-zhy-history></div>
+        </section>
+
+        <section class="zhy_footer-note">提示：打开 F12 控制台可查看每次请求的完整 JSON 响应；若浏览器拦截请求，请通过本地 HTTP 服务打开本页。</section>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：fetch 请求 Dog CEO 接口
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        var ZHY_API = 'https://dog.ceo/api/breeds/image/random';
+        var zhyCount = 0;
+
+        /* ---------- DOM 引用（类选择器 + data 属性，不用 id） ---------- */
+        var zhyStage = document.querySelector('[data-zhy-stage]');
+        var zhyStatus = document.querySelector('[data-zhy-status]');
+        var zhyBreedTag = document.querySelector('[data-zhy-breed]');
+        var zhyHistory = document.querySelector('[data-zhy-history]');
+        var zhyLoadBtn = document.querySelector('[data-zhy-action="load"]');
+
+        /* ---------- 工具：设置状态条 ---------- */
+        function zhySetStatus(zhyText, zhyType) {
+            zhyStatus.className = 'zhy_status';
+            if (zhyType === 'load') { zhyStatus.classList.add('zhy_st-load'); }
+            if (zhyType === 'ok') { zhyStatus.classList.add('zhy_st-ok'); }
+            if (zhyType === 'bad') { zhyStatus.classList.add('zhy_st-bad'); }
+            zhyStatus.textContent = zhyText;
+        }
+
+        /* ---------- 工具：从图片 URL 中解析品种名 ---------- */
+        function zhyParseBreed(zhyUrl) {
+            var zhyMatch = zhyUrl.match(/\/breeds\/([^\/]+)\//);
+            if (!zhyMatch) {
+                return '未知品种';
+            }
+            /* german/shepherd → German Shepherd；hound-african → African Hound */
+            return zhyMatch[1]
+                .replace('-', ' ')
+                .split('/')
+                .map(function (zhyWord) {
+                    return zhyWord.charAt(0).toUpperCase() + zhyWord.slice(1);
+                })
+                .reverse()
+                .join(' ');
+        }
+
+        /* ---------- 核心：fetch 请求 ---------- */
+        async function zhyLoadDog() {
+            zhyCount++;
+            document.querySelector('[data-zhy-val="count"]').textContent = zhyCount;
+            zhyLoadBtn.disabled = true;
+            zhySetStatus('⏳ 正在请求接口… (' + ZHY_API + ')', 'load');
+
+            /* 展示加载动画 */
+            zhyStage.innerHTML = '<div class="zhy_dog-placeholder"><span class="zhy_dog-spin"></span><span>请求中…</span></div>';
+            zhyBreedTag.hidden = true;
+
+            try {
+                var zhyResp = await fetch(ZHY_API);
+                document.querySelector('[data-zhy-val="code"]').textContent = zhyResp.status + ' ' + zhyResp.statusText;
+
+                if (!zhyResp.ok) {
+                    throw new Error('HTTP ' + zhyResp.status);
+                }
+
+                var zhyData = await zhyResp.json();   /* 接口返回 JSON → 对象 */
+                console.log('[17-2] 接口响应：', zhyData);
+
+                if (zhyData.status !== 'success') {
+                    throw new Error('接口返回 status: ' + zhyData.status);
+                }
+
+                /* 渲染图片 */
+                var zhyImg = document.createElement('img');
+                zhyImg.src = zhyData.message;
+                zhyImg.alt = '随机狗狗图片';
+                zhyStage.innerHTML = '';
+                zhyStage.appendChild(zhyImg);
+
+                /* 品种名标签 + 信息格 */
+                var zhyBreed = zhyParseBreed(zhyData.message);
+                zhyBreedTag.innerHTML = '品种：<em>' + zhyBreed + '</em>';
+                zhyBreedTag.hidden = false;
+                document.querySelector('[data-zhy-val="status"]').textContent = zhyData.status;
+                document.querySelector('[data-zhy-val="breed"]').textContent = zhyBreed;
+                var zhyLink = document.querySelector('[data-zhy-href]');
+                zhyLink.href = zhyData.message;
+                zhyLink.textContent = zhyData.message.split('/').pop();
+
+                /* 历史缩略图（保留最近 5 张） */
+                var zhyThumb = document.createElement('img');
+                zhyThumb.src = zhyData.message;
+                zhyThumb.alt = zhyBreed;
+                zhyThumb.title = zhyBreed;
+                zhyThumb.addEventListener('click', function () {
+                    var zhyBig = document.querySelector('[data-zhy-stage] img');
+                    if (zhyBig) {
+                        zhyBig.src = zhyData.message;
+                    }
+                });
+                zhyHistory.insertBefore(zhyThumb, zhyHistory.firstChild);
+                while (zhyHistory.children.length > 5) {
+                    zhyHistory.removeChild(zhyHistory.lastChild);
+                }
+
+                zhySetStatus('✓ 请求成功！共请求 ' + zhyCount + ' 次，本次品种：' + zhyBreed, 'ok');
+            } catch (zhyError) {
+                zhySetStatus('✗ 请求失败：' + zhyError.message + '（可查看 F12 控制台，或改用本地 HTTP 服务打开）', 'bad');
+                document.querySelector('[data-zhy-val="status"]').textContent = 'error';
+                zhyStage.innerHTML = '<div class="zhy_dog-placeholder"><i class="iconfont icon-shanchu" aria-hidden="true"></i><span>请求失败，请重试</span></div>';
+                console.error('[17-2] 请求失败：', zhyError);
+            } finally {
+                zhyLoadBtn.disabled = false;
+            }
+        }
+
+        /* ---------- 事件绑定 ---------- */
+        zhyLoadBtn.addEventListener('click', zhyLoadDog);
+
+        /* 页面加载 400ms 后自动请求第一张 */
+        setTimeout(zhyLoadDog, 400);
+
+        console.log('[17-2] 张海玉：fetch 狗狗接口演示页加载完成');
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 数据格式 · 语法与常用方法</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：JSON 数据格式演示
+           亮点：在线 JSON 校验器（输入 → 解析 → 表格化展示）
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- JSON vs JS 对象 对比表 ---------- */
+        .zhy_cmp {
+            width: 100%;
+            margin-top: 14px;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .zhy_cmp th,
+        .zhy_cmp td {
+            padding: 10px 14px;
+            border: 1px solid #e3ebf1;
+            text-align: left;
+        }
+
+        .zhy_cmp th { background: #eef5fa; color: #1d5d8f; }
+
+        .zhy_cmp .zhy_ok { color: #3a9d5d; font-weight: 700; }
+
+        .zhy_cmp .zhy_no { color: #d86d55; font-weight: 700; }
+
+        /* ---------- 类型徽章 ---------- */
+        .zhy_type-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+        .zhy_type-badge {
+            padding: 7px 14px;
+            background: #f0f6fb;
+            border: 1px solid #cfe3f2;
+            border-radius: 17px;
+            color: #1d5d8f;
+            font: 600 13px Consolas, "Microsoft YaHei", monospace;
+        }
+
+        .zhy_type-badge em {
+            color: #d86d55;
+            font-style: normal;
+            margin-left: 6px;
+        }
+
+        /* ---------- 代码框 / 输出框 ---------- */
+        .zhy_code-box {
+            margin: 14px 0 0;
+            padding: 14px 16px;
+            background: #1c2733;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.9 Consolas, monospace;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .zhy_code-box .zhy_c-key { color: #6fb3e0; }
+
+        .zhy_code-box .zhy_c-str { color: #9ed58b; }
+
+        .zhy_code-box .zhy_c-cm { color: #7a8a99; }
+
+        /* ---------- JSON 校验器 ---------- */
+        .zhy_editor {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .zhy_json-input {
+            width: 100%;
+            height: 210px;
+            padding: 12px 14px;
+            background: #1c2733;
+            border: 1.5px solid #2c3d4f;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, monospace;
+            resize: vertical;
+            outline: none;
+        }
+
+        .zhy_json-input:focus { border-color: #6fb3e0; }
+
+        .zhy_result-box {
+            height: 210px;
+            padding: 12px 14px;
+            background: #fdf6ec;
+            border-left: 3px solid #e8a13a;
+            border-radius: 10px;
+            overflow: auto;
+            font: 13px/1.8 Consolas, "Microsoft YaHei", monospace;
+            color: #8a6d3b;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .zhy_result-box.zhy_result-ok {
+            background: #eef9f1;
+            border-left-color: #3a9d5d;
+            color: #2f7d4b;
+        }
+
+        .zhy_result-box.zhy_result-bad {
+            background: #fdf0ee;
+            border-left-color: #d86d55;
+            color: #b04534;
+        }
+
+        /* ---------- 学生 JSON 数据表 ---------- */
+        .zhy_data-table {
+            width: 100%;
+            margin-top: 14px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .zhy_data-table th,
+        .zhy_data-table td {
+            padding: 8px 12px;
+            border: 1px solid #e3ebf1;
+            text-align: left;
+        }
+
+        .zhy_data-table th { background: #eef5fa; color: #1d5d8f; }
+
+        .zhy_data-table td { font-family: Consolas, "Microsoft YaHei", monospace; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-11-02 大模型：GLM-5.3-FlashX 功能：JSON 数据格式 · 语法规则与 parse/stringify 演示 -->
+
+    <div class="zhy_page">
+        <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 17-1 · JavaScript 数据交换</p>
+        <h1 class="zhy_title">JSON：JavaScript Object Notation</h1>
+        <p class="zhy_intro">JSON 是一种轻量级的数据交换格式，独立于语言、易于阅读和解析，是前后端传输数据的事实标准。</p>
+
+        <!-- ========== 一、语法规则 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 一、语法规则与数据类型</h2>
+            <div class="zhy_code-box">{
+    <span class="zhy_c-key">"name"</span>: <span class="zhy_c-str">"张海玉"</span>,          <span class="zhy_c-cm">// 键必须用双引号</span>
+    <span class="zhy_c-key">"age"</span>: 21,                    <span class="zhy_c-cm">// 数字</span>
+    <span class="zhy_c-key">"isStudent"</span>: true,            <span class="zhy_c-cm">// 布尔</span>
+    <span class="zhy_c-key">"hobbies"</span>: ["网页设计", "前端"], <span class="zhy_c-cm">// 数组</span>
+    <span class="zhy_c-key">"school"</span>: {                   <span class="zhy_c-cm">// 嵌套对象</span>
+        <span class="zhy_c-key">"name"</span>: <span class="zhy_c-str">"大连东软信息学院"</span>
+    },
+    <span class="zhy_c-key">"remark"</span>: null                <span class="zhy_c-cm">// 空值</span>
+}</div>
+            <div class="zhy_type-row">
+                <span class="zhy_type-badge">字符串<em>"..."</em></span>
+                <span class="zhy_type-badge">数字<em>21</em></span>
+                <span class="zhy_type-badge">布尔<em>true / false</em></span>
+                <span class="zhy_type-badge">空值<em>null</em></span>
+                <span class="zhy_type-badge">数组<em>[ ]</em></span>
+                <span class="zhy_type-badge">对象<em>{ }</em></span>
+            </div>
+            <p class="zhy_intro" style="margin-top:10px">注意：JSON 不支持函数、undefined、单引号键名和注释。</p>
+        </section>
+
+        <!-- ========== 二、JSON 与 JS 对象的区别 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-faxian" aria-hidden="true"></i> 二、JSON 与 JS 对象的区别</h2>
+            <table class="zhy_cmp">
+                <thead><tr><th>对比项</th><th>JSON</th><th>JS 对象</th></tr></thead>
+                <tbody>
+                    <tr><td>键名</td><td class="zhy_no">必须双引号</td><td class="zhy_ok">单双引号或裸键均可</td></tr>
+                    <tr><td>值类型</td><td class="zhy_no">不含函数 / undefined</td><td class="zhy_ok">任意类型</td></tr>
+                    <tr><td>注释</td><td class="zhy_no">不允许</td><td class="zhy_ok">// 与 /* */ 均可</td></tr>
+                    <tr><td>结尾逗号</td><td class="zhy_no">不允许</td><td class="zhy_ok">允许</td></tr>
+                    <tr><td>本质</td><td class="zhy_ok">字符串（文本格式）</td><td class="zhy_ok">内存中的数据结构</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ========== 三、两个核心方法 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 三、两个核心方法：parse 与 stringify</h2>
+            <div class="zhy_code-box"><span class="zhy_c-cm">// 字符串 → 对象（反序列化）</span>
+<span class="zhy_c-key">var</span> obj = JSON.parse(<span class="zhy_c-str">'{"name":"张海玉"}'</span>);
+
+<span class="zhy_c-cm">// 对象 → 字符串（序列化）</span>
+<span class="zhy_c-key">var</span> str = JSON.stringify({ name: <span class="zhy_c-str">"张海玉"</span> }, null, 2);</div>
+            <div class="zhy_btn-row" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+                <button type="button" class="zhy_btn" data-zhy-demo="parse">JSON.parse 解析</button>
+                <button type="button" class="zhy_btn" data-zhy-demo="stringify">JSON.stringify 序列化</button>
+            </div>
+            <div class="zhy_out" data-zhy-out="method" style="margin-top:12px;padding:12px 16px;background:#fdf6ec;border-left:3px solid #e8a13a;border-radius:8px;color:#8a6d3b;font:13px/1.9 Consolas,monospace;white-space:pre-wrap">点击按钮查看两种方法的执行结果…</div>
+        </section>
+
+        <!-- ========== 四、JSON 在线校验器 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 四、JSON 在线校验器（可编辑）</h2>
+            <p class="zhy_intro">左侧文本框可编辑，点击"解析校验"，合法 JSON 将在右侧表格化展示，非法 JSON 会提示错误位置。</p>
+            <div class="zhy_editor">
+                <textarea class="zhy_json-input" data-zhy-json spellcheck="false">{
+  "name": "张海玉",
+  "zhyStudentId": "20230101",
+  "age": 21,
+  "isStudent": true,
+  "hobbies": ["网页设计", "JavaScript", "羽毛球"],
+  "school": { "name": "大连东软信息学院", "city": "大连" },
+  "remark": null
+}</textarea>
+                <div class="zhy_result-box" data-zhy-result>校验结果将显示在这里…</div>
+            </div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn" data-zhy-action="validate">解析校验</button>
+                <button type="button" class="zhy_btn" data-zhy-action="bad">故意制造错误（试试非法 JSON）</button>
+            </div>
+            <table class="zhy_data-table" data-zhy-table hidden>
+                <thead><tr><th>属性</th><th>值</th><th>类型</th></tr></thead>
+                <tbody data-zhy-tbody></tbody>
+            </table>
+        </section>
+
+        <!-- ========== 五、学生成绩 JSON 数据展示 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> 五、实战：用 JSON 描述学生成绩单</h2>
+            <div class="zhy_code-box">[
+    { <span class="zhy_c-key">"name"</span>: <span class="zhy_c-str">"张海玉"</span>, <span class="zhy_c-key">"html"</span>: 95, <span class="zhy_c-key">"js"</span>: 92 },
+    { <span class="zhy_c-key">"name"</span>: <span class="zhy_c-str">"李雷"</span>,   <span class="zhy_c-key">"html"</span>: 88, <span class="zhy_c-key">"js"</span>: 90 },
+    { <span class="zhy_c-key">"name"</span>: <span class="zhy_c-str">"韩梅梅"</span>, <span class="zhy_c-key">"html"</span>: 91, <span class="zhy_c-key">"js"</span>: 86 }
+]</div>
+            <div class="zhy_btn-row">
+                <button type="button" class="zhy_btn" data-zhy-action="scores">解析成绩单并计算平均分</button>
+            </div>
+            <div class="zhy_out" data-zhy-out="scores" style="margin-top:12px;padding:12px 16px;background:#fdf6ec;border-left:3px solid #e8a13a;border-radius:8px;color:#8a6d3b;font:13px/1.9 Consolas,monospace;white-space:pre-wrap">点击按钮查看成绩统计…</div>
+        </section>
+
+        <section class="zhy_footer-note">提示：下一页 17-2 将使用 fetch 请求真实网络接口，接口返回的数据正是 JSON。</section>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：JSON 数据格式演示脚本
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        /* ---------- 工具：写入输出框 + 控制台 ---------- */
+        function zhyEcho(zhyName, zhyText) {
+            var zhyOut = document.querySelector('[data-zhy-out="' + zhyName + '"]');
+            if (zhyOut) {
+                zhyOut.textContent = zhyText;
+            }
+            console.log('[17-1]', zhyText);
+        }
+
+        /* ---------- 三、parse / stringify 演示 ---------- */
+        Array.prototype.forEach.call(document.querySelectorAll('[data-zhy-demo]'), function (zhyBtn) {
+            zhyBtn.addEventListener('click', function () {
+                if (zhyBtn.getAttribute('data-zhy-demo') === 'parse') {
+                    var zhyParsed = JSON.parse('{"name":"张海玉","age":21,"isStudent":true}');
+                    zhyEcho('method',
+                        'JSON.parse(\'{"name":"张海玉",...}\') 解析成功：\n'
+                        + '类型 → ' + typeof zhyParsed + '\n'
+                        + 'obj.name → ' + zhyParsed.name + '（此时已是真正的对象，可以点语法访问）');
+                } else {
+                    var zhyStr = JSON.stringify({ name: '张海玉', age: 21 }, null, 2);
+                    zhyEcho('method',
+                        'JSON.stringify({ name: "张海玉", age: 21 }, null, 2) 序列化结果：\n'
+                        + zhyStr + '\n类型 → ' + typeof zhyStr + '（已是字符串，可用于网络传输）');
+                }
+            });
+        });
+
+        /* ---------- 四、JSON 校验器 ---------- */
+        var zhyJsonBox = document.querySelector('[data-zhy-json]');
+        var zhyResultBox = document.querySelector('[data-zhy-result]');
+        var zhyTable = document.querySelector('[data-zhy-table]');
+        var zhyTbody = document.querySelector('[data-zhy-tbody]');
+
+        function zhyValidate(zhyText) {
+            try {
+                var zhyData = JSON.parse(zhyText);
+                zhyResultBox.className = 'zhy_result-box zhy_result-ok';
+                zhyResultBox.textContent = '✓ 校验通过！解析出的数据：\n\n' + JSON.stringify(zhyData, null, 2);
+
+                /* 键值表格化 */
+                var zhyRows = '';
+                var zhyCount = 0;
+                for (var zhyKey in zhyData) {
+                    var zhyVal = zhyData[zhyKey];
+                    var zhyShow;
+                    if (zhyVal === null) {
+                        zhyShow = 'null';
+                    } else if (typeof zhyVal === 'object') {
+                        zhyShow = JSON.stringify(zhyVal);
+                    } else {
+                        zhyShow = String(zhyVal);
+                    }
+                    zhyRows += '<tr><td>' + zhyKey + '</td><td>' + zhyShow
+                        + '</td><td>' + (zhyVal === null ? 'null' : typeof zhyVal) + '</td></tr>';
+                    zhyCount++;
+                }
+                zhyTbody.innerHTML = zhyRows;
+                zhyTable.hidden = false;
+                zhyEcho('method', '✓ JSON 合法，共 ' + zhyCount + ' 个顶层属性');
+            } catch (zhyError) {
+                zhyResultBox.className = 'zhy_result-box zhy_result-bad';
+                zhyResultBox.textContent = '✗ 解析失败：' + zhyError.message + '\n\n请检查：双引号、逗号、注释等是否符合 JSON 语法。';
+                zhyTable.hidden = true;
+                zhyEcho('method', '✗ JSON 非法：' + zhyError.message);
+            }
+        }
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-zhy-action]'), function (zhyBtn) {
+            zhyBtn.addEventListener('click', function () {
+                switch (zhyBtn.getAttribute('data-zhy-action')) {
+                case 'validate':
+                    zhyValidate(zhyJsonBox.value);
+                    break;
+                case 'bad':
+                    /* 故意填入一段非法 JSON：键用了单引号且带注释 */
+                    zhyJsonBox.value = "{\n  name: '张海玉',  // 单引号键名，JSON 不允许\n  'age': 21,      // 单引号值也不行\n  hobby: undefined // undefined 不是合法 JSON 值\n}";
+                    zhyValidate(zhyJsonBox.value);
+                    break;
+                case 'scores':
+                    var zhyScores = JSON.parse('['
+                        + '{"name":"张海玉","html":95,"js":92},'
+                        + '{"name":"李雷","html":88,"js":90},'
+                        + '{"name":"韩梅梅","html":91,"js":86}]');
+                    var zhyReport = '';
+                    for (var zhyI = 0; zhyI < zhyScores.length; zhyI++) {
+                        var zhyStu = zhyScores[zhyI];
+                        var zhyAvg = (zhyStu.html + zhyStu.js) / 2;
+                        zhyReport += zhyStu.name + '：HTML ' + zhyStu.html + ' 分，JS ' + zhyStu.js + ' 分，平均 ' + zhyAvg + ' 分\n';
+                    }
+                    zhyEcho('scores', '解析出 ' + zhyScores.length + ' 条学生记录：\n\n' + zhyReport);
+                    break;
+                }
+            });
+        });
+
+        console.log('[17-1] 张海玉：JSON 演示页加载完成');
+    </script>
+</body>
+</html>
