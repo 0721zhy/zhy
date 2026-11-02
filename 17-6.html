@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise 与 async 异步实战 · 包饺子流程</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：包饺子异步流程演示（17-6）
+           买原料 → 取原料 →（和面 ∥ 和馅）→ 包饺子 → 吃饺子
+           顺序 await 串行 + Promise.all 并行
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 通用按钮 ---------- */
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 11px 26px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_btn:hover { background: #164a73; transform: translateY(-2px); }
+
+        .zhy_btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+
+        .zhy_btn--ghost {
+            background: #fff;
+            color: #1d5d8f;
+            border: 1.5px solid #1d5d8f;
+        }
+
+        .zhy_btn--ghost:hover { background: #eef4fa; }
+
+        /* ---------- 流程图 ---------- */
+        .zhy_flow {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+        }
+
+        /* 步骤卡片 */
+        .zhy_step {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: #f4f8fb;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 12px;
+            transition: all .3s ease;
+        }
+
+        .zhy_step-icon {
+            flex: none;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e2ebf3;
+            border-radius: 50%;
+            font-size: 22px;
+            color: #5f7a92;
+            transition: all .3s ease;
+        }
+
+        .zhy_step-main { flex: 1; min-width: 0; }
+
+        .zhy_step-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #17212b;
+        }
+
+        .zhy_step-desc {
+            margin-top: 2px;
+            font-size: 12px;
+            color: #7a8fa3;
+        }
+
+        /* 状态徽章 */
+        .zhy_step-state {
+            flex: none;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #e2ebf3;
+            color: #5f7a92;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* 进行中：橙色呼吸 */
+        .zhy_step.zhy_step-running {
+            border-color: #f0a05a;
+            background: #fdf3e7;
+            transform: translateX(6px);
+        }
+
+        .zhy_step.zhy_step-running .zhy_step-icon {
+            background: #f0a05a;
+            color: #fff;
+            animation: zhy_breath 1s ease-in-out infinite;
+        }
+
+        .zhy_step.zhy_step-running .zhy_step-state {
+            background: #f0a05a;
+            color: #fff;
+        }
+
+        @keyframes zhy_breath {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+
+        /* 完成：绿色 */
+        .zhy_step.zhy_step-done {
+            border-color: #7cc488;
+            background: #eef8f0;
+        }
+
+        .zhy_step.zhy_step-done .zhy_step-icon {
+            background: #5cab69;
+            color: #fff;
+            animation: none;
+        }
+
+        .zhy_step.zhy_step-done .zhy_step-state {
+            background: #5cab69;
+            color: #fff;
+        }
+
+        .zhy_step.zhy_step-done .zhy_step-name::after {
+            content: ' ✓';
+            color: #3f8c4d;
+        }
+
+        /* 箭头连接线 */
+        .zhy_arrow-down {
+            align-self: center;
+            padding: 4px 0;
+            color: #9db3c6;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* 并行分支容器 */
+        .zhy_branch {
+            display: flex;
+            gap: 12px;
+            position: relative;
+            padding: 8px 0 8px 26px;
+            border-left: 2px dashed #9db3c6;
+            margin-left: 22px;
+        }
+
+        .zhy_branch .zhy_step { flex: 1; }
+
+        .zhy_branch-label {
+            position: absolute;
+            left: -2px;
+            top: -9px;
+            transform: translateX(-100%);
+            writing-mode: vertical-lr;
+            letter-spacing: 4px;
+            font-size: 11px;
+            color: #9db3c6;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .zhy_branch { flex-direction: column; }
+        }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_kw { color: #7fb3ff; }
+        .zhy_code .zhy_fn { color: #ffd479; }
+        .zhy_code .zhy_str { color: #9ed58b; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+
+        /* ---------- 异步日志 ---------- */
+        .zhy_log {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            min-height: 150px;
+            max-height: 260px;
+            overflow-y: auto;
+            font: 12px/1.9 Consolas, monospace;
+            color: #9ed58b;
+        }
+
+        .zhy_log p { margin: 0; }
+
+        .zhy_log .zhy_log-time { color: #5f7a92; margin-right: 8px; }
+
+        .zhy_log .zhy_log-hl { color: #ffd479; }
+
+        .zhy_log .zhy_log-end { color: #ff8f66; font-weight: 700; }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-02 大模型：GLM-5.3-FlashX 功能：Promise 与 async 异步流程演示 · 包饺子（串行 await + Promise.all 并行） -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 17-6 · Promise 与 async 异步实战</p>
+    <h1 class="zhy_title">包饺子的异步流程</h1>
+    <p class="zhy_intro">包饺子天然就是一个异步流程：买原料、取原料必须<strong>依次完成</strong>（await 串行）；和面与和馅互不依赖，可以<strong>同时进行</strong>（Promise.all 并行）；全部就绪后才能包饺子、吃饺子。点击按钮，观察每一步的状态变化与控制台日志。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 一、流程演示</h2>
+        <p><button type="button" class="zhy_btn" data-zhy-cook><i class="iconfont icon-zengjia" aria-hidden="true"></i> 开始包饺子</button>
+        <button type="button" class="zhy_btn zhy_btn--ghost" data-zhy-clear><i class="iconfont icon-fanhui" aria-hidden="true"></i> 重置</button></p>
+
+        <div class="zhy_flow">
+            <div class="zhy_step" data-zhy-step="buy">
+                <span class="zhy_step-icon"><i class="iconfont icon-gouwuche" aria-hidden="true"></i></span>
+                <span class="zhy_step-main">
+                    <span class="zhy_step-name">1 · 买原料</span>
+                    <span class="zhy_step-desc">await 串行：去超市买面粉和肉馅（约 1.5 秒）</span>
+                </span>
+                <span class="zhy_step-state">待开始</span>
+            </div>
+            <div class="zhy_arrow-down">↓</div>
+            <div class="zhy_step" data-zhy-step="take">
+                <span class="zhy_step-icon"><i class="iconfont icon-faxian" aria-hidden="true"></i></span>
+                <span class="zhy_step-main">
+                    <span class="zhy_step-name">2 · 取原料</span>
+                    <span class="zhy_step-desc">await 串行：必须等买完，把原料取回家（约 1 秒）</span>
+                </span>
+                <span class="zhy_step-state">待开始</span>
+            </div>
+            <div class="zhy_arrow-down">↓ 买完、取完之后，两件事互不依赖，同时开工</div>
+            <div class="zhy_branch">
+                <span class="zhy_branch-label">Promise.all 并行</span>
+                <div class="zhy_step" data-zhy-step="dough">
+                    <span class="zhy_step-icon"><i class="iconfont icon-shipin" aria-hidden="true"></i></span>
+                    <span class="zhy_step-main">
+                        <span class="zhy_step-name">3a · 和面</span>
+                        <span class="zhy_step-desc">面粉加水揉成面团（约 2 秒）</span>
+                    </span>
+                    <span class="zhy_step-state">待开始</span>
+                </div>
+                <div class="zhy_step" data-zhy-step="fill">
+                    <span class="zhy_step-icon"><i class="iconfont icon-xihuan" aria-hidden="true"></i></span>
+                    <span class="zhy_step-main">
+                        <span class="zhy_step-name">3b · 和馅</span>
+                        <span class="zhy_step-desc">肉菜调料拌成饺子馅（约 1.5 秒）</span>
+                    </span>
+                    <span class="zhy_step-state">待开始</span>
+                </div>
+            </div>
+            <div class="zhy_arrow-down">↓ 面和馅都好了，才能进入下一步</div>
+            <div class="zhy_step" data-zhy-step="wrap">
+                <span class="zhy_step-icon"><i class="iconfont icon-bianji" aria-hidden="true"></i></span>
+                <span class="zhy_step-main">
+                    <span class="zhy_step-name">4 · 包饺子</span>
+                    <span class="zhy_step-desc">await 串行：擀皮、放馅、捏褶（约 1.5 秒）</span>
+                </span>
+                <span class="zhy_step-state">待开始</span>
+            </div>
+            <div class="zhy_arrow-down">↓</div>
+            <div class="zhy_step" data-zhy-step="eat">
+                <span class="zhy_step-icon"><i class="iconfont icon-my" aria-hidden="true"></i></span>
+                <span class="zhy_step-main">
+                    <span class="zhy_step-name">5 · 吃饺子</span>
+                    <span class="zhy_step-desc">烧水下锅，蘸醋开吃，async 函数返回"真香"（约 1 秒）</span>
+                </span>
+                <span class="zhy_step-state">待开始</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 二、核心代码</h2>
+        <div class="zhy_code"><span class="zhy_cm">// 模拟耗时的异步活动：返回一个 Promise，ms 毫秒后兑现</span>
+<span class="zhy_kw">function</span> <span class="zhy_fn">sleep</span>(ms) {
+    <span class="zhy_kw">return new Promise</span>(zhyResolve =&gt; <span class="zhy_fn">setTimeout</span>(zhyResolve, ms));
+}
+
+<span class="zhy_cm">// async 函数：用 await 串行等待，用 Promise.all 并行抢跑</span>
+<span class="zhy_kw">async function</span> <span class="zhy_fn">zhyMakeDumplings</span>() {
+    <span class="zhy_kw">await</span> <span class="zhy_fn">sleep</span>(1500);          <span class="zhy_cm">// 1. 买原料（必须先完成）</span>
+    <span class="zhy_kw">await</span> <span class="zhy_fn">sleep</span>(1000);          <span class="zhy_cm">// 2. 取原料（接着完成）</span>
+
+    <span class="zhy_kw">await</span> Promise.<span class="zhy_fn">all</span>([        <span class="zhy_cm">// 3. 和面 ∥ 和馅，同时进行</span>
+        <span class="zhy_fn">sleep</span>(2000),             <span class="zhy_cm">//    和面</span>
+        <span class="zhy_fn">sleep</span>(1500)              <span class="zhy_cm">//    和馅</span>
+    ]);                          <span class="zhy_cm">//    两者都完成才解除等待</span>
+
+    <span class="zhy_kw">await</span> <span class="zhy_fn">sleep</span>(1500);          <span class="zhy_cm">// 4. 包饺子</span>
+    <span class="zhy_kw">return</span> <span class="zhy_str">'饺子出锅，真香！'</span>; <span class="zhy_cm">// 5. 吃饺子</span>
+}</div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 三、异步日志</h2>
+        <div class="zhy_log" data-zhy-log aria-live="polite"></div>
+    </section>
+
+    <section class="zhy_footer-note">说明：sleep() 用 setTimeout 封装成 Promise，是 async/await 中"等待一段时间"的标准写法；总耗时约等于关键路径 1.5 + 1 + 2 + 1.5 + 1 = 7 秒（并行步骤只按最长的和面计）。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：包饺子异步流程（17-6）
+       串行 await + Promise.all 并行，驱动步骤卡片与日志
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        /* ---------- 状态切换工具 ---------- */
+        var zhyStateText = { idle: '待开始', running: '进行中…', done: '完成' };
+
+        function zhySetState(zhyKey, zhyStatus) {
+            var zhyCard = document.querySelector('[data-zhy-step="' + zhyKey + '"]');
+            zhyCard.classList.remove('zhy_step-running', 'zhy_step-done');
+            if (zhyStatus === 'running') { zhyCard.classList.add('zhy_step-running'); }
+            if (zhyStatus === 'done') { zhyCard.classList.add('zhy_step-done'); }
+            zhyCard.querySelector('.zhy_step-state').textContent = zhyStateText[zhyStatus];
+        }
+
+        function zhyResetAll() {
+            ['buy', 'take', 'dough', 'fill', 'wrap', 'eat'].forEach(function (zhyKey) {
+                zhySetState(zhyKey, 'idle');
+            });
+        }
+
+        /* ---------- 日志 ---------- */
+        var zhyLog = document.querySelector('[data-zhy-log]');
+
+        function zhyAppendLog(zhyText, zhyCls) {
+            var zhyNow = new Date();
+            var zhyPad = function (zhyN) { return (zhyN < 10 ? '0' : '') + zhyN; };
+            var zhyP = document.createElement('p');
+            zhyP.innerHTML = '<span class="zhy_log-time">' +
+                zhyPad(zhyNow.getMinutes()) + ':' + zhyPad(zhyNow.getSeconds()) + '.' +
+                ('00' + zhyNow.getMilliseconds()).slice(-3) + '</span>' +
+                (zhyCls ? '<span class="' + zhyCls + '">' : '') + zhyText + (zhyCls ? '</span>' : '');
+            zhyLog.appendChild(zhyP);
+            zhyLog.scrollTop = zhyLog.scrollHeight;
+        }
+
+        /* ---------- 核心一：sleep —— 把 setTimeout 包装成 Promise ---------- */
+        function zhySleep(zhyMs) {
+            return new Promise(function (zhyResolve) {
+                setTimeout(zhyResolve, zhyMs);
+            });
+        }
+
+        /* ---------- 核心二：async 函数编排整个包饺子流程 ---------- */
+        var zhyCookBtn = document.querySelector('[data-zhy-cook]');
+        var zhyClearBtn = document.querySelector('[data-zhy-clear]');
+
+        async function zhyMakeDumplings() {
+            zhyCookBtn.disabled = true;
+
+            /* 1. 买原料：await 串行，必须等它完成 */
+            zhySetState('buy', 'running');
+            zhyAppendLog('🛒 出门买原料（面粉、肉馅、蔬菜）……');
+            await zhySleep(1500);
+            zhySetState('buy', 'done');
+            zhyAppendLog('✅ 原料买齐了');
+
+            /* 2. 取原料：接着串行 */
+            zhySetState('take', 'running');
+            zhyAppendLog('📦 把原料取回厨房……');
+            await zhySleep(1000);
+            zhySetState('take', 'done');
+            zhyAppendLog('✅ 原料就位，和面、和馅可以同时开工');
+
+            /* 3. 和面 ∥ 和馅：Promise.all 并行，两个同时计时 */
+            zhySetState('dough', 'running');
+            zhySetState('fill', 'running');
+            zhyAppendLog('<span class="zhy_log-hl">⚡ Promise.all 启动并行任务：和面(2s) ∥ 和馅(1.5s)</span>');
+            await Promise.all([
+                zhySleep(2000).then(function () {
+                    zhySetState('dough', 'done');
+                    zhyAppendLog('✅ 面和好了（光滑面团）');
+                }),
+                zhySleep(1500).then(function () {
+                    zhySetState('fill', 'done');
+                    zhyAppendLog('✅ 馅拌好了（香气扑鼻）');
+                })
+            ]);
+            zhyAppendLog('✅ 和面、和馅全部完成（并行只花了 2 秒，而不是 3.5 秒）');
+
+            /* 4. 包饺子：面和馅都就绪后才能开始 */
+            zhySetState('wrap', 'running');
+            zhyAppendLog('🥟 擀皮、放馅、捏褶，包饺子……');
+            await zhySleep(1500);
+            zhySetState('wrap', 'done');
+            zhyAppendLog('✅ 饺子包好了，一共 36 只');
+
+            /* 5. 吃饺子 */
+            zhySetState('eat', 'running');
+            zhyAppendLog('🍲 烧水下锅煮饺子……');
+            await zhySleep(1000);
+            zhySetState('eat', 'done');
+            zhyAppendLog('<span class="zhy_log-end">🎉 饺子出锅，真香！async 函数执行完毕</span>', '');
+
+            zhyCookBtn.disabled = false;
+        }
+
+        zhyCookBtn.addEventListener('click', function () {
+            zhyResetAll();
+            zhyAppendLog('—— async 函数 zhyMakeDumplings() 被调用 ——');
+            /* async 函数立即返回一个 Promise，流程由内部 await 驱动 */
+            zhyMakeDumplings();
+        });
+
+        zhyClearBtn.addEventListener('click', function () {
+            zhyLog.innerHTML = '';
+            zhyResetAll();
+            zhyCookBtn.disabled = false;
+        });
+
+        zhyResetAll();
+        zhyAppendLog('页面就绪，点击「开始包饺子」体验异步流程……');
+    })();
+</script>
+</body>
+</html>

@@ -360,3 +360,12 @@
 
 > 完成17-4.html，对远程数据接口进行测试，支持get、post等，显示返回的数据和错误提示信息。示例post接口：https://jsonplaceholder.typicode.com/posts
 
+
+## 2026-11-02
+
+**模型：** GLM-5.3-FlashX
+
+**提示词：**
+
+> 完成17-5.html，展示JavaScript的两种定时器。完成17-6.html，使用promise和async完成异步操作的演示包饺子的流程。先买原料、取原料，买完原料之后同时和面、和馅，同时完成。完成这两个活动之后包饺子，包完饺子吃饺子。
+

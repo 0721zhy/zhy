@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 两种定时器 · setTimeout 与 setInterval</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：JavaScript 定时器演示（17-5）
+           setTimeout（一次性延时）与 setInterval（周期性重复）
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 对比表格 ---------- */
+        .zhy_compare {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .zhy_compare th,
+        .zhy_compare td {
+            padding: 10px 12px;
+            border: 1px solid #d8e2ec;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .zhy_compare th {
+            background: #eef4fa;
+            color: #1d5d8f;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .zhy_compare td:first-child {
+            white-space: nowrap;
+            font: 700 13px Consolas, monospace;
+            color: #b3541e;
+        }
+
+        /* ---------- 通用按钮 ---------- */
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_btn:hover { background: #164a73; transform: translateY(-2px); }
+
+        .zhy_btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+
+        .zhy_btn--warn { background: #b3541e; }
+        .zhy_btn--warn:hover { background: #93441a; }
+
+        .zhy_btn--ghost {
+            background: #fff;
+            color: #1d5d8f;
+            border: 1.5px solid #1d5d8f;
+        }
+
+        .zhy_btn--ghost:hover { background: #eef4fa; }
+
+        /* ---------- 演示舞台 ---------- */
+        .zhy_stage {
+            margin-top: 16px;
+            padding: 22px;
+            background: #14202c;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        /* setTimeout：倒计时数字 */
+        .zhy_bomb {
+            font: 700 56px Consolas, monospace;
+            color: #9ed58b;
+            letter-spacing: 4px;
+        }
+
+        .zhy_bomb.zhy_bomb-hot { color: #f0a05a; }
+
+        .zhy_bomb-msg {
+            margin-top: 10px;
+            min-height: 24px;
+            color: #cfe3f2;
+            font-size: 15px;
+        }
+
+        .zhy_bomb-msg.zhy_bomb-boom {
+            color: #ff8f66;
+            font-weight: 700;
+            animation: zhy_pop .4s ease;
+        }
+
+        @keyframes zhy_pop {
+            0% { transform: scale(.4); opacity: 0; }
+            70% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .zhy_stage-btns {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* setInterval：秒表 */
+        .zhy_watch {
+            font: 700 52px Consolas, monospace;
+            color: #7fd0ff;
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .zhy_watch-lap {
+            margin-top: 12px;
+            color: #8fa9bf;
+            font-size: 13px;
+            min-height: 20px;
+        }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_kw { color: #7fb3ff; }
+        .zhy_code .zhy_fn { color: #ffd479; }
+        .zhy_code .zhy_str { color: #9ed58b; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+
+        /* ---------- 运行日志 ---------- */
+        .zhy_log {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            max-height: 170px;
+            overflow-y: auto;
+            font: 12px/1.9 Consolas, monospace;
+            color: #9ed58b;
+        }
+
+        .zhy_log p { margin: 0; }
+
+        .zhy_log .zhy_log-time { color: #5f7a92; margin-right: 8px; }
+
+        @media (max-width: 640px) {
+            .zhy_bomb, .zhy_watch { font-size: 38px; }
+        }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-02 大模型：GLM-5.3-FlashX 功能：JavaScript 两种定时器演示 · setTimeout 一次性延时与 setInterval 周期重复 -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 17-5 · JavaScript 定时器</p>
+    <h1 class="zhy_title">两种定时器：setTimeout 与 setInterval</h1>
+    <p class="zhy_intro">JavaScript 通过 Window 对象提供两种定时器：setTimeout 在指定毫秒后<strong>执行一次</strong>，setInterval 每隔指定毫秒<strong>重复执行</strong>；它们分别用 clearTimeout / clearInterval 取消。下面通过两个互动演示体会区别。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 一、两种定时器对比</h2>
+        <table class="zhy_compare">
+            <tr>
+                <th>对比项</th>
+                <th>setTimeout（一次性定时器）</th>
+                <th>setInterval（周期性定时器）</th>
+            </tr>
+            <tr>
+                <td>执行次数</td>
+                <td>延时到达后只执行<strong> 1 次</strong></td>
+                <td>每隔设定时间执行<strong> 1 次</strong>，循环往复</td>
+            </tr>
+            <tr>
+                <td>返回值</td>
+                <td colspan="2">都返回一个整数编号（定时器 ID），用于取消</td>
+            </tr>
+            <tr>
+                <td>取消方法</td>
+                <td>clearTimeout(ID)</td>
+                <td>clearInterval(ID)</td>
+            </tr>
+            <tr>
+                <td>典型场景</td>
+                <td>延迟提示、倒计时炸弹、防抖</td>
+                <td>秒表、轮播图自动播放、实时时钟</td>
+            </tr>
+        </table>
+        <div class="zhy_code"><span class="zhy_cm">// setTimeout：3 秒后执行一次</span>
+<span class="zhy_kw">var</span> zhyT1 = <span class="zhy_fn">setTimeout</span>(<span class="zhy_kw">function</span> () {
+    console.<span class="zhy_fn">log</span>(<span class="zhy_str">'时间到！'</span>);
+}, 3000);
+<span class="zhy_fn">clearTimeout</span>(zhyT1);   <span class="zhy_cm">// 在 3 秒内可取消</span>
+
+<span class="zhy_cm">// setInterval：每 1 秒执行一次，持续重复</span>
+<span class="zhy_kw">var</span> zhyT2 = <span class="zhy_fn">setInterval</span>(<span class="zhy_kw">function</span> () {
+    console.<span class="zhy_fn">log</span>(<span class="zhy_str">'滴答'</span>);
+}, 1000);
+<span class="zhy_fn">clearInterval</span>(zhyT2);  <span class="zhy_cm">// 停止重复执行</span></div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 二、setTimeout 演示 · 3 秒倒计时炸弹</h2>
+        <p>点击「点火」后启动一次性定时器，倒计时归零时"爆炸"；倒计时期间可随时用 <strong>clearTimeout</strong> 拆弹。</p>
+        <div class="zhy_stage">
+            <div class="zhy_bomb" data-zhy-bomb>3.0</div>
+            <p class="zhy_bomb-msg" data-zhy-bomb-msg>等待点火……</p>
+            <div class="zhy_stage-btns">
+                <button type="button" class="zhy_btn" data-zhy-fire><i class="iconfont icon-zengjia" aria-hidden="true"></i> 点火</button>
+                <button type="button" class="zhy_btn zhy_btn--warn" data-zhy-defuse disabled><i class="iconfont icon-shanchu" aria-hidden="true"></i> 拆弹（clearTimeout）</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> 三、setInterval 演示 · 秒表</h2>
+        <p>点击「开始」启动周期性定时器，每 50 毫秒刷新一次读数；「暂停」调用 <strong>clearInterval</strong> 停止，「计次」在运行中记录分秒。</p>
+        <div class="zhy_stage">
+            <div class="zhy_watch" data-zhy-watch>00:00.00</div>
+            <p class="zhy_watch-lap" data-zhy-lap></p>
+            <div class="zhy_stage-btns">
+                <button type="button" class="zhy_btn" data-zhy-start><i class="iconfont icon-zengjia" aria-hidden="true"></i> 开始</button>
+                <button type="button" class="zhy_btn zhy_btn--warn" data-zhy-stop disabled><i class="iconfont icon-shanchu" aria-hidden="true"></i> 暂停（clearInterval）</button>
+                <button type="button" class="zhy_btn zhy_btn--ghost" data-zhy-lap-btn disabled><i class="iconfont icon-bianji" aria-hidden="true"></i> 计次</button>
+                <button type="button" class="zhy_btn zhy_btn--ghost" data-zhy-reset><i class="iconfont icon-fanhui" aria-hidden="true"></i> 重置</button>
+            </div>
+        </div>
+        <div class="zhy_log" data-zhy-log aria-live="polite"></div>
+    </section>
+
+    <section class="zhy_footer-note">说明：定时器回调由浏览器事件循环调度，延迟时间均为"不早于"设定值；页面切换到后台时浏览器可能降频，因此定时器不能保证精确时刻执行。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：定时器演示（17-5）
+       约定：所有变量带 zhy_ 前缀，事件用委托与 data 属性绑定
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        /* ---------- 公共：运行日志 ---------- */
+        var zhyLog = document.querySelector('[data-zhy-log]');
+
+        function zhyAppendLog(zhyText) {
+            var zhyNow = new Date();
+            var zhyPad = function (zhyN) { return (zhyN < 10 ? '0' : '') + zhyN; };
+            var zhyP = document.createElement('p');
+            zhyP.innerHTML = '<span class="zhy_log-time">' +
+                zhyPad(zhyNow.getHours()) + ':' + zhyPad(zhyNow.getMinutes()) + ':' +
+                zhyPad(zhyNow.getSeconds()) + '.' + zhyPad(zhyNow.getMilliseconds()) +
+                '</span>' + zhyText;
+            zhyLog.appendChild(zhyP);
+            zhyLog.scrollTop = zhyLog.scrollHeight;
+        }
+
+        /* ========== 演示一：setTimeout 倒计时炸弹 ========== */
+        var zhyBomb = document.querySelector('[data-zhy-bomb]');
+        var zhyBombMsg = document.querySelector('[data-zhy-bomb-msg]');
+        var zhyFireBtn = document.querySelector('[data-zhy-fire]');
+        var zhyDefuseBtn = document.querySelector('[data-zhy-defuse]');
+        var zhyBombTimer = null;      // setTimeout 返回的编号
+        var zhyTickTimer = null;      // 仅用于画面倒计时的周期刷新
+
+        zhyFireBtn.addEventListener('click', function () {
+            if (zhyBombTimer !== null) { return; }   // 防止重复点火
+
+            var zhyLeft = 3.0;                       // 剩余秒数（仅展示用）
+            zhyBomb.textContent = '3.0';
+            zhyBomb.classList.remove('zhy_bomb-hot');
+            zhyBombMsg.classList.remove('zhy_bomb-boom');
+            zhyBombMsg.textContent = '3 秒后爆炸，快拆弹！';
+            zhyFireBtn.disabled = true;
+            zhyDefuseBtn.disabled = false;
+            zhyAppendLog('setTimeout 已点火：3 秒后触发爆炸回调');
+
+            /* 画面上的 0.1 秒刷新只是视觉效果 */
+            zhyTickTimer = setInterval(function () {
+                zhyLeft = Math.max(0, zhyLeft - 0.1);
+                zhyBomb.textContent = zhyLeft.toFixed(1);
+                if (zhyLeft <= 1) { zhyBomb.classList.add('zhy_bomb-hot'); }
+            }, 100);
+
+            /* 核心代码：一次性定时器 */
+            zhyBombTimer = setTimeout(function () {
+                clearInterval(zhyTickTimer);
+                zhyBomb.textContent = '0.0';
+                zhyBombMsg.textContent = '💥 砰！setTimeout 回调执行了（且只执行一次）';
+                zhyBombMsg.classList.add('zhy_bomb-boom');
+                zhyFireBtn.disabled = false;
+                zhyDefuseBtn.disabled = true;
+                zhyBombTimer = null;
+                zhyAppendLog('setTimeout 回调触发 —— 爆炸！');
+            }, 3000);
+        });
+
+        zhyDefuseBtn.addEventListener('click', function () {
+            if (zhyBombTimer === null) { return; }
+
+            /* 核心代码：取消一次性定时器 */
+            clearTimeout(zhyBombTimer);
+            clearInterval(zhyTickTimer);
+            zhyBombTimer = null;
+            zhyBombMsg.classList.remove('zhy_bomb-boom');
+            zhyBombMsg.textContent = '✅ 拆弹成功！clearTimeout 阻止了回调执行';
+            zhyFireBtn.disabled = false;
+            zhyDefuseBtn.disabled = true;
+            zhyAppendLog('clearTimeout 调用 —— 定时器已取消');
+        });
+
+        /* ========== 演示二：setInterval 秒表 ========== */
+        var zhyWatch = document.querySelector('[data-zhy-watch]');
+        var zhyLapView = document.querySelector('[data-zhy-lap]');
+        var zhyStartBtn = document.querySelector('[data-zhy-start]');
+        var zhyStopBtn = document.querySelector('[data-zhy-stop]');
+        var zhyLapBtn = document.querySelector('[data-zhy-lap-btn]');
+        var zhyResetBtn = document.querySelector('[data-zhy-reset]');
+        var zhyWatchTimer = null;     // setInterval 返回的编号
+        var zhyMs = 0;                // 累计毫秒数
+        var zhyLapCount = 0;
+
+        function zhyFormat(zhyTotal) {
+            var zhyMm = Math.floor(zhyTotal / 60000);
+            var zhySs = Math.floor(zhyTotal % 60000 / 1000);
+            var zhyCs = Math.floor(zhyTotal % 1000 / 10);
+            var zhyPad2 = function (zhyN) { return (zhyN < 10 ? '0' : '') + zhyN; };
+            return zhyPad2(zhyMm) + ':' + zhyPad2(zhySs) + '.' + zhyPad2(zhyCs);
+        }
+
+        zhyStartBtn.addEventListener('click', function () {
+            if (zhyWatchTimer !== null) { return; }  // 防止重复启动
+
+            /* 核心代码：周期性定时器，每 50ms 累加并刷新 */
+            zhyWatchTimer = setInterval(function () {
+                zhyMs += 50;
+                zhyWatch.textContent = zhyFormat(zhyMs);
+            }, 50);
+
+            zhyStartBtn.disabled = true;
+            zhyStopBtn.disabled = false;
+            zhyLapBtn.disabled = false;
+            zhyAppendLog('setInterval 已启动：每 50ms 刷新一次');
+        });
+
+        zhyStopBtn.addEventListener('click', function () {
+            if (zhyWatchTimer === null) { return; }
+
+            /* 核心代码：停止周期性定时器 */
+            clearInterval(zhyWatchTimer);
+            zhyWatchTimer = null;
+            zhyStartBtn.disabled = false;
+            zhyStopBtn.disabled = true;
+            zhyLapBtn.disabled = true;
+            zhyAppendLog('clearInterval 调用 —— 秒表暂停在 ' + zhyFormat(zhyMs));
+        });
+
+        zhyLapBtn.addEventListener('click', function () {
+            zhyLapCount += 1;
+            zhyLapView.textContent = '计次 ' + zhyLapCount + '：' + zhyFormat(zhyMs);
+            zhyAppendLog('计次 ' + zhyLapCount + ' —— ' + zhyFormat(zhyMs));
+        });
+
+        zhyResetBtn.addEventListener('click', function () {
+            clearInterval(zhyWatchTimer);
+            zhyWatchTimer = null;
+            zhyMs = 0;
+            zhyLapCount = 0;
+            zhyWatch.textContent = '00:00.00';
+            zhyLapView.textContent = '';
+            zhyStartBtn.disabled = false;
+            zhyStopBtn.disabled = true;
+            zhyLapBtn.disabled = true;
+            zhyAppendLog('秒表已重置');
+        });
+
+        zhyAppendLog('页面就绪，等待操作……');
+    })();
+</script>
+</body>
+</html>
