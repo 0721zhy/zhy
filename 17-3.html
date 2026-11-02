@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表 · fetch 获取接口数据</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：商品列表页（17-3）
+           接口：https://dummyjson.com/products?limit=8
+           点击卡片 → 17-3-detail.html?id=商品ID
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 状态条 ---------- */
+        .zhy_status {
+            margin-top: 14px;
+            padding: 10px 16px;
+            border-left: 3px solid #1d5d8f;
+            border-radius: 8px;
+            background: #eef5fa;
+            color: #1d5d8f;
+            font: 600 13px Consolas, "Microsoft YaHei", monospace;
+        }
+
+        .zhy_status.zhy_st-ok { background: #eef9f1; border-left-color: #3a9d5d; color: #2f7d4b; }
+
+        .zhy_status.zhy_st-bad { background: #fdf0ee; border-left-color: #d86d55; color: #b04534; }
+
+        /* ---------- 接口说明 ---------- */
+        .zhy_api-line {
+            margin-top: 14px;
+            padding: 10px 16px;
+            background: #1c2733;
+            border-radius: 8px;
+            color: #9ed58b;
+            font: 13px/1.7 Consolas, monospace;
+            word-break: break-all;
+        }
+
+        .zhy_api-line em { color: #6fb3e0; font-style: normal; font-weight: 700; }
+
+        /* ---------- 商品网格 ---------- */
+        .zhy_goods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .zhy_goods-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e3ebf1;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease;
+            animation: zhy_rise .3s ease backwards;
+        }
+
+        .zhy_goods-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(29, 93, 143, .14);
+            border-color: #1d5d8f;
+        }
+
+        @keyframes zhy_rise {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .zhy_goods-pic {
+            position: relative;
+            height: 160px;
+            background: #f6f8fa;
+        }
+
+        .zhy_goods-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        /* 分类角标 */
+        .zhy_goods-cate {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 3px 10px;
+            background: rgba(29, 93, 143, .88);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 11px;
+        }
+
+        .zhy_goods-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+
+        .zhy_goods-title {
+            margin: 0;
+            color: #17212b;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .zhy_goods-desc {
+            margin: 0;
+            color: #8a97a0;
+            font-size: 12px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .zhy_goods-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .zhy_goods-price {
+            color: #d86d55;
+            font: 700 19px Consolas, monospace;
+        }
+
+        .zhy_goods-price::before { content: '$'; font-size: 13px; }
+
+        .zhy_goods-off {
+            padding: 2px 7px;
+            background: #fdeee9;
+            border-radius: 6px;
+            color: #d86d55;
+            font: 700 11px Consolas, monospace;
+        }
+
+        .zhy_goods-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #98a2ad;
+            font-size: 12px;
+        }
+
+        .zhy_goods-star { color: #e8a13a; letter-spacing: 1px; }
+
+        .zhy_goods-star em { color: #98a2ad; font-style: normal; font-size: 11px; margin-left: 4px; }
+
+        .zhy_goods-id {
+            margin-left: auto;
+            padding: 1px 8px;
+            background: #eef5fa;
+            border-radius: 6px;
+            color: #1d5d8f;
+            font: 600 11px Consolas, monospace;
+        }
+
+        /* ---------- 加载占位骨架 ---------- */
+        .zhy_skeleton {
+            height: 300px;
+            border-radius: 12px;
+            background: linear-gradient(100deg, #eef1f5 40%, #f7f9fb 50%, #eef1f5 60%);
+            background-size: 200% 100%;
+            animation: zhy_shine 1.1s linear infinite;
+        }
+
+        @keyframes zhy_shine {
+            to { background-position: -200% 0; }
+        }
+
+        /* ---------- 底部提示 ---------- */
+        .zhy_foot-tip {
+            margin-top: 18px;
+            padding: 12px 16px;
+            background: #f0f6fb;
+            border-radius: 8px;
+            color: #5a7a96;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .zhy_foot-tip em {
+            color: #1d5d8f;
+            font-style: normal;
+            font-weight: 700;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-11-02 大模型：GLM-5.3-FlashX 功能：商品列表 · fetch 请求 dummyjson 接口渲染 8 件商品 -->
+
+    <div class="zhy_page">
+        <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 17-3 · JavaScript 网络请求实战</p>
+        <h1 class="zhy_title">商品列表：fetch + 接口数据</h1>
+        <p class="zhy_intro">数据来源于 DummyJSON 公开接口（支持跨域），共请求 8 件商品；点击任意商品卡片可进入 <em>17-3-detail.html</em> 查看详情。</p>
+
+        <section class="zhy_section">
+            <div class="zhy_api-line"><em>GET</em> https://dummyjson.com/products?limit=8</div>
+            <div class="zhy_status" data-zhy-status>⏳ 正在请求商品列表…</div>
+            <div class="zhy_goods-grid" data-zhy-grid hidden></div>
+            <div class="zhy_skeleton" data-zhy-skeleton></div>
+            <div class="zhy_foot-tip">
+                实现要点：使用原生 <em>fetch</em> + <em>async/await</em> 请求接口，<em>await resp.json()</em> 解析 JSON，
+                遍历 <em>products</em> 数组拼接卡片；点击卡片跳转 <em>17-3-detail.html?id=商品ID</em>，详情页根据 ID 再请求单件商品接口。
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：fetch 商品列表接口
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        var ZHY_API = 'https://dummyjson.com/products?limit=8';
+        var zhyStatus = document.querySelector('[data-zhy-status]');
+        var zhyGrid = document.querySelector('[data-zhy-grid]');
+        var zhySkeleton = document.querySelector('[data-zhy-skeleton]');
+
+        /* ---------- 分类名转中文（常见分类映射） ---------- */
+        var zhyCateMap = {
+            smartphones: '手机',
+            laptops: '笔记本电脑',
+            fragrances: '香水',
+            skincare: '护肤',
+            groceries: '食品杂货',
+            'home-decoration': '家居装饰',
+            furniture: '家具',
+            tops: '上装',
+            'womens-dresses': '女装',
+            'womens-shoes': '女鞋',
+            'mens-shirts': '男装',
+            'mens-shoes': '男鞋',
+            'mens-watches': '男表',
+            'womens-watches': '女表',
+            'womens-bags': '女包',
+            'womens-jewellery': '首饰',
+            sunglasses: '太阳镜',
+            automotive: '汽车用品',
+            motorcycle: '摩托车',
+            lighting: '照明'
+        };
+
+        async function zhyLoadGoods() {
+            try {
+                var zhyResp = await fetch(ZHY_API);
+                if (!zhyResp.ok) {
+                    throw new Error('HTTP ' + zhyResp.status);
+                }
+                var zhyData = await zhyResp.json();
+                console.log('[17-3] 接口响应：共', zhyData.products.length, '件商品，总数', zhyData.total);
+                zhyRender(zhyData.products);
+                zhyStatus.className = 'zhy_status zhy_st-ok';
+                zhyStatus.textContent = '✓ 请求成功：' + zhyResp.status + '，加载 ' + zhyData.products.length + ' 件商品（数据库共 ' + zhyData.total + ' 件）';
+            } catch (zhyError) {
+                zhyStatus.className = 'zhy_status zhy_st-bad';
+                zhyStatus.textContent = '✗ 请求失败：' + zhyError.message + '（请检查网络，或 F12 查看控制台）';
+                zhySkeleton.hidden = true;
+                console.error('[17-3]', zhyError);
+            }
+        }
+
+        function zhyRender(zhyList) {
+            var zhyHtml = '';
+            for (var zhyI = 0; zhyI < zhyList.length; zhyI++) {
+                var zhyG = zhyList[zhyI];
+                var zhyCate = zhyCateMap[zhyG.category] || zhyG.category;
+                var zhyStars = '★★★★★'.slice(0, Math.round(zhyG.rating))
+                    + '☆☆☆☆☆'.slice(0, 5 - Math.round(zhyG.rating));
+                zhyHtml += '<a class="zhy_goods-card" href="17-3-detail.html?id=' + zhyG.id
+                    + '" style="animation-delay:' + (zhyI * 0.06) + 's">'
+                    + '<span class="zhy_goods-pic">'
+                    + '<img src="' + zhyG.thumbnail + '" alt="' + zhyG.title + '" loading="lazy">'
+                    + '<span class="zhy_goods-cate">' + zhyCate + '</span>'
+                    + '</span>'
+                    + '<span class="zhy_goods-body">'
+                    + '<h3 class="zhy_goods-title">' + zhyG.title + '</h3>'
+                    + '<p class="zhy_goods-desc">' + zhyG.description + '</p>'
+                    + '<span class="zhy_goods-price-row">'
+                    + '<span class="zhy_goods-price">' + zhyG.price.toFixed(2) + '</span>'
+                    + '<span class="zhy_goods-off">-' + Math.round(zhyG.discountPercentage) + '%</span>'
+                    + '</span>'
+                    + '<span class="zhy_goods-meta">'
+                    + '<span class="zhy_goods-star">' + zhyStars + '<em>' + zhyG.rating.toFixed(2) + '</em></span>'
+                    + '<span class="zhy_goods-id">ID ' + zhyG.id + '</span>'
+                    + '</span>'
+                    + '</span>'
+                    + '</a>';
+            }
+            zhySkeleton.hidden = true;
+            zhyGrid.innerHTML = zhyHtml;
+            zhyGrid.hidden = false;
+        }
+
+        zhyLoadGoods();
+        console.log('[17-3] 张海玉：商品列表页加载完成');
+    </script>
+</body>
+</html>
