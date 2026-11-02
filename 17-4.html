@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接口测试工作台 · GET / POST / PUT / DELETE</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：远程接口测试工作台（17-4）
+           示例接口：https://jsonplaceholder.typicode.com/posts
+           支持 GET / POST / PUT / DELETE，展示响应与错误信息
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 请求构造区 ---------- */
+        .zhy_req-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .zhy_method {
+            width: 118px;
+            padding: 11px 12px;
+            background: #1c2733;
+            border: 1.5px solid #2c3d4f;
+            border-radius: 8px;
+            color: #9ed58b;
+            font: 700 14px Consolas, monospace;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .zhy_url {
+            flex: 1;
+            min-width: 260px;
+            padding: 11px 14px;
+            background: #1c2733;
+            border: 1.5px solid #2c3d4f;
+            border-radius: 8px;
+            color: #cfe3f2;
+            font: 13px Consolas, monospace;
+            outline: none;
+        }
+
+        .zhy_url:focus { border-color: #6fb3e0; }
+
+        .zhy_send {
+            padding: 11px 26px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_send:hover { background: #164a73; transform: translateY(-2px); }
+
+        .zhy_send[disabled] { opacity: .55; cursor: not-allowed; transform: none; }
+
+        /* 请求体编辑 */
+        .zhy_body-wrap { margin-top: 12px; }
+
+        .zhy_body-wrap.zhy_body-hide { display: none; }
+
+        .zhy_body-label {
+            margin: 0 0 6px;
+            color: #5a6570;
+            font-size: 12px;
+        }
+
+        .zhy_body-input {
+            width: 100%;
+            height: 118px;
+            padding: 11px 13px;
+            background: #1c2733;
+            border: 1.5px solid #2c3d4f;
+            border-radius: 8px;
+            color: #9ed58b;
+            font: 13px/1.7 Consolas, monospace;
+            resize: vertical;
+            outline: none;
+        }
+
+        .zhy_body-input:focus { border-color: #6fb3e0; }
+
+        /* ---------- 快捷预设 ---------- */
+        .zhy_preset-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
+
+        .zhy_preset {
+            padding: 7px 13px;
+            background: #fff;
+            border: 1.5px solid #cfe3f2;
+            border-radius: 16px;
+            color: #1d5d8f;
+            font: 600 12px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .15s ease;
+        }
+
+        .zhy_preset:hover { background: #1d5d8f; color: #fff; transform: translateY(-2px); }
+
+        .zhy_preset em {
+            font: 700 11px Consolas, monospace;
+            color: #d86d55;
+            font-style: normal;
+            margin-right: 5px;
+        }
+
+        .zhy_preset:hover em { color: #ffd04a; }
+
+        /* ---------- 响应状态行 ---------- */
+        .zhy_resp-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 18px;
+            margin-top: 14px;
+            padding: 11px 16px;
+            background: #f0f2f5;
+            border-left: 3px solid #b8c2cc;
+            border-radius: 8px;
+            font: 600 13px Consolas, monospace;
+            color: #5a6570;
+        }
+
+        .zhy_resp-meta.zhy_meta-ok { background: #eef9f1; border-left-color: #3a9d5d; color: #2f7d4b; }
+
+        .zhy_resp-meta.zhy_meta-bad { background: #fdf0ee; border-left-color: #d86d55; color: #b04534; }
+
+        .zhy_code-chip {
+            padding: 3px 11px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, .08);
+            font-weight: 700;
+        }
+
+        .zhy_resp-meta.zhy_meta-ok .zhy_code-chip { background: #3a9d5d; color: #fff; }
+
+        .zhy_resp-meta.zhy_meta-bad .zhy_code-chip { background: #d86d55; color: #fff; }
+
+        /* ---------- 响应体 ---------- */
+        .zhy_resp-body {
+            margin-top: 12px;
+            height: 300px;
+            padding: 13px 15px;
+            background: #1c2733;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.75 Consolas, monospace;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .zhy_resp-body em { color: #7a8a99; font-style: normal; }
+
+        /* ---------- 请求历史 ---------- */
+        .zhy_history-table {
+            width: 100%;
+            margin-top: 12px;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .zhy_history-table th,
+        .zhy_history-table td {
+            padding: 7px 11px;
+            border: 1px solid #e3ebf1;
+            text-align: left;
+        }
+
+        .zhy_history-table th { background: #eef5fa; color: #1d5d8f; }
+
+        .zhy_history-table td { font-family: Consolas, monospace; color: #5a6570; word-break: break-all; }
+
+        .zhy_h-method { font-weight: 700; }
+
+        .zhy_h-method.zhy_m-get { color: #3a9d5d; }
+
+        .zhy_h-method.zhy_m-post { color: #e8a13a; }
+
+        .zhy_h-method.zhy_m-put { color: #1d5d8f; }
+
+        .zhy_h-method.zhy_m-delete { color: #d86d55; }
+    </style>
+</head>
+<body>
+    <!-- 姓名：张海玉 建立时间：2026-11-02 大模型：GLM-5.3-FlashX 功能：接口测试工作台 · 支持 GET/POST/PUT/DELETE 并展示响应与错误信息 -->
+
+    <div class="zhy_page">
+        <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 17-4 · JavaScript 网络请求</p>
+        <h1 class="zhy_title">远程接口测试工作台</h1>
+        <p class="zhy_intro">使用原生 fetch 向远程接口发送 GET / POST / PUT / DELETE 请求，实时展示 HTTP 状态码、耗时与响应数据；请求出错时给出红色错误提示。</p>
+
+        <!-- ========== 一、请求构造 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 一、构造请求</h2>
+            <div class="zhy_req-bar">
+                <select class="zhy_method" data-zhy-method>
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input class="zhy_url" data-zhy-url value="https://jsonplaceholder.typicode.com/posts" spellcheck="false" aria-label="接口地址">
+                <button type="button" class="zhy_send" data-zhy-send><i class="iconfont icon-zengjia" aria-hidden="true"></i> 发送请求</button>
+            </div>
+
+            <div class="zhy_body-wrap zhy_body-hide" data-zhy-body-wrap>
+                <p class="zhy_body-label">请求体（JSON，随 POST / PUT 发送，Content-Type: application/json）：</p>
+                <textarea class="zhy_body-input" data-zhy-body spellcheck="false">{
+  "title": "张海玉的测试文章",
+  "body": "这是通过 fetch POST 发送的请求体内容。",
+  "userId": 1
+}</textarea>
+            </div>
+
+            <div class="zhy_preset-row">
+                <button type="button" class="zhy_preset" data-zhy-preset="get-all"><em>GET</em>获取全部文章</button>
+                <button type="button" class="zhy_preset" data-zhy-preset="get-one"><em>GET</em>获取第 1 篇</button>
+                <button type="button" class="zhy_preset" data-zhy-preset="get-404"><em>GET</em>404 错误演示</button>
+                <button type="button" class="zhy_preset" data-zhy-preset="post"><em>POST</em>新建文章</button>
+                <button type="button" class="zhy_preset" data-zhy-preset="put"><em>PUT</em>更新第 1 篇</button>
+                <button type="button" class="zhy_preset" data-zhy-preset="delete"><em>DELETE</em>删除第 1 篇</button>
+                <button type="button" class="zhy_preset" data-zhy-preset="neterr"><em>GET</em>网络错误演示</button>
+            </div>
+        </section>
+
+        <!-- ========== 二、响应结果 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 二、响应结果</h2>
+            <div class="zhy_resp-meta" data-zhy-meta>等待发送请求… 点击上方预设按钮或填写地址后发送。</div>
+            <div class="zhy_resp-body" data-zhy-resp><em>// 响应数据将显示在这里（JSON 自动格式化）</em></div>
+        </section>
+
+        <!-- ========== 三、请求历史 ========== -->
+        <section class="zhy_section">
+            <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 三、请求历史</h2>
+            <table class="zhy_history-table">
+                <thead><tr><th>#</th><th>方法</th><th>URL</th><th>状态</th><th>耗时</th></tr></thead>
+                <tbody data-zhy-history>
+                    <tr><td colspan="5">尚无请求记录</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="zhy_footer-note">说明：JSONPlaceholder 是免费练习接口，POST/PUT/DELETE 的修改不会真正写入服务器，但会完整模拟整个请求-响应流程。</section>
+    </div>
+
+    <script>
+        // ============================================================
+        // 姓名：张海玉（zhy）  功能：接口测试工作台脚本
+        // 命名约定：全部变量使用 zhy_ 前缀；通过类选择器获取元素，不使用 id
+        // ============================================================
+
+        var ZHY_BASE = 'https://jsonplaceholder.typicode.com/posts';
+        var zhyMethod = document.querySelector('[data-zhy-method]');
+        var zhyUrl = document.querySelector('[data-zhy-url]');
+        var zhyBodyWrap = document.querySelector('[data-zhy-body-wrap]');
+        var zhyBodyInput = document.querySelector('[data-zhy-body]');
+        var zhySendBtn = document.querySelector('[data-zhy-send]');
+        var zhyMeta = document.querySelector('[data-zhy-meta]');
+        var zhyRespBox = document.querySelector('[data-zhy-resp]');
+        var zhyHistoryBox = document.querySelector('[data-zhy-history]');
+        var zhyHistoryRows = [];
+        var zhyHistorySeq = 0;
+
+        /* ---------- 方法切换：POST/PUT 才显示请求体 ---------- */
+        function zhyToggleBody() {
+            var zhyM = zhyMethod.value;
+            zhyBodyWrap.classList.toggle('zhy_body-hide', zhyM !== 'POST' && zhyM !== 'PUT');
+        }
+
+        zhyMethod.addEventListener('change', zhyToggleBody);
+
+        /* ---------- 状态行 ---------- */
+        function zhySetMeta(zhyHtml, zhyType) {
+            zhyMeta.className = 'zhy_resp-meta';
+            if (zhyType === 'ok') { zhyMeta.classList.add('zhy_meta-ok'); }
+            if (zhyType === 'bad') { zhyMeta.classList.add('zhy_meta-bad'); }
+            zhyMeta.innerHTML = zhyHtml;
+        }
+
+        /* ---------- 历史 ---------- */
+        function zhyAddHistory(zhyM, zhyU, zhyCode, zhyMs) {
+            zhyHistorySeq++;
+            zhyHistoryRows.unshift('<tr><td>' + zhyHistorySeq + '</td>'
+                + '<td class="zhy_h-method zhy_m-' + zhyM.toLowerCase() + '">' + zhyM + '</td>'
+                + '<td>' + zhyU + '</td><td>' + zhyCode + '</td><td>' + zhyMs + ' ms</td></tr>');
+            if (zhyHistoryRows.length > 8) {
+                zhyHistoryRows.pop();
+            }
+            zhyHistoryBox.innerHTML = zhyHistoryRows.join('');
+        }
+
+        /* ---------- 核心：发送请求 ---------- */
+        async function zhySendRequest() {
+            var zhyM = zhyMethod.value;
+            var zhyU = zhyUrl.value.trim();
+            if (!zhyU) {
+                zhySetMeta('✗ 请先填写接口地址', 'bad');
+                return;
+            }
+
+            var zhyOptions = { method: zhyM, headers: {} };
+            if (zhyM === 'POST' || zhyM === 'PUT') {
+                zhyOptions.headers['Content-Type'] = 'application/json; charset=UTF-8';
+                zhyOptions.body = zhyBodyInput.value;
+            }
+
+            zhySendBtn.disabled = true;
+            zhySetMeta('⏳ 正在请求 <span class="zhy_code-chip">' + zhyM + '</span> ' + zhyU + ' …');
+            zhyRespBox.innerHTML = '<em>// 请求中…</em>';
+
+            var zhyStart = performance.now();
+            try {
+                var zhyResp = await fetch(zhyU, zhyOptions);
+                var zhyMs = Math.round(performance.now() - zhyStart);
+                var zhyText = await zhyResp.text();
+
+                /* 尝试按 JSON 格式化，失败则原样展示 */
+                var zhyPretty = zhyText;
+                try {
+                    zhyPretty = JSON.stringify(JSON.parse(zhyText), null, 2);
+                } catch (zhyE) { /* 非 JSON 响应，原样展示 */ }
+
+                zhyRespBox.textContent = zhyPretty || '(空响应)';
+
+                if (!zhyResp.ok) {
+                    zhySetMeta('<span class="zhy_code-chip">' + zhyResp.status + ' ' + zhyResp.statusText
+                        + '</span> 请求完成但服务器返回错误 · 耗时 ' + zhyMs + ' ms · 响应长度 ' + zhyText.length + ' 字符', 'bad');
+                    zhyAddHistory(zhyM, zhyU, zhyResp.status, zhyMs);
+                } else {
+                    zhySetMeta('<span class="zhy_code-chip">' + zhyResp.status + ' ' + zhyResp.statusText
+                        + '</span> 请求成功 · 耗时 ' + zhyMs + ' ms · 响应长度 ' + zhyText.length + ' 字符'
+                        + ' · 类型 ' + (zhyResp.headers.get('content-type') || '未知'), 'ok');
+                    zhyAddHistory(zhyM, zhyU, zhyResp.status, zhyMs);
+                }
+                console.log('[17-4]', zhyM, zhyU, '→', zhyResp.status, zhyMs + 'ms');
+            } catch (zhyError) {
+                var zhyFailMs = Math.round(performance.now() - zhyStart);
+                zhySetMeta('<span class="zhy_code-chip">网络错误</span> ' + zhyError.message
+                    + ' · 耗时 ' + zhyFailMs + ' ms（地址无法访问 / 域名不存在 / 断网）', 'bad');
+                zhyRespBox.textContent = '✗ 请求未能完成：' + zhyError.message
+                    + '\n\n常见原因：\n1. URL 拼写错误或域名不存在\n2. 网络断开\n3. 浏览器拦截了不安全请求';
+                zhyAddHistory(zhyM, zhyU, '网络错误', zhyFailMs);
+                console.error('[17-4]', zhyError);
+            } finally {
+                zhySendBtn.disabled = false;
+            }
+        }
+
+        zhySendBtn.addEventListener('click', zhySendRequest);
+
+        /* ---------- 快捷预设 ---------- */
+        Array.prototype.forEach.call(document.querySelectorAll('[data-zhy-preset]'), function (zhyBtn) {
+            zhyBtn.addEventListener('click', function () {
+                var zhyKind = zhyBtn.getAttribute('data-zhy-preset');
+                switch (zhyKind) {
+                case 'get-all':
+                    zhyMethod.value = 'GET';
+                    zhyUrl.value = ZHY_BASE;
+                    break;
+                case 'get-one':
+                    zhyMethod.value = 'GET';
+                    zhyUrl.value = ZHY_BASE + '/1';
+                    break;
+                case 'get-404':
+                    zhyMethod.value = 'GET';
+                    zhyUrl.value = ZHY_BASE + '/9999';
+                    break;
+                case 'post':
+                    zhyMethod.value = 'POST';
+                    zhyUrl.value = ZHY_BASE;
+                    zhyBodyInput.value = '{\n  "title": "张海玉的测试文章",\n  "body": "这是通过 fetch POST 发送的请求体内容。",\n  "userId": 1\n}';
+                    break;
+                case 'put':
+                    zhyMethod.value = 'PUT';
+                    zhyUrl.value = ZHY_BASE + '/1';
+                    zhyBodyInput.value = '{\n  "id": 1,\n  "title": "张海玉更新后的标题",\n  "body": "PUT 全量更新测试。",\n  "userId": 1\n}';
+                    break;
+                case 'delete':
+                    zhyMethod.value = 'DELETE';
+                    zhyUrl.value = ZHY_BASE + '/1';
+                    break;
+                case 'neterr':
+                    zhyMethod.value = 'GET';
+                    zhyUrl.value = 'https://api.not-exist-zhanghy.invalid/data';
+                    break;
+                }
+                zhyToggleBody();
+                zhySendRequest();
+            });
+        });
+
+        console.log('[17-4] 张海玉：接口测试工作台加载完成');
+    </script>
+</body>
+</html>
