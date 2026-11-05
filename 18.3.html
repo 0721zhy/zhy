@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像识别系统结构框架图 · SVG · 科研方向</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：图像识别系统结构框架图（18.3）
+           纯 SVG 绘制 · 科研方向标注
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- SVG 画布容器 ---------- */
+        .zhy_svg-stage {
+            margin-top: 16px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #14202c;
+            border: 1.5px solid #2c3d4f;
+            overflow-x: auto;
+        }
+
+        .zhy_svg {
+            display: block;
+            width: 100%;
+            min-width: 880px;
+            height: auto;
+        }
+
+        /* SVG 内部文字通用 */
+        .zhy_svg text {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* 悬停提示 */
+        .zhy_tip {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #7a8fa3;
+        }
+
+        /* ---------- 图例 ---------- */
+        .zhy_legend {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .zhy_legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            background: #f4f8fb;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 999px;
+            font-size: 13px;
+            color: #4a5d70;
+        }
+
+        .zhy_dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            flex: none;
+        }
+
+        /* ---------- 说明表 ---------- */
+        .zhy_layers {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .zhy_layers th,
+        .zhy_layers td {
+            padding: 10px 12px;
+            border: 1px solid #d8e2ec;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .zhy_layers th {
+            background: #eef4fa;
+            color: #1d5d8f;
+            white-space: nowrap;
+        }
+
+        .zhy_layers td b { color: #b3541e; }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_tag { color: #7fb3ff; }
+        .zhy_code .zhy_attr { color: #ffd479; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能：基于图像识别的系统结构框架图（SVG 格式 · 科研方向标注） -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 18-3 · SVG 矢量绘图实战</p>
+    <h1 class="zhy_title">图像识别系统结构框架图</h1>
+    <p class="zhy_intro">整张框架图使用 <strong>SVG（可缩放矢量图形）</strong>绘制：矩形、箭头（marker 定义）、虚线分区与文字均为矢量元素，任意缩放不失真。图中展示图像识别系统从数据采集到结果输出的完整链路，右侧标注本课题的<strong>科研方向</strong>。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 一、系统结构框架图（SVG）</h2>
+        <div class="zhy_svg-stage">
+            <svg class="zhy_svg" viewBox="0 0 960 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="图像识别系统结构框架图">
+                <defs>
+                    <!-- 箭头 -->
+                    <marker id="zhy_arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ed58b"/>
+                    </marker>
+                    <marker id="zhy_arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c8a8ff"/>
+                    </marker>
+                    <!-- 标题渐变 -->
+                    <linearGradient id="zhy_title-grad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0" stop-color="#7fd0ff"/>
+                        <stop offset="1" stop-color="#c8a8ff"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- 背景 -->
+                <rect x="0" y="0" width="960" height="620" fill="#14202c"/>
+                <!-- 背景网格 -->
+                <g stroke="rgba(159,179,200,0.07)" stroke-width="1">
+                    <path d="M 80 0 V 620 M 160 0 V 620 M 240 0 V 620 M 320 0 V 620 M 400 0 V 620 M 480 0 V 620 M 560 0 V 620 M 640 0 V 620 M 720 0 V 620 M 800 0 V 620 M 880 0 V 620"/>
+                    <path d="M 0 80 H 960 M 0 160 H 960 M 0 240 H 960 M 0 320 H 960 M 0 400 H 960 M 0 480 H 960 M 0 560 H 960"/>
+                </g>
+
+                <!-- 标题 -->
+                <text x="480" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="url(#zhy_title-grad)">图像识别系统结构框架（科研方向）</text>
+
+                <!-- ================= 第 1 层：数据获取层 ================= -->
+                <g>
+                    <rect x="40" y="66" width="120" height="76" rx="10" fill="rgba(127,208,255,0.14)" stroke="#7fd0ff" stroke-width="1.5"/>
+                    <text x="100" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#7fd0ff">数据获取层</text>
+                    <text x="100" y="120" text-anchor="middle" font-size="11" fill="#8fa9bf">输入源</text>
+
+                    <rect x="200" y="70" width="150" height="32" rx="7" fill="#7fd0ff" opacity="0.9"/>
+                    <text x="275" y="91" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">公开数据集</text>
+                    <text x="360" y="91" font-size="11" fill="#8fa9bf">ImageNet · COCO · MNIST</text>
+
+                    <rect x="200" y="110" width="150" height="32" rx="7" fill="#7fd0ff" opacity="0.75"/>
+                    <text x="275" y="131" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">自建数据集</text>
+                    <text x="360" y="131" font-size="11" fill="#8fa9bf">实验室采集 · 人工标注</text>
+                </g>
+
+                <!-- 箭头：数据获取 → 预处理 -->
+                <line x1="370" y1="105" x2="430" y2="105" stroke="#9ed58b" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+
+                <!-- ================= 第 2 层：数据预处理层 ================= -->
+                <g>
+                    <rect x="440" y="66" width="440" height="76" rx="10" fill="rgba(158,213,139,0.12)" stroke="#9ed58b" stroke-width="1.5"/>
+                    <text x="460" y="88" font-size="13" font-weight="700" fill="#9ed58b">数据预处理层</text>
+                    <rect x="460" y="98" width="120" height="30" rx="6" fill="#9ed58b" opacity="0.85"/>
+                    <text x="520" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">图像去噪</text>
+                    <rect x="596" y="98" width="120" height="30" rx="6" fill="#9ed58b" opacity="0.7"/>
+                    <text x="656" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">尺寸归一化</text>
+                    <rect x="732" y="98" width="132" height="30" rx="6" fill="#9ed58b" opacity="0.55"/>
+                    <text x="798" y="118" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">数据增强</text>
+                </g>
+
+                <!-- 箭头：预处理 → 模型层 -->
+                <line x1="660" y1="142" x2="660" y2="182" stroke="#9ed58b" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+                <text x="676" y="168" font-size="11" fill="#8fa9bf">预处理后的图像张量</text>
+
+                <!-- ================= 第 3 层：核心模型层（CNN） ================= -->
+                <g>
+                    <rect x="40" y="190" width="840" height="180" rx="12" fill="rgba(255,212,121,0.08)" stroke="#ffd479" stroke-width="1.5"/>
+                    <text x="60" y="216" font-size="14" font-weight="700" fill="#ffd479">核心模型层 · 卷积神经网络 CNN（特征自动提取 + 分类）</text>
+
+                    <!-- CNN 内部流程 -->
+                    <rect x="60" y="232" width="118" height="52" rx="8" fill="#ffd479" opacity="0.85"/>
+                    <text x="119" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">输入层</text>
+                    <text x="119" y="272" text-anchor="middle" font-size="10" fill="#5c4a1e">224×224×3</text>
+
+                    <line x1="178" y1="258" x2="216" y2="258" stroke="#ffd479" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+
+                    <rect x="220" y="232" width="118" height="52" rx="8" fill="#ffd479" opacity="0.7"/>
+                    <text x="279" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">卷积层 ×N</text>
+                    <text x="279" y="272" text-anchor="middle" font-size="10" fill="#5c4a1e">局部感受野 · 权重共享</text>
+
+                    <line x1="338" y1="258" x2="376" y2="258" stroke="#ffd479" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+
+                    <rect x="380" y="232" width="118" height="52" rx="8" fill="#ffd479" opacity="0.6"/>
+                    <text x="439" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">池化层</text>
+                    <text x="439" y="272" text-anchor="middle" font-size="10" fill="#5c4a1e">降维 · 平移不变性</text>
+
+                    <line x1="498" y1="258" x2="536" y2="258" stroke="#ffd479" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+
+                    <rect x="540" y="232" width="118" height="52" rx="8" fill="#ffd479" opacity="0.5"/>
+                    <text x="599" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">全连接层</text>
+                    <text x="599" y="272" text-anchor="middle" font-size="10" fill="#5c4a1e">特征组合</text>
+
+                    <line x1="658" y1="258" x2="696" y2="258" stroke="#ffd479" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+
+                    <rect x="700" y="232" width="118" height="52" rx="8" fill="#ffd479" opacity="0.4"/>
+                    <text x="759" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">Softmax</text>
+                    <text x="759" y="272" text-anchor="middle" font-size="10" fill="#5c4a1e">概率输出</text>
+
+                    <!-- 训练优化链路 -->
+                    <rect x="60" y="306" width="180" height="44" rx="8" fill="none" stroke="#ffd479" stroke-width="1.2" stroke-dasharray="5 4"/>
+                    <text x="150" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#ffd479">训练：损失函数 + 反向传播</text>
+                    <text x="150" y="342" text-anchor="middle" font-size="10" fill="#8fa9bf">交叉熵 · 梯度下降 · GPU 加速</text>
+
+                    <rect x="260" y="306" width="180" height="44" rx="8" fill="none" stroke="#ffd479" stroke-width="1.2" stroke-dasharray="5 4"/>
+                    <text x="350" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#ffd479">推理引擎</text>
+                    <text x="350" y="342" text-anchor="middle" font-size="10" fill="#8fa9bf">模型加载 · 批量预测 · 阈值判决</text>
+
+                    <rect x="460" y="306" width="180" height="44" rx="8" fill="none" stroke="#ffd479" stroke-width="1.2" stroke-dasharray="5 4"/>
+                    <text x="550" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#ffd479">模型评估</text>
+                    <text x="550" y="342" text-anchor="middle" font-size="10" fill="#8fa9bf">准确率 · 精确率 / 召回率 · mAP</text>
+
+                    <!-- 训练回路箭头 -->
+                    <path d="M 640 328 H 700 V 300" fill="none" stroke="#ffd479" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#zhy_arrow)"/>
+                    <text x="712" y="296" font-size="10" fill="#8fa9bf">超参调优迭代</text>
+                </g>
+
+                <!-- 箭头：模型层 → 输出层 -->
+                <line x1="460" y1="370" x2="460" y2="410" stroke="#9ed58b" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+                <text x="476" y="396" font-size="11" fill="#8fa9bf">识别结果</text>
+
+                <!-- ================= 第 4 层：应用输出层 ================= -->
+                <g>
+                    <rect x="40" y="418" width="840" height="76" rx="10" fill="rgba(255,143,102,0.1)" stroke="#ff8f66" stroke-width="1.5"/>
+                    <text x="60" y="442" font-size="13" font-weight="700" fill="#ff8f66">应用输出层</text>
+                    <rect x="60" y="452" width="180" height="30" rx="6" fill="#ff8f66" opacity="0.8"/>
+                    <text x="150" y="472" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">图像分类</text>
+                    <rect x="260" y="452" width="180" height="30" rx="6" fill="#ff8f66" opacity="0.65"/>
+                    <text x="350" y="472" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">目标检测（边界框）</text>
+                    <rect x="460" y="452" width="180" height="30" rx="6" fill="#ff8f66" opacity="0.5"/>
+                    <text x="550" y="472" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">语义分割</text>
+                    <rect x="660" y="452" width="180" height="30" rx="6" fill="#ff8f66" opacity="0.35"/>
+                    <text x="750" y="472" text-anchor="middle" font-size="12" font-weight="700" fill="#14202c">场景应用接口</text>
+                </g>
+
+                <!-- 箭头：输出层 → 应用场景 -->
+                <line x1="460" y1="494" x2="460" y2="534" stroke="#9ed58b" stroke-width="2" marker-end="url(#zhy_arrow)"/>
+
+                <!-- ================= 第 5 层：落地场景 ================= -->
+                <g>
+                    <rect x="40" y="542" width="840" height="56" rx="10" fill="rgba(111,224,200,0.1)" stroke="#6fe0c8" stroke-width="1.5"/>
+                    <text x="60" y="566" font-size="13" font-weight="700" fill="#6fe0c8">落地场景</text>
+                    <text x="160" y="576" font-size="12" fill="#cfe3f2">医疗影像辅助诊断 · 自动驾驶环境感知 · 工业质检 · 安防人脸识别 · 农业病虫害识别</text>
+                </g>
+
+                <!-- ================= 右侧：科研方向（虚线框） ================= -->
+                <g>
+                    <rect x="908" y="66" width="0" height="0" fill="none"/>
+                </g>
+                <!-- 注：为保持主图宽度，科研方向以悬浮虚线框放在标题下方右侧留白处改为图下注释区，这里放在主框右侧内嵌 -->
+                <g>
+                    <rect x="740" y="190" width="140" height="0" fill="none"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 科研方向：独立 SVG 虚线框，与主图并列 -->
+        <div class="zhy_svg-stage" style="margin-top: 12px;">
+            <svg class="zhy_svg" viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="科研方向">
+                <rect x="0" y="0" width="960" height="150" fill="#14202c"/>
+                <rect x="24" y="18" width="912" height="114" rx="12" fill="rgba(200,168,255,0.08)" stroke="#c8a8ff" stroke-width="1.8" stroke-dasharray="8 5"/>
+                <text x="52" y="50" font-size="16" font-weight="700" fill="#c8a8ff">科研方向（Research Focus）</text>
+                <rect x="52" y="66" width="200" height="44" rx="8" fill="#c8a8ff" opacity="0.8"/>
+                <text x="152" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">小样本学习</text>
+                <text x="152" y="102" text-anchor="middle" font-size="10" fill="#3d2a66">Few-shot Learning</text>
+                <rect x="276" y="66" width="200" height="44" rx="8" fill="#c8a8ff" opacity="0.65"/>
+                <text x="376" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">模型轻量化</text>
+                <text x="376" y="102" text-anchor="middle" font-size="10" fill="#3d2a66">剪枝 · 量化 · 边缘部署</text>
+                <rect x="500" y="66" width="200" height="44" rx="8" fill="#c8a8ff" opacity="0.5"/>
+                <text x="600" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">跨模态识别</text>
+                <text x="600" y="102" text-anchor="middle" font-size="10" fill="#3d2a66">图文对齐 · CLIP</text>
+                <rect x="724" y="66" width="188" height="44" rx="8" fill="#c8a8ff" opacity="0.38"/>
+                <text x="818" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#14202c">可解释性研究</text>
+                <text x="818" y="102" text-anchor="middle" font-size="10" fill="#3d2a66">热力图 · 注意力可视化</text>
+            </svg>
+        </div>
+
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 提示：以上两幅图均为内联 SVG 矢量图，缩放窗口或放大页面都不会失真；箭头通过 &lt;marker&gt; 复用定义。</p>
+
+        <div class="zhy_legend">
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#7fd0ff"></span>数据获取层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#9ed58b"></span>数据预处理层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#ffd479"></span>核心模型层（CNN）</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#ff8f66"></span>应用输出层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#6fe0c8"></span>落地场景</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#c8a8ff"></span>科研方向</span>
+        </div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 二、各层职责说明</h2>
+        <table class="zhy_layers">
+            <tr><th>层级</th><th>组成</th><th>职责</th></tr>
+            <tr><td>数据获取层</td><td>公开数据集 / 自建数据集</td><td>图像识别的原料来源；科研中常在公开集上预训练、自建集上微调</td></tr>
+            <tr><td>数据预处理层</td><td>去噪 · 归一化 · 数据增强</td><td>统一输入尺寸与数值范围；增强（旋转/翻转/裁剪）可扩充样本、抑制过拟合</td></tr>
+            <tr><td>核心模型层</td><td>CNN：卷积 → 池化 → 全连接 → Softmax</td><td>卷积层用局部感受野与权重共享自动提取特征；训练靠损失函数反向传播，推理输出类别概率</td></tr>
+            <tr><td>应用输出层</td><td>分类 / 检测 / 分割</td><td>按任务粒度输出：整图类别、目标边界框或逐像素标签</td></tr>
+            <tr><td>落地场景</td><td>医疗 / 自动驾驶 / 工业质检等</td><td>识别能力与具体行业结合，形成完整的系统闭环</td></tr>
+            <tr><td>科研方向</td><td>小样本学习 · 模型轻量化 · 跨模态 · 可解释性</td><td>当前学术界热点：少数据、低算力、多模态与"黑盒"可解释是四大突破口</td></tr>
+        </table>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 三、SVG 绘制核心代码</h2>
+        <div class="zhy_code"><span class="zhy_cm">&lt;!-- 用 defs + marker 定义可复用箭头 --&gt;</span>
+<span class="zhy_tag">&lt;defs&gt;</span>
+  <span class="zhy_tag">&lt;marker</span> <span class="zhy_attr">id</span>=<span class="zhy_cm">"zhy_arrow"</span> <span class="zhy_attr">orient</span>=<span class="zhy_cm">"auto-start-reverse"</span>
+          <span class="zhy_attr">markerWidth</span>=<span class="zhy_cm">"7"</span> <span class="zhy_attr">markerHeight</span>=<span class="zhy_cm">"7"</span><span class="zhy_tag">&gt;</span>
+    <span class="zhy_tag">&lt;path</span> <span class="zhy_attr">d</span>=<span class="zhy_cm">"M 0 0 L 10 5 L 0 10 z"</span> <span class="zhy_attr">fill</span>=<span class="zhy_cm">"#9ed58b"</span><span class="zhy_tag">/&gt;</span>
+  <span class="zhy_tag">&lt;/marker&gt;</span>
+<span class="zhy_tag">&lt;/defs&gt;</span>
+
+<span class="zhy_cm">&lt;!-- 节点：圆角矩形 + 居中文字 --&gt;</span>
+<span class="zhy_tag">&lt;rect</span> <span class="zhy_attr">x</span>=<span class="zhy_cm">"220"</span> <span class="zhy_attr">y</span>=<span class="zhy_cm">"232"</span> <span class="zhy_attr">width</span>=<span class="zhy_cm">"118"</span> <span class="zhy_attr">height</span>=<span class="zhy_cm">"52"</span>
+      <span class="zhy_attr">rx</span>=<span class="zhy_cm">"8"</span> <span class="zhy_attr">fill</span>=<span class="zhy_cm">"#ffd479"</span><span class="zhy_tag">/&gt;</span>
+<span class="zhy_tag">&lt;text</span> <span class="zhy_attr">x</span>=<span class="zhy_cm">"279"</span> <span class="zhy_attr">y</span>=<span class="zhy_cm">"254"</span> <span class="zhy_attr">text-anchor</span>=<span class="zhy_cm">"middle"</span><span class="zhy_tag">&gt;</span>卷积层 ×N<span class="zhy_tag">&lt;/text&gt;</span>
+
+<span class="zhy_cm">&lt;!-- 连线：line 上挂 marker-end 即成箭头 --&gt;</span>
+<span class="zhy_tag">&lt;line</span> <span class="zhy_attr">x1</span>=<span class="zhy_cm">"178"</span> <span class="zhy_attr">y1</span>=<span class="zhy_cm">"258"</span> <span class="zhy_attr">x2</span>=<span class="zhy_cm">"216"</span> <span class="zhy_attr">y2</span>=<span class="zhy_cm">"258"</span>
+      <span class="zhy_attr">stroke</span>=<span class="zhy_cm">"#ffd479"</span> <span class="zhy_attr">marker-end</span>=<span class="zhy_cm">"url(#zhy_arrow)"</span><span class="zhy_tag">/&gt;</span></div>
+    </section>
+
+    <section class="zhy_footer-note">说明：与 18.2 的 Canvas 位图不同，SVG 是 DOM 矢量元素，天然支持缩放、无级清晰与 CSS/JS 交互，适合绘制架构图、流程图等静态示意图；本页 SVG 完全手写，无第三方图表库。</section>
+</div>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 文字粒子动画 · lay张</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式："lay张" 文字粒子动画（layzhang）
+           离屏采样文字像素 → 淡紫色粒子汇聚成字
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 画布舞台 ---------- */
+        .zhy_stage {
+            position: relative;
+            margin-top: 16px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 50% 45%, #1c1533 0%, #120d22 60%, #0d0a18 100%);
+            border: 1.5px solid #3a2d5c;
+        }
+
+        .zhy_canvas {
+            display: block;
+            width: 100%;
+            height: 440px;
+            cursor: crosshair;
+        }
+
+        .zhy_hud {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 8px 14px;
+            background: rgba(18, 13, 34, .72);
+            border: 1px solid rgba(200, 168, 255, .4);
+            border-radius: 10px;
+            color: #c8a8ff;
+            font: 12px/1.7 Consolas, monospace;
+            pointer-events: none;
+        }
+
+        .zhy_hud b { color: #e6d9ff; font-size: 14px; }
+
+        /* ---------- 控制条 ---------- */
+        .zhy_ctrl {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: #6b4fa8;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_btn:hover { background: #583f8c; transform: translateY(-2px); }
+
+        .zhy_btn--ghost {
+            background: #fff;
+            color: #6b4fa8;
+            border: 1.5px solid #6b4fa8;
+        }
+
+        .zhy_btn--ghost:hover { background: #f3eeff; }
+
+        .zhy_slider-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #f4f8fb;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #4a5d70;
+        }
+
+        .zhy_range { accent-color: #6b4fa8; cursor: pointer; }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_kw { color: #7fb3ff; }
+        .zhy_code .zhy_fn { color: #ffd479; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能："lay张" Canvas 文字粒子动画 · 淡紫色粒子汇聚成字 -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> layzhang · Canvas 文字动画</p>
+    <h1 class="zhy_title">"lay张" 粒子文字动画</h1>
+    <p class="zhy_intro">先把文字 <strong>lay张</strong> 画在一张看不见的离屏画布上，再用 <strong>getImageData</strong> 采样文字像素点，每个采样点变成一颗<strong>淡紫色粒子</strong>。粒子从四面八方飞来，汇聚成文字；移动鼠标可以把粒子推开，松手后它们又会慢慢"愈合"。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> 一、动画演示</h2>
+        <div class="zhy_stage">
+            <canvas class="zhy_canvas" data-zhy-canvas></canvas>
+            <div class="zhy_hud">粒子 <b data-zhy-count>0</b> 颗　·　点击画布打散再重聚</div>
+        </div>
+        <div class="zhy_ctrl">
+            <button type="button" class="zhy_btn" data-zhy-scatter><i class="iconfont icon-faxian" aria-hidden="true"></i> 打散</button>
+            <button type="button" class="zhy_btn zhy_btn--ghost" data-zhy-gather><i class="iconfont icon-zengjia" aria-hidden="true"></i> 重聚</button>
+            <span class="zhy_slider-box">粒子间距
+                <input type="range" class="zhy_range" data-zhy-gap min="3" max="10" value="4">
+                <output data-zhy-gapval>4</output>
+            </span>
+        </div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 二、核心代码</h2>
+        <div class="zhy_code"><span class="zhy_cm">// 1. 在离屏画布上绘制文字，采样像素生成粒子</span>
+zhyOffCtx.font = <span class="zhy_fn">'700 180px "Microsoft YaHei"'</span>;
+zhyOffCtx.<span class="zhy_fn">fillText</span>(<span class="zhy_fn">'lay张'</span>, zhyX, zhyY);
+<span class="zhy_kw">var</span> zhyData = zhyOffCtx.<span class="zhy_fn">getImageData</span>(0, 0, zhyW, zhyH).data;
+
+<span class="zhy_kw">for</span> (<span class="zhy_kw">var</span> y = 0; y &lt; zhyH; y += zhyGap) {
+    <span class="zhy_kw">for</span> (<span class="zhy_kw">var</span> x = 0; x &lt; zhyW; x += zhyGap) {
+        <span class="zhy_kw">if</span> (zhyData[(y * zhyW + x) * 4 + 3] &gt; 128) {  <span class="zhy_cm">// alpha 通道有字</span>
+            zhyParticles.<span class="zhy_fn">push</span>({ x: <span class="zhy_fn">随机位置</span>, y: <span class="zhy_fn">随机位置</span>,
+                tx: x, ty: y,                    <span class="zhy_cm">// 目标 = 文字像素坐标</span>
+                color: <span class="zhy_fn">'#c8a8ff'</span> });           <span class="zhy_cm">// 淡紫色</span>
+        }
+    }
+}
+
+<span class="zhy_cm">// 2. 每帧：粒子向目标缓动 + 鼠标斥力</span>
+zhyP.vx += (zhyP.tx - zhyP.x) * 0.02;   <span class="zhy_cm">// 弹簧引力</span>
+zhyP.vy += (zhyP.ty - zhyP.y) * 0.02;
+zhyP.vx *= 0.88; zhyP.vy *= 0.88;       <span class="zhy_cm">// 阻尼防震荡</span></div>
+    </section>
+
+    <section class="zhy_footer-note">说明：粒子颜色取自淡紫色系（#c8a8ff ~ #e6d9ff），在深紫夜色背景上呈现柔和光感；全部逻辑为原生 Canvas 2D，无第三方动画库。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本："lay张" 文字粒子动画（layzhang）
+       离屏文字采样 → 淡紫色粒子 → 弹簧缓动汇聚
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        var zhyCanvas = document.querySelector('[data-zhy-canvas]');
+        var zhyCtx = zhyCanvas.getContext('2d');
+        var zhyCountView = document.querySelector('[data-zhy-count]');
+
+        var zhyW = 0, zhyH = 0;
+        var zhyParticles = [];         // 粒子数组
+        var zhyMouse = { x: -9999, y: -9999 };
+        var zhyGap = 4;                // 采样间距（像素）
+        var zhyText = 'lay张';
+
+        /* 淡紫色系色板 */
+        var zhyColors = ['#c8a8ff', '#d8c5ff', '#e6d9ff', '#b699ff', '#a887f0', '#cdb4ff'];
+
+        /* ---------- 离屏画布：绘制文字并采样 ---------- */
+        var zhyOff = document.createElement('canvas');
+        var zhyOffCtx = zhyOff.getContext('2d');
+
+        function zhyBuild() {
+            zhyParticles = [];
+
+            /* 离屏画布尺寸与主画布一致 */
+            zhyOff.width = zhyW;
+            zhyOff.height = zhyH;
+            zhyOffCtx.clearRect(0, 0, zhyW, zhyH);
+
+            /* 自适应字号：宽度的 1/3，最大 220 */
+            var zhySize = Math.min(zhyW / 3.2, 220);
+            zhyOffCtx.font = '700 ' + zhySize + 'px "Microsoft YaHei", sans-serif';
+            zhyOffCtx.textAlign = 'center';
+            zhyOffCtx.textBaseline = 'middle';
+            zhyOffCtx.fillStyle = '#ffffff';
+            zhyOffCtx.fillText(zhyText, zhyW / 2, zhyH / 2);
+
+            /* 采样文字像素 */
+            var zhyData = zhyOffCtx.getImageData(0, 0, zhyW, zhyH).data;
+            for (var zhyY = 0; zhyY < zhyH; zhyY += zhyGap) {
+                for (var zhyX = 0; zhyX < zhyW; zhyX += zhyGap) {
+                    if (zhyData[(zhyY * zhyW + zhyX) * 4 + 3] > 128) {
+                        zhyParticles.push({
+                            x: Math.random() * zhyW,               // 当前位置（随机）
+                            y: Math.random() * zhyH,
+                            tx: zhyX,                               // 目标位置（文字上）
+                            ty: zhyY,
+                            vx: 0,
+                            vy: 0,
+                            r: 0.9 + Math.random() * 1.4,           // 粒子半径
+                            color: zhyColors[Math.floor(Math.random() * zhyColors.length)],
+                            jitter: Math.random() * Math.PI * 2     // 呼吸相位
+                        });
+                    }
+                }
+            }
+            zhyCountView.textContent = zhyParticles.length;
+        }
+
+        /* ---------- 尺寸自适应 ---------- */
+        function zhyResize() {
+            var zhyDpr = window.devicePixelRatio || 1;
+            var zhyRect = zhyCanvas.getBoundingClientRect();
+            zhyW = zhyRect.width;
+            zhyH = zhyRect.height;
+            zhyCanvas.width = zhyW * zhyDpr;
+            zhyCanvas.height = zhyH * zhyDpr;
+            zhyCtx.setTransform(zhyDpr, 0, 0, zhyDpr, 0, 0);
+            zhyBuild();
+        }
+
+        /* ---------- 动画主循环 ---------- */
+        var zhyTick = 0;
+
+        function zhyLoop() {
+            zhyTick++;
+            zhyCtx.clearRect(0, 0, zhyW, zhyH);
+
+            for (var zhyI = 0; zhyI < zhyParticles.length; zhyI++) {
+                var zhyP = zhyParticles[zhyI];
+
+                /* 弹簧引力：向目标像素缓动 */
+                zhyP.vx += (zhyP.tx - zhyP.x) * 0.02;
+                zhyP.vy += (zhyP.ty - zhyP.y) * 0.02;
+
+                /* 鼠标斥力：60px 范围内推开 */
+                var zhyDx = zhyP.x - zhyMouse.x;
+                var zhyDy = zhyP.y - zhyMouse.y;
+                var zhyDist2 = zhyDx * zhyDx + zhyDy * zhyDy;
+                if (zhyDist2 < 3600) {
+                    var zhyDist = Math.sqrt(zhyDist2) || 1;
+                    var zhyForce = (60 - zhyDist) / 60 * 3;
+                    zhyP.vx += zhyDx / zhyDist * zhyForce;
+                    zhyP.vy += zhyDy / zhyDist * zhyForce;
+                }
+
+                /* 阻尼 + 位置更新 */
+                zhyP.vx *= 0.88;
+                zhyP.vy *= 0.88;
+                zhyP.x += zhyP.vx;
+                zhyP.y += zhyP.vy;
+
+                /* 轻微呼吸浮动 */
+                var zhyFloat = Math.sin(zhyTick * 0.03 + zhyP.jitter) * 0.6;
+
+                zhyCtx.beginPath();
+                zhyCtx.arc(zhyP.x, zhyP.y + zhyFloat, zhyP.r, 0, Math.PI * 2);
+                zhyCtx.fillStyle = zhyP.color;
+                /* 淡紫色柔光 */
+                zhyCtx.shadowColor = '#c8a8ff';
+                zhyCtx.shadowBlur = 6;
+                zhyCtx.fill();
+            }
+            zhyCtx.shadowBlur = 0;
+
+            requestAnimationFrame(zhyLoop);
+        }
+
+        /* ---------- 交互 ---------- */
+        zhyCanvas.addEventListener('mousemove', function (zhyEvt) {
+            var zhyRect = zhyCanvas.getBoundingClientRect();
+            zhyMouse.x = zhyEvt.clientX - zhyRect.left;
+            zhyMouse.y = zhyEvt.clientY - zhyRect.top;
+        });
+
+        zhyCanvas.addEventListener('mouseleave', function () {
+            zhyMouse.x = -9999;
+            zhyMouse.y = -9999;
+        });
+
+        /* 点击画布：把所有粒子炸开，随后自动重聚 */
+        zhyCanvas.addEventListener('click', function () {
+            for (var zhyI = 0; zhyI < zhyParticles.length; zhyI++) {
+                var zhyP = zhyParticles[zhyI];
+                var zhyAngle = Math.random() * Math.PI * 2;
+                var zhySpeed = 8 + Math.random() * 14;
+                zhyP.vx = Math.cos(zhyAngle) * zhySpeed;
+                zhyP.vy = Math.sin(zhyAngle) * zhySpeed;
+            }
+        });
+
+        document.querySelector('[data-zhy-scatter]').addEventListener('click', function () {
+            for (var zhyI = 0; zhyI < zhyParticles.length; zhyI++) {
+                var zhyP = zhyParticles[zhyI];
+                zhyP.x = Math.random() * zhyW;
+                zhyP.y = Math.random() * zhyH;
+                zhyP.vx = (Math.random() - 0.5) * 6;
+                zhyP.vy = (Math.random() - 0.5) * 6;
+            }
+        });
+
+        document.querySelector('[data-zhy-gather]').addEventListener('click', function () {
+            /* 清零速度，让弹簧引力把粒子拉回文字 */
+            for (var zhyI = 0; zhyI < zhyParticles.length; zhyI++) {
+                zhyParticles[zhyI].vx = 0;
+                zhyParticles[zhyI].vy = 0;
+            }
+        });
+
+        document.querySelector('[data-zhy-gap]').addEventListener('input', function () {
+            zhyGap = parseInt(this.value, 10);
+            document.querySelector('[data-zhy-gapval]').textContent = zhyGap;
+            zhyBuild();
+        });
+
+        window.addEventListener('resize', zhyResize);
+
+        /* ---------- 启动 ---------- */
+        zhyResize();
+        requestAnimationFrame(zhyLoop);
+    })();
+</script>
+</body>
+</html>
