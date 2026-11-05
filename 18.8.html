@@ -25,13 +25,14 @@
             font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
             background: #071426;
             color: #cfe3f2;
-            overflow: hidden;
+            /* 小屏幕允许纵向滚动；大屏 1080p 时内容刚好一屏不会出现滚动条 */
+            overflow-x: hidden;
         }
 
         .zhy_screen {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
             padding: 12px 16px 16px;
             background:
                 radial-gradient(ellipse at 50% -10%, rgba(29, 93, 143, .35) 0%, transparent 55%),
@@ -93,13 +94,16 @@
             flex-direction: column;
             gap: 14px;
             min-height: 0;
+            min-width: 0;
+            /* 小屏滚动时的列高下限，保证每列内容可看 */
+            min-height: 460px;
         }
 
         /* ---------- 面板 ---------- */
         .zhy_card {
             position: relative;
             flex: 1;
-            min-height: 0;
+            min-height: 210px;
             display: flex;
             flex-direction: column;
             background: rgba(13, 32, 56, .55);
@@ -135,7 +139,7 @@
         }
 
         /* 中列地图面板占比更大 */
-        .zhy_card--map { flex: 1.55; }
+        .zhy_card--map { flex: 1.55; min-height: 300px; }
 
         .zhy_chart {
             flex: 1;
