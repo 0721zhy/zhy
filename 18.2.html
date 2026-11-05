@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 架构图 · 电商全站系统</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：Canvas 电商系统架构图（18.2）
+           分层架构 + 箭头连线 + 流动光点动画 + 悬停高亮
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 画布舞台 ---------- */
+        .zhy_stage {
+            margin-top: 16px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #14202c;
+            border: 1.5px solid #2c3d4f;
+            overflow-x: auto;
+        }
+
+        .zhy_canvas {
+            display: block;
+            width: 100%;
+            min-width: 860px;
+            height: 560px;
+            cursor: default;
+        }
+
+        /* ---------- 图例 ---------- */
+        .zhy_legend {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .zhy_legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            background: #f4f8fb;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 999px;
+            font-size: 13px;
+            color: #4a5d70;
+        }
+
+        .zhy_dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            flex: none;
+        }
+
+        /* ---------- 分层说明表 ---------- */
+        .zhy_layers {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .zhy_layers th,
+        .zhy_layers td {
+            padding: 10px 12px;
+            border: 1px solid #d8e2ec;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .zhy_layers th {
+            background: #eef4fa;
+            color: #1d5d8f;
+            white-space: nowrap;
+        }
+
+        .zhy_layers td b { color: #b3541e; }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_kw { color: #7fb3ff; }
+        .zhy_code .zhy_fn { color: #ffd479; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+
+        .zhy_tip {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #7a8fa3;
+        }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：Kimi-K3 功能：Canvas 绘制电商全站系统架构图 · 分层节点 + 连线 + 流动光点动画 -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 18-2 · Canvas 绘图实战</p>
+    <h1 class="zhy_title">电商全站系统架构图</h1>
+    <p class="zhy_intro">整张架构图完全用 <strong>Canvas 2D API</strong> 手写绘制：矩形节点、圆角、文字、箭头连线，并用 requestAnimationFrame 让数据流光点沿箭头持续流动。把鼠标移到任意服务节点上，可高亮它与上下游的连接关系。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 一、架构图（Canvas 实时绘制）</h2>
+        <div class="zhy_stage">
+            <canvas class="zhy_canvas" data-zhy-canvas></canvas>
+        </div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 提示：移动鼠标到节点上可查看该节点的职责说明，并高亮其上下游连线。</p>
+        <div class="zhy_legend">
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#7fd0ff"></span>用户层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#9ed58b"></span>接入层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#ffd479"></span>应用服务层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#c8a8ff"></span>中间件层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#ff8f66"></span>数据层</span>
+            <span class="zhy_legend-item"><span class="zhy_dot" style="background:#6fe0c8"></span>运维支撑</span>
+        </div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 二、各层职责</h2>
+        <table class="zhy_layers">
+            <tr><th>层级</th><th>组成</th><th>职责</th></tr>
+            <tr><td>用户层</td><td>PC 浏览器 / 移动 APP / 小程序</td><td>三种入口访问同一套后端服务，前端页面只负责展示与交互</td></tr>
+            <tr><td>接入层</td><td>CDN 加速 · Nginx 负载均衡 · API 网关</td><td>静态资源就近分发；请求按负载分发到多台服务器；网关统一做<b>鉴权、限流、路由</b></td></tr>
+            <tr><td>应用服务层</td><td>用户 / 商品 / 购物车 / 订单 / 支付 / 物流 六大微服务</td><td>按业务拆分，每个服务独立开发部署，通过接口互相调用</td></tr>
+            <tr><td>中间件层</td><td>Redis 缓存 · RabbitMQ 消息队列 · Elasticsearch</td><td>热点数据缓存削峰；下单等耗时操作<b>异步解耦</b>；商品搜索走全文检索引擎</td></tr>
+            <tr><td>数据层</td><td>MySQL 主从集群 · OSS 文件存储</td><td>交易数据持久化，主库写入、从库读取；商品图片等静态文件走对象存储</td></tr>
+            <tr><td>运维支撑</td><td>监控告警 · 日志中心</td><td>横切所有层：采集指标与日志，异常时自动告警</td></tr>
+        </table>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 二、Canvas 绘制核心代码</h2>
+        <div class="zhy_code"><span class="zhy_cm">// 节点用圆角矩形 + 文字绘制</span>
+<span class="zhy_kw">function</span> <span class="zhy_fn">zhyDrawNode</span>(zhyCtx, zhyNode, zhyHover) {
+    zhyCtx.<span class="zhy_fn">beginPath</span>();
+    zhyCtx.<span class="zhy_fn">roundRect</span>(zhyNode.x, zhyNode.y, zhyNode.w, zhyNode.h, 8);
+    zhyCtx.fillStyle = zhyNode.color;
+    zhyCtx.<span class="zhy_fn">fill</span>();
+    zhyCtx.fillStyle = <span class="zhy_fn">'#14202c'</span>;
+    zhyCtx.textAlign = <span class="zhy_fn">'center'</span>;
+    zhyCtx.<span class="zhy_fn">fillText</span>(zhyNode.name, zhyNode.x + zhyNode.w / 2, zhyNode.y + zhyNode.h / 2);
+}
+
+<span class="zhy_cm">// 数据流光点：按 t∈[0,1] 在两点连线上插值移动</span>
+<span class="zhy_kw">function</span> <span class="zhy_fn">zhyDrawFlow</span>(zhyCtx, zhyX1, zhyY1, zhyX2, zhyY2, zhyT) {
+    <span class="zhy_kw">var</span> zhyX = zhyX1 + (zhyX2 - zhyX1) * zhyT;
+    <span class="zhy_kw">var</span> zhyY = zhyY1 + (zhyY2 - zhyY1) * zhyT;
+    zhyCtx.<span class="zhy_fn">beginPath</span>();
+    zhyCtx.<span class="zhy_fn">arc</span>(zhyX, zhyY, 3, 0, Math.PI * 2);
+    zhyCtx.<span class="zhy_fn">fill</span>();
+}</div>
+    </section>
+
+    <section class="zhy_footer-note">说明：本图为教学示意图，全部节点与连线均为 Canvas 手写绘制，无任何第三方图表库；真实电商系统还会包含分库分表、服务注册中心、熔断降级等更多组件。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：Canvas 电商系统架构图（18.2）
+       分层节点 + 箭头连线 + 流动光点 + 悬停高亮
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        var zhyCanvas = document.querySelector('[data-zhy-canvas]');
+        var zhyCtx = zhyCanvas.getContext('2d');
+
+        /* ---------- 调色板 ---------- */
+        var zhyLayerColors = {
+            client: '#7fd0ff',   // 用户层
+            gateway: '#9ed58b',  // 接入层
+            service: '#ffd479',  // 应用服务层
+            middle: '#c8a8ff',   // 中间件层
+            data: '#ff8f66',     // 数据层
+            ops: '#6fe0c8'       // 运维支撑
+        };
+
+        /* ---------- 节点数据：层 / 名称 / 职责说明 ---------- */
+        var zhyLayers = [
+            { key: 'client', label: '用户层', nodes: [
+                { name: 'PC 浏览器', desc: '桌面端网页商城，HTML+CSS+JS 前端' },
+                { name: '移动 APP', desc: 'iOS / Android 原生客户端' },
+                { name: '小程序', desc: '微信 / 支付宝小程序入口' }
+            ]},
+            { key: 'gateway', label: '接入层', nodes: [
+                { name: 'CDN 加速', desc: '静态资源就近分发，减轻源站压力' },
+                { name: 'Nginx 负载均衡', desc: '按负载把请求分发到多台应用服务器' },
+                { name: 'API 网关', desc: '统一入口：鉴权、限流、路由转发' }
+            ]},
+            { key: 'service', label: '应用服务层', nodes: [
+                { name: '用户服务', desc: '注册登录、会员信息、收货地址管理' },
+                { name: '商品服务', desc: '商品列表、详情、库存、类目管理' },
+                { name: '购物车服务', desc: '加购、改数量、选中结算' },
+                { name: '订单服务', desc: '下单、拆单、订单状态流转' },
+                { name: '支付服务', desc: '对接微信 / 支付宝支付，回调对账' },
+                { name: '物流服务', desc: '对接快递公司接口，轨迹查询' }
+            ]},
+            { key: 'middle', label: '中间件层', nodes: [
+                { name: 'Redis 缓存', desc: '热点商品与 Session 缓存，削峰填谷' },
+                { name: 'RabbitMQ 消息队列', desc: '下单、发短信等操作异步化解耦' },
+                { name: 'Elasticsearch', desc: '商品全文搜索，支持分词与筛选' }
+            ]},
+            { key: 'data', label: '数据层', nodes: [
+                { name: 'MySQL 主从集群', desc: '交易数据持久化：主库写、从库读' },
+                { name: 'OSS 文件存储', desc: '商品图片、视频等静态文件对象存储' }
+            ]}
+        ];
+
+        /* 运维支撑层：横切右侧 */
+        var zhyOpsNode = { name: '监控告警 · 日志中心', desc: '横切所有层：采集指标与日志，异常自动告警', color: zhyLayerColors.ops };
+
+        /* ---------- 布局计算 ---------- */
+        var zhyW = 0, zhyH = 0;
+        var zhyNodes = [];      // 扁平化后的全部节点（含坐标）
+        var zhyEdges = [];      // 层间连线 [{from, to}]
+        var zhyFlows = [];      // 流动光点 [{edge, t, speed}]
+        var zhyHoverNode = null;
+
+        function zhyLayout() {
+            var zhyRect = zhyCanvas.getBoundingClientRect();
+            var zhyDpr = window.devicePixelRatio || 1;
+            zhyW = zhyRect.width;
+            zhyH = zhyRect.height;
+            zhyCanvas.width = zhyW * zhyDpr;
+            zhyCanvas.height = zhyH * zhyDpr;
+            zhyCtx.setTransform(zhyDpr, 0, 0, zhyDpr, 0, 0);
+
+            zhyNodes = [];
+            zhyEdges = [];
+
+            var zhyLeft = 88;                    // 左侧留出层标签宽度
+            var zhyOpsW = 150;                   // 右侧运维支撑条宽度
+            var zhyMainW = zhyW - zhyLeft - zhyOpsW - 40;
+            var zhyGapY = 18;
+            var zhyNodeH = 46;
+            var zhyUsableH = zhyH - 70;          // 上下留白
+            var zhyRowH = (zhyUsableH - zhyGapY * (zhyLayers.length - 1)) / zhyLayers.length;
+
+            var zhyPrevRow = null;
+            zhyLayers.forEach(function (zhyLayer, zhyLi) {
+                var zhyY = 46 + zhyLi * (zhyRowH + zhyGapY);
+                var zhyN = zhyLayer.nodes.length;
+                var zhyGapX = 12;
+                var zhyNodeW = (zhyMainW - zhyGapX * (zhyN - 1)) / zhyN;
+
+                var zhyRow = [];
+                zhyLayer.nodes.forEach(function (zhyNode, zhyNi) {
+                    var zhyItem = {
+                        name: zhyNode.name,
+                        desc: zhyNode.desc,
+                        layer: zhyLayer.label,
+                        color: zhyLayerColors[zhyLayer.key],
+                        x: zhyLeft + zhyNi * (zhyNodeW + zhyGapX),
+                        y: zhyY,
+                        w: zhyNodeW,
+                        h: zhyNodeH
+                    };
+                    zhyNodes.push(zhyItem);
+                    zhyRow.push(zhyItem);
+                });
+
+                /* 相邻两层之间建立连线（取首尾对齐的若干条） */
+                if (zhyPrevRow) {
+                    var zhyPairs = Math.max(zhyPrevRow.length, zhyRow.length);
+                    for (var zhyP = 0; zhyP < zhyPairs; zhyP++) {
+                        var zhyFrom = zhyPrevRow[Math.min(zhyP, zhyPrevRow.length - 1)];
+                        var zhyTo = zhyRow[Math.min(zhyP, zhyRow.length - 1)];
+                        zhyEdges.push({ from: zhyFrom, to: zhyTo });
+                    }
+                }
+                zhyPrevRow = zhyRow;
+            });
+
+            /* 运维支撑条（右侧竖条，贯穿全部层） */
+            zhyOpsNode.x = zhyW - zhyOpsW - 20;
+            zhyOpsNode.y = 46;
+            zhyOpsNode.w = zhyOpsW;
+            zhyOpsNode.h = zhyUsableH - (zhyRowH - zhyNodeH);
+
+            /* 初始化流动光点：每条边 1 个 */
+            zhyFlows = [];
+            zhyEdges.forEach(function (zhyEdge, zhyI) {
+                zhyFlows.push({
+                    edge: zhyEdge,
+                    t: (zhyI * 0.13) % 1,        // 错开相位
+                    speed: 0.004 + (zhyI % 3) * 0.0015
+                });
+            });
+        }
+
+        /* ---------- 圆角矩形 ---------- */
+        function zhyRoundRect(zhyX, zhyY, zhyW, zhyH, zhyR) {
+            zhyCtx.beginPath();
+            zhyCtx.moveTo(zhyX + zhyR, zhyY);
+            zhyCtx.arcTo(zhyX + zhyW, zhyY, zhyX + zhyW, zhyY + zhyH, zhyR);
+            zhyCtx.arcTo(zhyX + zhyW, zhyY + zhyH, zhyX, zhyY + zhyH, zhyR);
+            zhyCtx.arcTo(zhyX, zhyY + zhyH, zhyX, zhyY, zhyR);
+            zhyCtx.arcTo(zhyX, zhyY, zhyX + zhyW, zhyY, zhyR);
+            zhyCtx.closePath();
+        }
+
+        /* ---------- 绘制箭头连线 ---------- */
+        function zhyDrawEdge(zhyEdge, zhyHighlight) {
+            var zhyX1 = zhyEdge.from.x + zhyEdge.from.w / 2;
+            var zhyY1 = zhyEdge.from.y + zhyEdge.from.h;
+            var zhyX2 = zhyEdge.to.x + zhyEdge.to.w / 2;
+            var zhyY2 = zhyEdge.to.y;
+
+            zhyCtx.beginPath();
+            zhyCtx.moveTo(zhyX1, zhyY1);
+            zhyCtx.lineTo(zhyX2, zhyY2);
+            zhyCtx.strokeStyle = zhyHighlight ? '#ffffff' : 'rgba(159, 179, 200, 0.35)';
+            zhyCtx.lineWidth = zhyHighlight ? 2 : 1;
+            zhyCtx.stroke();
+
+            /* 箭头头部 */
+            var zhyAngle = Math.atan2(zhyY2 - zhyY1, zhyX2 - zhyX1);
+            zhyCtx.beginPath();
+            zhyCtx.moveTo(zhyX2, zhyY2);
+            zhyCtx.lineTo(zhyX2 - 6 * Math.cos(zhyAngle - 0.4), zhyY2 - 6 * Math.sin(zhyAngle - 0.4));
+            zhyCtx.lineTo(zhyX2 - 6 * Math.cos(zhyAngle + 0.4), zhyY2 - 6 * Math.sin(zhyAngle + 0.4));
+            zhyCtx.closePath();
+            zhyCtx.fillStyle = zhyHighlight ? '#ffffff' : 'rgba(159, 179, 200, 0.35)';
+            zhyCtx.fill();
+        }
+
+        /* ---------- 绘制节点 ---------- */
+        function zhyDrawNode(zhyNode, zhyHover) {
+            zhyCtx.save();
+            if (zhyHover) {
+                zhyCtx.shadowColor = zhyNode.color;
+                zhyCtx.shadowBlur = 16;
+            }
+            zhyRoundRect(zhyNode.x, zhyNode.y, zhyNode.w, zhyNode.h, 8);
+            zhyCtx.fillStyle = zhyHover ? zhyNode.color : zhyNode.color + 'cc';
+            zhyCtx.fill();
+            zhyCtx.restore();
+
+            zhyCtx.fillStyle = '#14202c';
+            zhyCtx.font = '700 13px "Microsoft YaHei", sans-serif';
+            zhyCtx.textAlign = 'center';
+            zhyCtx.textBaseline = 'middle';
+            zhyCtx.fillText(zhyNode.name, zhyNode.x + zhyNode.w / 2, zhyNode.y + zhyNode.h / 2);
+        }
+
+        /* ---------- 主绘制 ---------- */
+        function zhyDraw() {
+            zhyCtx.clearRect(0, 0, zhyW, zhyH);
+
+            /* 背景网格 */
+            zhyCtx.strokeStyle = 'rgba(159, 179, 200, 0.07)';
+            zhyCtx.lineWidth = 1;
+            for (var zhyG = 0; zhyG < zhyW; zhyG += 40) {
+                zhyCtx.beginPath(); zhyCtx.moveTo(zhyG, 0); zhyCtx.lineTo(zhyG, zhyH); zhyCtx.stroke();
+            }
+            for (var zhyG2 = 0; zhyG2 < zhyH; zhyG2 += 40) {
+                zhyCtx.beginPath(); zhyCtx.moveTo(0, zhyG2); zhyCtx.lineTo(zhyW, zhyG2); zhyCtx.stroke();
+            }
+
+            /* 层标签 */
+            var zhyRowH2 = (zhyH - 70 - 18 * (zhyLayers.length - 1)) / zhyLayers.length;
+            zhyLayers.forEach(function (zhyLayer, zhyLi) {
+                var zhyY = 46 + zhyLi * (zhyRowH2 + 18);
+                zhyCtx.fillStyle = zhyLayerColors[zhyLayer.key];
+                zhyCtx.font = '700 12px "Microsoft YaHei", sans-serif';
+                zhyCtx.textAlign = 'left';
+                zhyCtx.textBaseline = 'middle';
+                zhyCtx.fillText(zhyLayer.label, 14, zhyY + 23);
+                /* 层分隔虚线 */
+                if (zhyLi > 0) {
+                    zhyCtx.beginPath();
+                    zhyCtx.setLineDash([4, 6]);
+                    zhyCtx.moveTo(0, zhyY - 9);
+                    zhyCtx.lineTo(zhyW, zhyY - 9);
+                    zhyCtx.strokeStyle = 'rgba(159, 179, 200, 0.18)';
+                    zhyCtx.stroke();
+                    zhyCtx.setLineDash([]);
+                }
+            });
+
+            /* 连线（悬停节点相关的线高亮） */
+            zhyEdges.forEach(function (zhyEdge) {
+                var zhyHl = zhyHoverNode &&
+                    (zhyEdge.from === zhyHoverNode || zhyEdge.to === zhyHoverNode);
+                zhyDrawEdge(zhyEdge, zhyHl);
+            });
+
+            /* 流动光点 */
+            zhyFlows.forEach(function (zhyF) {
+                zhyF.t += zhyF.speed;
+                if (zhyF.t > 1) { zhyF.t = 0; }
+                var zhyX1 = zhyF.edge.from.x + zhyF.edge.from.w / 2;
+                var zhyY1 = zhyF.edge.from.y + zhyF.edge.from.h;
+                var zhyX2 = zhyF.edge.to.x + zhyF.edge.to.w / 2;
+                var zhyY2 = zhyF.edge.to.y;
+                var zhyX = zhyX1 + (zhyX2 - zhyX1) * zhyF.t;
+                var zhyY = zhyY1 + (zhyY2 - zhyY1) * zhyF.t;
+                zhyCtx.beginPath();
+                zhyCtx.arc(zhyX, zhyY, 3, 0, Math.PI * 2);
+                zhyCtx.fillStyle = '#9ed58b';
+                zhyCtx.shadowColor = '#9ed58b';
+                zhyCtx.shadowBlur = 8;
+                zhyCtx.fill();
+                zhyCtx.shadowBlur = 0;
+            });
+
+            /* 节点 */
+            zhyNodes.forEach(function (zhyNode) {
+                zhyDrawNode(zhyNode, zhyNode === zhyHoverNode);
+            });
+
+            /* 右侧运维支撑竖条 */
+            zhyRoundRect(zhyOpsNode.x, zhyOpsNode.y, zhyOpsNode.w, zhyOpsNode.h, 10);
+            zhyCtx.fillStyle = 'rgba(111, 224, 200, 0.14)';
+            zhyCtx.fill();
+            zhyCtx.strokeStyle = '#6fe0c8';
+            zhyCtx.lineWidth = 1.5;
+            zhyCtx.setLineDash([6, 4]);
+            zhyCtx.stroke();
+            zhyCtx.setLineDash([]);
+            zhyCtx.save();
+            zhyCtx.translate(zhyOpsNode.x + zhyOpsNode.w / 2, zhyOpsNode.y + zhyOpsNode.h / 2);
+            zhyCtx.rotate(Math.PI / 2);
+            zhyCtx.fillStyle = '#6fe0c8';
+            zhyCtx.font = '700 14px "Microsoft YaHei", sans-serif';
+            zhyCtx.textAlign = 'center';
+            zhyCtx.textBaseline = 'middle';
+            zhyCtx.fillText('监控告警 · 日志中心（横切全部层）', 0, 0);
+            zhyCtx.restore();
+
+            /* 悬停说明气泡 */
+            if (zhyHoverNode) {
+                var zhyText = zhyHoverNode.name + '：' + zhyHoverNode.desc;
+                zhyCtx.font = '13px "Microsoft YaHei", sans-serif';
+                var zhyTw = zhyCtx.measureText(zhyText).width + 24;
+                var zhyTx = Math.min(Math.max(zhyHoverNode.x + zhyHoverNode.w / 2 - zhyTw / 2, 8), zhyW - zhyTw - 8);
+                var zhyTy = zhyHoverNode.y - 34;
+                if (zhyTy < 6) { zhyTy = zhyHoverNode.y + zhyHoverNode.h + 8; }
+                zhyRoundRect(zhyTx, zhyTy, zhyTw, 26, 6);
+                zhyCtx.fillStyle = 'rgba(20, 32, 44, 0.92)';
+                zhyCtx.fill();
+                zhyCtx.strokeStyle = zhyHoverNode.color;
+                zhyCtx.lineWidth = 1;
+                zhyCtx.stroke();
+                zhyCtx.fillStyle = '#ffffff';
+                zhyCtx.textAlign = 'center';
+                zhyCtx.textBaseline = 'middle';
+                zhyCtx.fillText(zhyText, zhyTx + zhyTw / 2, zhyTy + 13);
+            }
+
+            requestAnimationFrame(zhyDraw);
+        }
+
+        /* ---------- 悬停命中检测 ---------- */
+        zhyCanvas.addEventListener('mousemove', function (zhyEvt) {
+            var zhyRect = zhyCanvas.getBoundingClientRect();
+            var zhyMx = zhyEvt.clientX - zhyRect.left;
+            var zhyMy = zhyEvt.clientY - zhyRect.top;
+            zhyHoverNode = null;
+            for (var zhyI = 0; zhyI < zhyNodes.length; zhyI++) {
+                var zhyN = zhyNodes[zhyI];
+                if (zhyMx >= zhyN.x && zhyMx <= zhyN.x + zhyN.w &&
+                    zhyMy >= zhyN.y && zhyMy <= zhyN.y + zhyN.h) {
+                    zhyHoverNode = zhyN;
+                    break;
+                }
+            }
+            zhyCanvas.style.cursor = zhyHoverNode ? 'pointer' : 'default';
+        });
+
+        zhyCanvas.addEventListener('mouseleave', function () {
+            zhyHoverNode = null;
+        });
+
+        window.addEventListener('resize', zhyLayout);
+
+        /* ---------- 启动 ---------- */
+        zhyLayout();
+        requestAnimationFrame(zhyDraw);
+    })();
+</script>
+</body>
+</html>

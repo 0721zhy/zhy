@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 动画 · 弹跳粒子球</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* =====================================================
+           本页私有样式：Canvas 动画演示（18.1）
+           requestAnimationFrame + 物理弹跳粒子球
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 画布舞台 ---------- */
+        .zhy_stage {
+            position: relative;
+            margin-top: 16px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #14202c;
+            border: 1.5px solid #2c3d4f;
+        }
+
+        .zhy_canvas {
+            display: block;
+            width: 100%;
+            height: 420px;
+            cursor: crosshair;
+        }
+
+        /* 悬浮统计面板 */
+        .zhy_hud {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 8px 14px;
+            background: rgba(20, 32, 44, .72);
+            border: 1px solid rgba(158, 213, 139, .35);
+            border-radius: 10px;
+            color: #9ed58b;
+            font: 12px/1.7 Consolas, monospace;
+            pointer-events: none;
+        }
+
+        .zhy_hud b { color: #ffd479; font-size: 14px; }
+
+        /* ---------- 控制条 ---------- */
+        .zhy_ctrl {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .zhy_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: #1d5d8f;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font: 700 14px "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+
+        .zhy_btn:hover { background: #164a73; transform: translateY(-2px); }
+
+        .zhy_btn--warn { background: #b3541e; }
+        .zhy_btn--warn:hover { background: #93441a; }
+
+        .zhy_btn--ghost {
+            background: #fff;
+            color: #1d5d8f;
+            border: 1.5px solid #1d5d8f;
+        }
+
+        .zhy_btn--ghost:hover { background: #eef4fa; }
+
+        /* 重力滑块 */
+        .zhy_slider-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #f4f8fb;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #4a5d70;
+        }
+
+        .zhy_slider-box output {
+            font: 700 13px Consolas, monospace;
+            color: #b3541e;
+            min-width: 38px;
+            text-align: right;
+        }
+
+        .zhy_range { accent-color: #1d5d8f; cursor: pointer; }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_kw { color: #7fb3ff; }
+        .zhy_code .zhy_fn { color: #ffd479; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+
+        /* ---------- 知识点列表 ---------- */
+        .zhy_points {
+            margin: 14px 0 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 10px;
+        }
+
+        .zhy_points li {
+            padding: 12px 14px;
+            background: #f4f8fb;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #4a5d70;
+        }
+
+        .zhy_points b {
+            display: block;
+            color: #1d5d8f;
+            font-family: Consolas, monospace;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：Kimi-K3 功能：Canvas 动画演示 · requestAnimationFrame 弹跳粒子球 -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 18-1 · Canvas 动画</p>
+    <h1 class="zhy_title">Canvas 弹跳粒子球动画</h1>
+    <p class="zhy_intro">使用 <strong>&lt;canvas&gt;</strong> 2D 上下文与 <strong>requestAnimationFrame</strong> 逐帧绘制：每颗小球有位置、速度、颜色，受重力加速、与地面/墙壁碰撞反弹，并带有尾迹拖尾效果。点击画布可在点击处发射一颗新球。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> 一、动画演示</h2>
+        <div class="zhy_stage">
+            <canvas class="zhy_canvas" data-zhy-canvas></canvas>
+            <div class="zhy_hud">FPS <b data-zhy-fps>--</b>　小球 <b data-zhy-count>0</b> 颗</div>
+        </div>
+        <div class="zhy_ctrl">
+            <button type="button" class="zhy_btn" data-zhy-add><i class="iconfont icon-zengjia" aria-hidden="true"></i> 加 10 颗球</button>
+            <button type="button" class="zhy_btn zhy_btn--ghost" data-zhy-pause><i class="iconfont icon-shipin" aria-hidden="true"></i> 暂停 / 继续</button>
+            <button type="button" class="zhy_btn zhy_btn--warn" data-zhy-clear><i class="iconfont icon-shanchu" aria-hidden="true"></i> 清空</button>
+            <span class="zhy_slider-box">重力
+                <input type="range" class="zhy_range" data-zhy-gravity min="0" max="20" value="8">
+                <output data-zhy-gval>0.8</output>
+            </span>
+        </div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 二、核心代码</h2>
+        <div class="zhy_code"><span class="zhy_cm">// 动画主循环：清屏 → 更新物理 → 绘制 → 请求下一帧</span>
+<span class="zhy_kw">function</span> <span class="zhy_fn">zhyLoop</span>() {
+    zhyCtx.fillStyle = <span class="zhy_fn">'rgba(20,32,44,.25)'</span>;  <span class="zhy_cm">// 半透明覆盖形成拖尾</span>
+    zhyCtx.<span class="zhy_fn">fillRect</span>(0, 0, zhyW, zhyH);
+
+    zhyBalls.<span class="zhy_fn">forEach</span>(<span class="zhy_kw">function</span> (zhyB) {
+        zhyB.vy += zhyGravity;            <span class="zhy_cm">// 重力加速</span>
+        zhyB.x += zhyB.vx;                <span class="zhy_cm">// 更新位置</span>
+        zhyB.y += zhyB.vy;
+        <span class="zhy_kw">if</span> (zhyB.y + zhyB.r &gt; zhyH) {   <span class="zhy_cm">// 撞地反弹并损耗能量</span>
+            zhyB.vy *= -0.85;
+        }
+        zhyCtx.<span class="zhy_fn">beginPath</span>();
+        zhyCtx.<span class="zhy_fn">arc</span>(zhyB.x, zhyB.y, zhyB.r, 0, Math.PI * 2);
+        zhyCtx.<span class="zhy_fn">fill</span>();
+    });
+
+    <span class="zhy_fn">requestAnimationFrame</span>(zhyLoop);  <span class="zhy_cm">// 与屏幕刷新率同步</span>
+}</div>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 三、Canvas 动画要点</h2>
+        <ul class="zhy_points">
+            <li><b>getContext('2d')</b>获取 2D 绘图上下文，所有绘制都通过它完成：arc 画圆、fillRect 填充矩形等。</li>
+            <li><b>requestAnimationFrame</b>浏览器自带的动画帧 API，与屏幕刷新率（约 60 次/秒）同步，比 setInterval 更流畅省电。</li>
+            <li><b>清屏技巧</b>不用 clearRect 而是用半透明矩形覆盖，上一帧的残影逐渐变淡，形成"拖尾"效果。</li>
+            <li><b>物理模拟</b>速度 + 重力加速度逐帧积分；碰撞时速度取反并乘 0.85 的能量损耗系数，小球越弹越低。</li>
+        </ul>
+    </section>
+
+    <section class="zhy_footer-note">说明：本页全部使用原生 Canvas 2D API，无任何第三方动画库；画布尺寸随窗口自适应，并按 devicePixelRatio 做高清屏适配。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：Canvas 弹跳粒子球（18.1）
+       约定：所有变量带 zhy_ 前缀，事件用 data 属性绑定
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        var zhyCanvas = document.querySelector('[data-zhy-canvas]');
+        var zhyCtx = zhyCanvas.getContext('2d');
+        var zhyFpsView = document.querySelector('[data-zhy-fps]');
+        var zhyCountView = document.querySelector('[data-zhy-count]');
+        var zhyGVal = document.querySelector('[data-zhy-gval]');
+
+        var zhyW = 0;                 // 画布逻辑宽度
+        var zhyH = 0;                 // 画布逻辑高度
+        var zhyBalls = [];            // 小球数组
+        var zhyGravity = 0.8;         // 重力加速度（px/帧²）
+        var zhyPaused = false;        // 暂停标志
+        var zhyFrames = 0;            // FPS 统计帧计数
+        var zhyFpsTime = performance.now();
+
+        var zhyColors = ['#9ed58b', '#7fd0ff', '#ffd479', '#ff8f66', '#c8a8ff', '#6fe0c8'];
+
+        /* ---------- 高清屏适配 + 尺寸自适应 ---------- */
+        function zhyResize() {
+            var zhyDpr = window.devicePixelRatio || 1;
+            var zhyRect = zhyCanvas.getBoundingClientRect();
+            zhyW = zhyRect.width;
+            zhyH = zhyRect.height;
+            zhyCanvas.width = zhyW * zhyDpr;
+            zhyCanvas.height = zhyH * zhyDpr;
+            zhyCtx.setTransform(zhyDpr, 0, 0, zhyDpr, 0, 0);
+            zhyCtx.fillStyle = '#14202c';
+            zhyCtx.fillRect(0, 0, zhyW, zhyH);
+        }
+
+        /* ---------- 生成一颗小球 ---------- */
+        function zhySpawn(zhyX, zhyY) {
+            zhyBalls.push({
+                x: (zhyX !== undefined) ? zhyX : Math.random() * zhyW,
+                y: (zhyY !== undefined) ? zhyY : Math.random() * zhyH * 0.4,
+                vx: (Math.random() - 0.5) * 10,
+                vy: Math.random() * 3,
+                r: 6 + Math.random() * 12,
+                color: zhyColors[Math.floor(Math.random() * zhyColors.length)]
+            });
+            zhyCountView.textContent = zhyBalls.length;
+        }
+
+        /* ---------- 动画主循环 ---------- */
+        function zhyLoop() {
+            if (!zhyPaused) {
+                /* 半透明覆盖：拖尾效果 */
+                zhyCtx.fillStyle = 'rgba(20, 32, 44, 0.25)';
+                zhyCtx.fillRect(0, 0, zhyW, zhyH);
+
+                for (var zhyI = 0; zhyI < zhyBalls.length; zhyI++) {
+                    var zhyB = zhyBalls[zhyI];
+
+                    /* 物理更新 */
+                    zhyB.vy += zhyGravity;
+                    zhyB.x += zhyB.vx;
+                    zhyB.y += zhyB.vy;
+
+                    /* 地面碰撞：反弹 + 能量损耗 */
+                    if (zhyB.y + zhyB.r > zhyH) {
+                        zhyB.y = zhyH - zhyB.r;
+                        zhyB.vy *= -0.85;
+                        zhyB.vx *= 0.99;
+                    }
+                    /* 天花板 */
+                    if (zhyB.y - zhyB.r < 0) {
+                        zhyB.y = zhyB.r;
+                        zhyB.vy *= -0.85;
+                    }
+                    /* 左右墙壁 */
+                    if (zhyB.x + zhyB.r > zhyW) {
+                        zhyB.x = zhyW - zhyB.r;
+                        zhyB.vx *= -0.9;
+                    }
+                    if (zhyB.x - zhyB.r < 0) {
+                        zhyB.x = zhyB.r;
+                        zhyB.vx *= -0.9;
+                    }
+
+                    /* 绘制小球（径向渐变，更有立体感） */
+                    var zhyGrad = zhyCtx.createRadialGradient(
+                        zhyB.x - zhyB.r * 0.3, zhyB.y - zhyB.r * 0.3, zhyB.r * 0.2,
+                        zhyB.x, zhyB.y, zhyB.r
+                    );
+                    zhyGrad.addColorStop(0, '#ffffff');
+                    zhyGrad.addColorStop(0.25, zhyB.color);
+                    zhyGrad.addColorStop(1, zhyB.color);
+                    zhyCtx.beginPath();
+                    zhyCtx.arc(zhyB.x, zhyB.y, zhyB.r, 0, Math.PI * 2);
+                    zhyCtx.fillStyle = zhyGrad;
+                    zhyCtx.fill();
+                }
+
+                /* FPS 统计：每 500ms 刷新一次 */
+                zhyFrames++;
+                var zhyNow = performance.now();
+                if (zhyNow - zhyFpsTime >= 500) {
+                    zhyFpsView.textContent = Math.round(zhyFrames * 1000 / (zhyNow - zhyFpsTime));
+                    zhyFrames = 0;
+                    zhyFpsTime = zhyNow;
+                }
+            }
+            requestAnimationFrame(zhyLoop);
+        }
+
+        /* ---------- 事件绑定 ---------- */
+        document.querySelector('[data-zhy-add]').addEventListener('click', function () {
+            for (var zhyI = 0; zhyI < 10; zhyI++) { zhySpawn(); }
+        });
+
+        document.querySelector('[data-zhy-pause]').addEventListener('click', function () {
+            zhyPaused = !zhyPaused;
+        });
+
+        document.querySelector('[data-zhy-clear]').addEventListener('click', function () {
+            zhyBalls = [];
+            zhyCountView.textContent = 0;
+            zhyCtx.fillStyle = '#14202c';
+            zhyCtx.fillRect(0, 0, zhyW, zhyH);
+        });
+
+        document.querySelector('[data-zhy-gravity]').addEventListener('input', function () {
+            zhyGravity = this.value / 10;
+            zhyGVal.textContent = zhyGravity.toFixed(1);
+        });
+
+        /* 点击画布：在点击处发射小球 */
+        zhyCanvas.addEventListener('click', function (zhyEvt) {
+            var zhyRect = zhyCanvas.getBoundingClientRect();
+            zhySpawn(zhyEvt.clientX - zhyRect.left, zhyEvt.clientY - zhyRect.top);
+        });
+
+        window.addEventListener('resize', zhyResize);
+
+        /* ---------- 启动 ---------- */
+        zhyResize();
+        for (var zhyI = 0; zhyI < 24; zhyI++) { zhySpawn(); }
+        requestAnimationFrame(zhyLoop);
+    })();
+</script>
+</body>
+</html>
