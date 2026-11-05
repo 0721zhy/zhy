@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="font/iconfont.css">
     <!-- ECharts 本地化引入：官网 CDN 文件已下载到 cdn/ 目录，离线可用 -->
     <script src="cdn/echarts.min.js"></script>
+    <!-- SVG 地图资产（GEO SVG Map 示例的西西里岛地形图，已移除 base64 位图精简） -->
+    <script src="cdn/sicily-svg.js"></script>
     <style>
         /* =====================================================
            本页私有样式：ECharts 两个图表（18.4）
@@ -86,11 +88,11 @@
     </style>
 </head>
 <body>
-<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能：ECharts 可视化 · 柱线混合图（销售趋势）与环形饼图（品类占比），库文件本地化到 cdn/ -->
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能：ECharts 可视化 · 柱线混合图（销售趋势）与 SVG 地图（GEO SVG Map），库文件本地化到 cdn/ -->
 <div class="zhy_page">
     <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 18-4 · ECharts 数据可视化</p>
     <h1 class="zhy_title">ECharts 两个数据图表</h1>
-    <p class="zhy_intro">ECharts 是百度开源、现由 Apache 基金会托管的可视化图表库（示例代码参考 <strong>echarts.apache.org</strong>）。为符合本站"资源全部本地化"的要求，官方 CDN 上的 <strong>echarts.min.js</strong> 已下载到 <strong>cdn/</strong> 目录本地引用。本页包含两个最常用的图：<strong>柱状 + 折线混合图</strong>与<strong>环形饼图</strong>。</p>
+    <p class="zhy_intro">ECharts 是百度开源、现由 Apache 基金会托管的可视化图表库（示例代码参考 <strong>echarts.apache.org</strong>）。为符合本站"资源全部本地化"的要求，官方 CDN 上的 <strong>echarts.min.js</strong> 与 SVG 地图资产已下载到 <strong>cdn/</strong> 目录本地引用。本页包含两个图：<strong>柱状 + 折线混合图</strong>与<strong>基于 SVG 的地理地图</strong>。</p>
 
     <section class="zhy_section">
         <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 图一 · 2026 年销售趋势（柱状图 + 折线图）</h2>
@@ -100,20 +102,20 @@
     </section>
 
     <section class="zhy_section">
-        <h2><i class="iconfont icon-gouwuche" aria-hidden="true"></i> 图二 · 商品品类销售占比（环形饼图）</h2>
-        <p>饼图内半径展示占比结构，扇区外侧标注品类名称与百分比。</p>
-        <div class="zhy_chart" data-zhy-chart-pie></div>
-        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 试试：点击某个扇区它会被"选中"外移；把鼠标放上去查看金额与占比。</p>
+        <h2><i class="iconfont icon-sousuo" aria-hidden="true"></i> 图二 · 地图（SVG）· 古西西里部落势力图</h2>
+        <p>geo 组件直接加载 <strong>SVG 地图</strong>（官方 GEO SVG Map 示例同款西西里地形图）。地图上的 <strong>route1 / route2</strong> 按钮可以点击：选中后对应部落区域会高亮，并弹出介绍气泡。</p>
+        <div class="zhy_chart" data-zhy-chart-map></div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 试试：点击顶部 route1 / route2 按钮切换高亮区域；地图支持鼠标滚轮缩放与拖拽漫游（roam）。</p>
     </section>
 
     <section class="zhy_section">
         <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 两种图表对比</h2>
         <table class="zhy_compare">
-            <tr><th>对比项</th><th>柱状 + 折线混合图</th><th>环形饼图</th></tr>
-            <tr><td>擅长表达</td><td><b>趋势与对比</b>：随时间变化的数量关系</td><td><b>构成与占比</b>：整体中各部分的份额</td></tr>
-            <tr><td>数据维度</td><td>类目轴（月份）× 双数值轴（金额、百分比）</td><td>名称 × 数值（自动算占比）</td></tr>
-            <tr><td>关键配置</td><td>series 的 type: 'bar' / 'line'，yAxis 配两个</td><td>type: 'pie'，radius: ['45%', '70%'] 形成环</td></tr>
-            <tr><td>交互特性</td><td>图例切换系列、tooltip 十字准星</td><td>扇区选中偏移、labelLine 引导线标签</td></tr>
+            <tr><th>对比项</th><th>柱状 + 折线混合图</th><th>SVG 地图（geo 组件）</th></tr>
+            <tr><td>擅长表达</td><td><b>趋势与对比</b>：随时间变化的数量关系</td><td><b>地理与空间</b>：区域划分、位置与路线</td></tr>
+            <tr><td>数据维度</td><td>类目轴（月份）× 双数值轴（金额、百分比）</td><td>SVG 视口坐标（x, y）× 区域名称</td></tr>
+            <tr><td>关键配置</td><td>series 的 type: 'bar' / 'line'，yAxis 配两个</td><td>registerMap 注册 SVG → geo.map 引用 → regions 按名设样式</td></tr>
+            <tr><td>交互特性</td><td>图例切换系列、tooltip 十字准星</td><td>区域选中高亮、tooltip 气泡、滚轮缩放拖拽漫游</td></tr>
         </table>
     </section>
 
@@ -143,7 +145,7 @@ window.<span class="zhy_fn">addEventListener</span>(<span class="zhy_str">'resiz
 });</div>
     </section>
 
-    <section class="zhy_footer-note">说明：echarts.min.js（v5.5.1，约 1MB）来自官方 CDN 并已本地化到 cdn/ 目录，页面离线也能正常渲染；图表数据为教学模拟数据。</section>
+    <section class="zhy_footer-note">说明：echarts.min.js（v5.5.1，约 1MB）与 SVG 地图资产均来自官方并已本地化到 cdn/ 目录，页面离线也能正常渲染；柱线图数据为教学模拟数据。</section>
 </div>
 
 <script>
@@ -212,60 +214,154 @@ window.<span class="zhy_fn">addEventListener</span>(<span class="zhy_str">'resiz
             ]
         });
 
-        /* ========== 图二：环形饼图（品类占比） ========== */
-        var zhyPieChart = echarts.init(document.querySelector('[data-zhy-chart-pie]'));
+        /* ========== 图二：SVG 地图（GEO SVG Map 官方示例） ========== */
+        var zhyMapChart = echarts.init(document.querySelector('[data-zhy-chart-map]'));
 
-        zhyPieChart.setOption({
-            textStyle: { fontFamily: '"Microsoft YaHei", sans-serif' },
+        /* 注册 SVG 地图：zhySicilySvg 来自 cdn/sicily-svg.js（本地化资产） */
+        echarts.registerMap('sicily', { svg: zhySicilySvg });
 
+        zhyMapChart.setOption({
             tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b}: {c} 万元（{d}%）'
-            },
-            legend: {
-                orient: 'vertical',
-                left: 12,
-                top: 'middle'
+                formatter: function (zhyParams) {
+                    return [
+                        zhyParams.name + '：',
+                        '公元前 8–4 世纪，古希腊殖民时代',
+                        '西西里岛三大原住民部落之一',
+                        '以农耕与丘陵要塞著称'
+                    ].join('<br>');
+                }
             },
 
-            series: [
+            geo: [
                 {
-                    name: '品类销售额',
-                    type: 'pie',
-                    radius: ['45%', '70%'],          /* 内外半径 → 环形 */
-                    center: ['55%', '52%'],
-                    avoidLabelOverlap: true,
-                    padAngle: 2,                      /* 扇区间隙 */
-                    itemStyle: {
-                        borderRadius: 8,              /* 扇区圆角 */
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    },
-                    label: {
+                    map: 'sicily',
+                    roam: true,                          /* 滚轮缩放 + 拖拽漫游 */
+                    layoutCenter: ['50%', '50%'],
+                    layoutSize: '100%',
+                    selectedMode: 'single',
+                    tooltip: {
                         show: true,
-                        formatter: '{b}\n{d}%'        /* 名称 + 占比 */
+                        confine: true,
+                        formatter: function () {
+                            return [
+                                '古西西里三大部落：',
+                                'Elymoi（红）· 西北部',
+                                'Sikanoi（紫）· 中部',
+                                'Sikeloi（黄）· 东部'
+                            ].join('<br>');
+                        }
                     },
-                    labelLine: {
-                        show: true,
-                        length: 14,
-                        length2: 18
+                    itemStyle: { color: undefined },
+                    emphasis: { label: { show: false } },
+                    select: {
+                        itemStyle: { color: '#b50205' },
+                        label: { show: false }
                     },
-                    data: [
-                        { value: 1286, name: '数码家电', itemStyle: { color: '#1d5d8f' } },
-                        { value: 968, name: '服饰鞋包', itemStyle: { color: '#b3541e' } },
-                        { value: 742, name: '美妆个护', itemStyle: { color: '#c8a8ff' } },
-                        { value: 635, name: '食品生鲜', itemStyle: { color: '#5cab69' } },
-                        { value: 421, name: '图书文娱', itemStyle: { color: '#f0a05a' } },
-                        { value: 289, name: '其他', itemStyle: { color: '#9db3c6' } }
+
+                    /* 按区域名设置样式与气泡（对应 SVG 内的命名区域） */
+                    regions: [
+                        {
+                            name: 'route1',
+                            itemStyle: { borderWidth: 0 },
+                            select: {
+                                itemStyle: { color: '#b5280d', borderWidth: 0 }
+                            },
+                            tooltip: {
+                                position: 'right',
+                                alwaysShowContent: true,
+                                enterable: true,
+                                extraCssText: 'user-select: text',
+                                formatter: [
+                                    'Route 1 · Elymoi（艾利米人）：',
+                                    '盘踞岛屿西北角',
+                                    '与腓尼基人往来密切',
+                                    '代表城邦：Segesta、Eryx'
+                                ].join('<br>')
+                            }
+                        },
+                        {
+                            name: 'route2',
+                            itemStyle: { borderWidth: 0 },
+                            select: {
+                                itemStyle: { color: '#b5280d', borderWidth: 0 }
+                            },
+                            tooltip: {
+                                position: 'left',
+                                alwaysShowContent: true,
+                                enterable: true,
+                                extraCssText: 'user-select: text',
+                                formatter: [
+                                    'Route 2 · Sikanoi（西卡尼人）与 Sikeloi（西库洛伊人）：',
+                                    '西卡尼人占据岛屿中部与南岸',
+                                    '西库洛伊人从意大利本土渡海而来',
+                                    '占据东部，代表城邦：Syrakousai'
+                                ].join('<br>')
+                            }
+                        }
                     ]
                 }
-            ]
+            ],
+
+            /* ----------
+               顶部两个"按钮"（route1 / route2）：
+               用隐藏坐标点的 label 实现，点击选中后联动 geo 区域
+               ---------- */
+            grid: { top: 10, left: 'center', width: 80, height: 20 },
+            xAxis: {
+                axisLine: { show: false }, splitLine: { show: false },
+                axisLabel: { show: false }, axisTick: { show: false }
+            },
+            yAxis: {
+                axisLine: { show: false }, splitLine: { show: false },
+                axisLabel: { show: false }, axisTick: { show: false }
+            },
+            series: {
+                type: 'scatter',
+                label: {
+                    show: true,
+                    borderColor: '#999',
+                    borderWidth: 1,
+                    borderRadius: 2,
+                    backgroundColor: '#fff',
+                    padding: [3, 5],
+                    fontSize: 14,
+                    opacity: 1,
+                    color: '#333'
+                },
+                encode: { label: 2 },
+                symbolSize: 0,
+                tooltip: { show: false },
+                selectedMode: 'single',
+                select: {
+                    label: {
+                        color: '#fff',
+                        borderColor: '#555',
+                        backgroundColor: '#555'
+                    }
+                },
+                data: [
+                    [0, 0, 'route1'],
+                    [1, 0, 'route2']
+                ]
+            }
+        });
+
+        /* 点击按钮 → 联动选中 geo 地图上的对应区域并弹窗 */
+        zhyMapChart.on('selectchanged', function (zhyParams) {
+            if (!zhyParams.selected.length) {
+                zhyMapChart.dispatchAction({ type: 'hideTip' });
+                zhyMapChart.dispatchAction({ type: 'geoSelect', geoIndex: 0 });
+            } else {
+                var zhyName = zhyMapChart.getOption().series[0].data[zhyParams.selected[0].dataIndex[0]][2];
+                zhyMapChart.dispatchAction({ type: 'geoSelect', geoIndex: 0, name: zhyName });
+                zhyMapChart.dispatchAction({ type: 'showTip', geoIndex: 0, name: zhyName });
+            }
         });
 
         /* ========== 窗口缩放自适应 ========== */
         window.addEventListener('resize', function () {
             zhyBarChart.resize();
-            zhyPieChart.resize();
+            zhyMapChart.resize();
         });
     })();
 </script>

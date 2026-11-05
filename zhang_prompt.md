@@ -396,3 +396,12 @@
 
 > 实现18.4.html，其中包括echarts的两个图，cdn文件下载到cdn目录下。示例代码网址 https://echarts.apache.org/
 
+
+## 2026-11-05
+
+**模型：** GLM-5.3-FlashX
+
+**提示词：**
+
+> 把18.4.html的饼图换成这个图（附截图：ECharts GEO SVG Map 示例，西西里岛地图 route1/route2）。
+
