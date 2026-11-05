@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid 图表 · 智能客服系统流程图与 ER 图</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <!-- Mermaid 本地化引入：官网 CDN 文件已下载到 cdn/ 目录，离线可用 -->
+    <script src="cdn/mermaid.min.js"></script>
+    <style>
+        /* =====================================================
+           本页私有样式：Mermaid 智能客服系统图解（18.6）
+           图一：flowchart 对话处理流程图
+           图二：erDiagram 数据实体关系图
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 图表面板 ---------- */
+        .zhy_diagram {
+            margin-top: 16px;
+            padding: 24px 16px;
+            background: #fff;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 12px;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        /* mermaid 渲染出的 svg 自适应宽度 */
+        .zhy_diagram svg { max-width: 100%; height: auto; }
+
+        /* ---------- mermaid 源码块 ---------- */
+        .zhy_src {
+            margin-top: 12px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+            text-align: left;
+        }
+
+        /* ---------- 对比表 ---------- */
+        .zhy_compare {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .zhy_compare th,
+        .zhy_compare td {
+            padding: 10px 12px;
+            border: 1px solid #d8e2ec;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .zhy_compare th {
+            background: #eef4fa;
+            color: #1d5d8f;
+            white-space: nowrap;
+        }
+
+        .zhy_compare td b { color: #b3541e; }
+
+        .zhy_tip {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #7a8fa3;
+        }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能：Mermaid 图解智能客服系统 · flowchart 对话流程图 + erDiagram 数据实体关系图，库文件本地化到 cdn/ -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 18-6 · Mermaid 图表实战</p>
+    <h1 class="zhy_title">智能客服系统：流程图与 ER 图</h1>
+    <p class="zhy_intro">Mermaid 是"<strong>用文字画图</strong>"的图表库：只要写一段类 Markdown 的源码，就能渲染成流程图、ER 图、时序图等。为符合本站"资源全部本地化"要求，官方 CDN 的 <strong>mermaid.min.js</strong>（v10.9.1）已下载到 <strong>cdn/</strong> 目录本地引用。本页用它绘制智能客服系统的<strong>对话处理流程图</strong>与<strong>数据库实体关系图（ER 图）</strong>。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-xinxi" aria-hidden="true"></i> 一、智能客服对话流程图（flowchart）</h2>
+        <p>用户提问后由机器人应答：命中知识库直接回复，未命中则澄清追问，两轮仍失败转人工并创建工单。</p>
+        <div class="zhy_diagram">
+<pre class="mermaid">
+flowchart TD
+    A([用户进入客服]) --> B[/输入问题/]
+    B --> C{NLU 意图识别}
+    C -->|识别成功| D{命中知识库?}
+    C -->|识别失败| E[引导澄清提问]
+    E --> B
+    D -->|命中| F[返回知识库答案]
+    F --> G{用户满意?}
+    G -->|满意| H([评价并结束])
+    G -->|不满意| I[机器人二次追问]
+    I --> B
+    D -->|未命中| J[致歉并推荐相似问题]
+    J --> K{是否转人工?}
+    K -->|否| B
+    K -->|是| L[排队分配人工客服]
+
+    subgraph M[人工服务子系统]
+        L --> N[客服接入会话]
+        N --> O[问题解决?]
+        O -->|是| H
+        O -->|否| P[创建工单]
+        P --> Q[工单流转·专人跟进]
+        Q --> R([回访闭环])
+    end
+
+    style A fill:#1d5d8f,color:#fff
+    style H fill:#5cab69,color:#fff
+    style L fill:#b3541e,color:#fff
+    style R fill:#5cab69,color:#fff
+</pre>
+        </div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 语法要点：<code>flowchart TD</code> 声明自上而下布局；<code>--&gt;</code> 连线，<code>--|文字|</code> 给线上加标签；<code>{}</code> 菱形判断、<code>[/ /]</code> 平行四边形输入输出、<code>(())</code> 圆角端点；<code>subgraph</code> 分组泳道。</p>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-gengduo" aria-hidden="true"></i> 二、智能客服数据库 ER 图（erDiagram）</h2>
+        <p>六个核心实体：用户发起会话，会话包含多条消息，消息命中意图并关联知识库条目；转人工后生成工单由客服处理。</p>
+        <div class="zhy_diagram">
+<pre class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "发起"
+    SESSION ||--o{ MESSAGE : "包含"
+    MESSAGE }o--|| INTENT : "命中"
+    INTENT ||--o{ KB_ENTRY : "关联答案"
+    SESSION ||--o| TICKET : "转人工生成"
+    AGENT ||--o{ TICKET : "认领处理"
+
+    USER {
+        bigint user_id PK "用户ID"
+        varchar nickname "昵称"
+        varchar phone "手机号"
+        datetime created_at "注册时间"
+    }
+    SESSION {
+        bigint session_id PK "会话ID"
+        bigint user_id FK "所属用户"
+        varchar channel "渠道(web/app)"
+        tinyint status "0机器人1人工2结束"
+        datetime started_at "开始时间"
+    }
+    MESSAGE {
+        bigint msg_id PK "消息ID"
+        bigint session_id FK "所属会话"
+        tinyint role "0用户1机器人2客服"
+        text content "消息内容"
+        bigint intent_id FK "命中的意图"
+        float confidence "识别置信度"
+    }
+    INTENT {
+        bigint intent_id PK "意图ID"
+        varchar name "意图名称"
+        varchar sample_utters "训练语料"
+    }
+    KB_ENTRY {
+        bigint kb_id PK "知识条目ID"
+        bigint intent_id FK "所属意图"
+        varchar question "标准问题"
+        text answer "标准答案"
+        int hit_count "命中次数"
+    }
+    TICKET {
+        bigint ticket_id PK "工单ID"
+        bigint session_id FK "来源会话"
+        bigint agent_id FK "处理客服"
+        tinyint priority "优先级"
+        tinyint status "0待处理1处理中2已闭环"
+    }
+    AGENT {
+        bigint agent_id PK "客服ID"
+        varchar agent_name "客服姓名"
+        varchar group_name "技能组"
+    }
+</pre>
+        </div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 语法要点：<code>A ||--o{ B : 标签</code> 表示一对多关系（左符基数：<code>||</code> 恰好一个、<code>o|</code> 零或一个、<code>}o</code> 零或多）；实体块内列出属性，<code>PK / FK</code> 标注主外键。</p>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 三、两种图对比与核心代码</h2>
+        <table class="zhy_compare">
+            <tr><th>对比项</th><th>流程图（flowchart）</th><th>ER 图（erDiagram）</th></tr>
+            <tr><td>表达内容</td><td><b>动态行为</b>：业务步骤、判断分支、流转路径</td><td><b>静态结构</b>：数据表、字段、实体间关系</td></tr>
+            <tr><td>图形元素</td><td>圆角框 / 菱形判断 / 平行四边形 IO / 泳道分组</td><td>实体表格 + 关系连线（ crow's foot 基数记号）</td></tr>
+            <tr><td>本页用途</td><td>描述客服对话从提问到工单的处理链路</td><td>描述支撑该链路的 6 张数据表设计</td></tr>
+        </table>
+        <div class="zhy_src">&lt;!-- 1. 引入库（本页已本地化：cdn/mermaid.min.js） --&gt;
+&lt;script src="cdn/mermaid.min.js"&gt;&lt;/script&gt;
+
+<span class="zhy_cm">// 2. 初始化：渲染页面中所有 &lt;pre class="mermaid"&gt; 源码</span>
+mermaid.<span class="zhy_fn">initialize</span>({
+    startOnLoad: true,
+    theme: <span class="zhy_str">'base'</span>,
+    themeVariables: { fontSize: <span class="zhy_str">'14px'</span> },
+    flowchart: { curve: <span class="zhy_str">'basis'</span> }
+});
+
+<span class="zhy_cm">// 3. 源码即图：缩进文本直接描述图形</span>
+&lt;pre class="mermaid"&gt;
+flowchart TD
+    A([用户进入客服]) --&gt; B[/输入问题/]
+    B --&gt; C{NLU 意图识别}
+&lt;/pre&gt;</div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> Mermaid 的优势：图即代码，可进 Git 版本管理、可程序化生成；缺点是超大规模图会难维护，此时应换专业绘图工具。</p>
+    </section>
+
+    <section class="zhy_footer-note">说明：mermaid.min.js（v10.9.1，约 3.3MB）来自官方 CDN 并已本地化到 cdn/ 目录，页面离线也能正常渲染；图中业务与字段为教学模拟设计。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：Mermaid 初始化（18.6）
+       约定：所有变量带 zhy_ 前缀
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        mermaid.initialize({
+            startOnLoad: true,                 /* 自动渲染 .mermaid 源码块 */
+            theme: 'base',                     /* 基础主题，便于自定义配色 */
+            securityLevel: 'loose',            /* 允许源码内 HTML 实体 */
+            themeVariables: {
+                fontSize: '14px',
+                primaryColor: '#eef4fa',       /* 节点填充 */
+                primaryBorderColor: '#1d5d8f', /* 节点边框 */
+                primaryTextColor: '#17212b',
+                lineColor: '#5f7a92',          /* 连线颜色 */
+                fontFamily: '"Microsoft YaHei", sans-serif'
+            },
+            flowchart: { curve: 'basis', htmlLabels: true },
+            er: { diagramPadding: 16 }
+        });
+    })();
+</script>
+</body>
+</html>

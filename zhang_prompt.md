@@ -405,3 +405,12 @@
 
 > 把18.4.html的饼图换成这个图（附截图：ECharts GEO SVG Map 示例，西西里岛地图 route1/route2）。
 
+
+## 2026-11-05
+
+**模型：** GLM-5.3-FlashX
+
+**提示词：**
+
+> 实现18.6html，实现基于mermaid的智能客服系统的流程图和er图，cdn文件下载到cdn目录下。
+
