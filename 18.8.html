@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据大屏 · 智慧商城全国销售监控中心</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <!-- 本地化依赖：ECharts 库 + 中国地图 GeoJSON（均已下载到 cdn/ 目录） -->
+    <script src="cdn/echarts.min.js"></script>
+    <script src="cdn/china-map.js"></script>
+    <style>
+        /* =====================================================
+           本页私有样式：数据大屏（18.8）
+           深蓝科技风 · 100vh 三列布局
+           中列上方为中国地图地理信息图（涟漪散点 + 飞线）
+           ===================================================== */
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #071426;
+            color: #cfe3f2;
+            overflow: hidden;
+        }
+
+        .zhy_screen {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 12px 16px 16px;
+            background:
+                radial-gradient(ellipse at 50% -10%, rgba(29, 93, 143, .35) 0%, transparent 55%),
+                radial-gradient(ellipse at 100% 100%, rgba(179, 84, 30, .12) 0%, transparent 45%),
+                #071426;
+        }
+
+        /* ---------- 顶栏 ---------- */
+        .zhy_topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+            background: linear-gradient(90deg, rgba(29, 93, 143, .35), rgba(29, 93, 143, .08) 50%, rgba(179, 84, 30, .25));
+            border: 1px solid rgba(127, 208, 255, .25);
+            border-radius: 10px;
+        }
+
+        .zhy_topbar-title {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, #7fd0ff, #e6d9ff 50%, #ffd479);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .zhy_topbar-clock {
+            font: 700 16px Consolas, monospace;
+            color: #7fd0ff;
+        }
+
+        .zhy_topbar-kpi {
+            display: flex;
+            gap: 22px;
+            font-size: 13px;
+            color: #9db3c6;
+        }
+
+        .zhy_topbar-kpi b {
+            display: block;
+            font: 700 20px Consolas, monospace;
+            color: #ffd479;
+        }
+
+        /* ---------- 三列主体 ---------- */
+        .zhy_body {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .zhy_col {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 0;
+        }
+
+        /* ---------- 面板 ---------- */
+        .zhy_card {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: rgba(13, 32, 56, .55);
+            border: 1px solid rgba(127, 208, 255, .22);
+            border-radius: 10px;
+            box-shadow: inset 0 0 24px rgba(29, 93, 143, .18);
+            overflow: hidden;
+        }
+
+        .zhy_card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px 8px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #7fd0ff;
+            border-bottom: 1px solid rgba(127, 208, 255, .18);
+        }
+
+        .zhy_card-title::before {
+            content: "";
+            width: 4px;
+            height: 14px;
+            border-radius: 2px;
+            background: linear-gradient(#7fd0ff, #b3541e);
+        }
+
+        .zhy_card-title small {
+            margin-left: auto;
+            font: 400 11px Consolas, monospace;
+            color: #5f7a92;
+        }
+
+        /* 中列地图面板占比更大 */
+        .zhy_card--map { flex: 1.55; }
+
+        .zhy_chart {
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 装饰角标 */
+        .zhy_card::after {
+            content: "";
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            width: 22px;
+            height: 22px;
+            border-top: 2px solid rgba(127, 208, 255, .5);
+            border-right: 2px solid rgba(127, 208, 255, .5);
+            border-radius: 0 6px 0 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能：ECharts 数据大屏 · 三列布局（左：趋势+雷达 中上：中国地图地理信息+中下：实时订单 右：品类+省份排行），地图与库文件本地化到 cdn/ -->
+<div class="zhy_screen">
+    <!-- 顶栏 -->
+    <header class="zhy_topbar">
+        <div class="zhy_topbar-kpi">
+            <span>今日销售额（元）<b>1,286,439</b></span>
+            <span>今日订单量<b>8,642</b></span>
+            <span>在线客服<b data-zhy-online>36</b></span>
+        </div>
+        <div class="zhy_topbar-title">智慧商城 · 全国销售数据监控大屏</div>
+        <div class="zhy_topbar-clock" data-zhy-clock>--:--:--</div>
+    </header>
+
+    <!-- 三列主体 -->
+    <div class="zhy_body">
+        <!-- 左列 -->
+        <div class="zhy_col">
+            <section class="zhy_card">
+                <div class="zhy_card-title"><i class="iconfont icon-tuijian" aria-hidden="true"></i> 月度销售趋势<small>万元</small></div>
+                <div class="zhy_chart" data-zhy-chart-trend></div>
+            </section>
+            <section class="zhy_card">
+                <div class="zhy_card-title"><i class="iconfont icon-faxian" aria-hidden="true"></i> 渠道结构雷达<small>占比 %</small></div>
+                <div class="zhy_chart" data-zhy-chart-radar></div>
+            </section>
+        </div>
+
+        <!-- 中列：上地图 下实时订单 -->
+        <div class="zhy_col">
+            <section class="zhy_card zhy_card--map">
+                <div class="zhy_card-title"><i class="iconfont icon-shouye" aria-hidden="true"></i> 全国订单分布（大连总部 → 各城市）<small>地理信息 · 实时涟漪</small></div>
+                <div class="zhy_chart" data-zhy-chart-map></div>
+            </section>
+            <section class="zhy_card">
+                <div class="zhy_card-title"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 24 小时实时订单量<small>单 / 小时</small></div>
+                <div class="zhy_chart" data-zhy-chart-realtime></div>
+            </section>
+        </div>
+
+        <!-- 右列 -->
+        <div class="zhy_col">
+            <section class="zhy_card">
+                <div class="zhy_card-title"><i class="iconfont icon-gouwuche" aria-hidden="true"></i> 品类销售占比<small>万元</small></div>
+                <div class="zhy_chart" data-zhy-chart-pie></div>
+            </section>
+            <section class="zhy_card">
+                <div class="zhy_card-title"><i class="iconfont icon-gengduo" aria-hidden="true"></i> 省份销售 TOP5<small>万元</small></div>
+                <div class="zhy_chart" data-zhy-chart-rank></div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：数据大屏五个图表 + 时钟（18.8）
+       约定：所有变量带 zhy_ 前缀
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        var zhyCharts = [];     /* 收集所有图表实例，统一 resize */
+
+        function zhyMake(zhySelector) {
+            var zhyChart = echarts.init(document.querySelector(zhySelector));
+            zhyCharts.push(zhyChart);
+            return zhyChart;
+        }
+
+        /* 公共深色主题片段 */
+        var zhyAxis = {
+            axisLine: { lineStyle: { color: 'rgba(127, 208, 255, .3)' } },
+            axisLabel: { color: '#9db3c6', fontSize: 11 },
+            splitLine: { lineStyle: { color: 'rgba(127, 208, 255, .1)' } }
+        };
+
+        /* ================= 中上：中国地图（地理信息） ================= */
+
+        /* 注册本地化地图：zhyChinaGeoJson 来自 cdn/china-map.js */
+        echarts.registerMap('china', { geoJSON: zhyChinaGeoJson });
+
+        /* 城市经纬度与销售额 */
+        var zhyCities = [
+            { name: '大连', coord: [121.62, 38.91], value: 920, hub: true },
+            { name: '北京', coord: [116.40, 39.90], value: 860 },
+            { name: '上海', coord: [121.47, 31.23], value: 845 },
+            { name: '广州', coord: [113.26, 23.13], value: 742 },
+            { name: '深圳', coord: [114.06, 22.55], value: 731 },
+            { name: '成都', coord: [104.07, 30.57], value: 688 },
+            { name: '杭州', coord: [120.15, 30.28], value: 655 },
+            { name: '武汉', coord: [114.30, 30.60], value: 610 },
+            { name: '西安', coord: [108.95, 34.27], value: 566 },
+            { name: '重庆', coord: [106.55, 29.86], value: 549 },
+            { name: '沈阳', coord: [123.43, 41.80], value: 487 },
+            { name: '哈尔滨', coord: [126.53, 45.80], value: 402 },
+            { name: '乌鲁木齐', coord: [87.62, 43.79], value: 318 },
+            { name: '拉萨', coord: [91.11, 29.97], value: 235 },
+            { name: '昆明', coord: [102.71, 25.04], value: 341 },
+            { name: '郑州', coord: [113.62, 34.75], value: 478 }
+        ];
+
+        /* 大连总部 → 各城市 飞线 */
+        var zhyHub = zhyCities[0].coord;
+        var zhyLines = zhyCities.slice(1).map(function (zhyC) {
+            return { coords: [zhyHub, zhyC.coord] };
+        });
+
+        var zhyMapChart = zhyMake('[data-zhy-chart-map]');
+        zhyMapChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(13, 32, 56, .92)',
+                borderColor: 'rgba(127, 208, 255, .4)',
+                textStyle: { color: '#cfe3f2' },
+                formatter: function (zhyP) {
+                    if (zhyP.seriesType === 'effectScatter') {
+                        return zhyP.name + '：' + zhyP.value[2] + ' 万元';
+                    }
+                    return zhyP.name;
+                }
+            },
+            geo: {
+                map: 'china',
+                roam: true,
+                zoom: 1.15,
+                top: 34,
+                label: { show: false },
+                itemStyle: {
+                    areaColor: 'rgba(29, 93, 143, .35)',
+                    borderColor: 'rgba(127, 208, 255, .55)',
+                    borderWidth: 1,
+                    shadowColor: 'rgba(29, 93, 143, .8)',
+                    shadowBlur: 18
+                },
+                emphasis: {
+                    label: { color: '#ffd479' },
+                    itemStyle: { areaColor: 'rgba(179, 84, 30, .5)' }
+                }
+            },
+            series: [
+                /* 涟漪散点：城市订单热度 */
+                {
+                    name: '城市订单',
+                    type: 'effectScatter',
+                    coordinateSystem: 'geo',
+                    symbolSize: function (zhyVal) { return 5 + zhyVal[2] / 60; },
+                    rippleEffect: { brushType: 'stroke', scale: 3.2 },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: '{b}',
+                        color: '#cfe3f2',
+                        fontSize: 10
+                    },
+                    itemStyle: { color: '#ffd479', shadowBlur: 8, shadowColor: '#ffd479' },
+                    data: zhyCities.map(function (zhyC) {
+                        return { name: zhyC.name, value: zhyC.coord.concat(zhyC.value) };
+                    })
+                },
+                /* 飞线：大连总部 → 各城市 */
+                {
+                    name: '发货线路',
+                    type: 'lines',
+                    coordinateSystem: 'geo',
+                    zlevel: 2,
+                    lineStyle: {
+                        color: '#7fd0ff',
+                        width: 1.4,
+                        opacity: 0.45,
+                        curveness: 0.3
+                    },
+                    effect: {
+                        show: true,
+                        period: 4.5,
+                        trailLength: 0.25,
+                        symbol: 'arrow',
+                        symbolSize: 5,
+                        color: '#ffffff'
+                    },
+                    data: zhyLines
+                }
+            ]
+        });
+
+        /* ================= 左上：月度销售趋势 ================= */
+
+        var zhyTrendChart = zhyMake('[data-zhy-chart-trend]');
+        zhyTrendChart.setOption({
+            tooltip: { trigger: 'axis', backgroundColor: 'rgba(13,32,56,.92)', borderColor: 'rgba(127,208,255,.4)', textStyle: { color: '#cfe3f2' } },
+            legend: { data: ['销售额', '同比增长率'], top: 4, textStyle: { color: '#9db3c6', fontSize: 11 }, itemWidth: 14, itemHeight: 9 },
+            grid: { left: 42, right: 38, top: 34, bottom: 24 },
+            xAxis: Object.assign({ type: 'category', data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'] }, zhyAxis),
+            yAxis: [
+                Object.assign({ type: 'value' }, zhyAxis),
+                Object.assign({ type: 'value', axisLabel: { color: '#9db3c6', formatter: '{value}%' } }, zhyAxis)
+            ],
+            series: [
+                {
+                    name: '销售额',
+                    type: 'bar',
+                    barWidth: '48%',
+                    itemStyle: {
+                        borderRadius: [3, 3, 0, 0],
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#7fd0ff' },
+                            { offset: 1, color: 'rgba(29, 93, 143, .3)' }
+                        ])
+                    },
+                    data: [152, 178, 210, 196, 245, 288, 310, 296, 335, 402, 468, 520]
+                },
+                {
+                    name: '同比增长率',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    smooth: true,
+                    symbolSize: 5,
+                    lineStyle: { color: '#ffb35a', width: 2 },
+                    itemStyle: { color: '#ffb35a' },
+                    data: [8.2, 10.5, 12.1, 9.8, 15.3, 18.6, 21.0, 17.4, 22.8, 28.5, 33.2, 39.6]
+                }
+            ]
+        });
+
+        /* ================= 左下：渠道结构雷达 ================= */
+
+        zhyMake('[data-zhy-chart-radar]').setOption({
+            tooltip: { backgroundColor: 'rgba(13,32,56,.92)', borderColor: 'rgba(127,208,255,.4)', textStyle: { color: '#cfe3f2' } },
+            radar: {
+                indicator: [
+                    { name: 'PC 网页', max: 100 },
+                    { name: '移动 APP', max: 100 },
+                    { name: '小程序', max: 100 },
+                    { name: '直播带货', max: 100 },
+                    { name: '电话', max: 100 },
+                    { name: '门店', max: 100 }
+                ],
+                radius: '62%',
+                axisName: { color: '#9db3c6', fontSize: 11 },
+                splitLine: { lineStyle: { color: 'rgba(127,208,255,.2)' } },
+                splitArea: { areaStyle: { color: ['rgba(29,93,143,.08)', 'rgba(29,93,143,.16)'] } },
+                axisLine: { lineStyle: { color: 'rgba(127,208,255,.2)' } }
+            },
+            series: [{
+                type: 'radar',
+                symbolSize: 4,
+                data: [
+                    {
+                        value: [62, 92, 88, 74, 35, 48],
+                        name: '本月渠道占比',
+                        itemStyle: { color: '#7fd0ff' },
+                        lineStyle: { color: '#7fd0ff', width: 2 },
+                        areaStyle: { color: 'rgba(127, 208, 255, .28)' }
+                    },
+                    {
+                        value: [70, 78, 66, 55, 46, 52],
+                        name: '上月渠道占比',
+                        itemStyle: { color: '#ffb35a' },
+                        lineStyle: { color: '#ffb35a', width: 2 },
+                        areaStyle: { color: 'rgba(255, 179, 90, .18)' }
+                    }
+                ]
+            }]
+        });
+
+        /* ================= 中下：24 小时实时订单 ================= */
+
+        zhyMake('[data-zhy-chart-realtime]').setOption({
+            tooltip: { trigger: 'axis', backgroundColor: 'rgba(13,32,56,.92)', borderColor: 'rgba(127,208,255,.4)', textStyle: { color: '#cfe3f2' } },
+            grid: { left: 42, right: 20, top: 20, bottom: 24 },
+            xAxis: Object.assign({ type: 'category', boundaryGap: false, data: ['0时','2时','4时','6时','8时','10时','12时','14时','16时','18时','20时','22时'] }, zhyAxis),
+            yAxis: Object.assign({ type: 'value' }, zhyAxis),
+            series: [{
+                name: '订单量',
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                lineStyle: { color: '#9ed58b', width: 2.5 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(158, 213, 139, .5)' },
+                        { offset: 1, color: 'rgba(158, 213, 139, .02)' }
+                    ])
+                },
+                data: [120, 58, 30, 66, 320, 480, 560, 510, 470, 690, 830, 520]
+            }]
+        });
+
+        /* ================= 右上：品类占比 ================= */
+
+        zhyMake('[data-zhy-chart-pie]').setOption({
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(13,32,56,.92)',
+                borderColor: 'rgba(127,208,255,.4)',
+                textStyle: { color: '#cfe3f2' },
+                formatter: '{b}: {c} 万元（{d}%）'
+            },
+            legend: {
+                orient: 'vertical', right: 6, top: 'middle',
+                textStyle: { color: '#9db3c6', fontSize: 11 },
+                itemWidth: 12, itemHeight: 8
+            },
+            series: [{
+                type: 'pie',
+                radius: ['42%', '68%'],
+                center: ['38%', '52%'],
+                padAngle: 2,
+                itemStyle: { borderRadius: 6, borderColor: 'rgba(13,32,56,.8)', borderWidth: 2 },
+                label: { show: false },
+                emphasis: {
+                    label: {
+                        show: true, position: 'center',
+                        fontSize: 15, fontWeight: 700, color: '#ffd479',
+                        formatter: '{b}\n{d}%'
+                    }
+                },
+                data: [
+                    { value: 1286, name: '数码家电', itemStyle: { color: '#1d6fa8' } },
+                    { value: 968, name: '服饰鞋包', itemStyle: { color: '#b3541e' } },
+                    { value: 742, name: '美妆个护', itemStyle: { color: '#8f6fd8' } },
+                    { value: 635, name: '食品生鲜', itemStyle: { color: '#5cab69' } },
+                    { value: 421, name: '图书文娱', itemStyle: { color: '#f0a05a' } },
+                    { value: 289, name: '其他', itemStyle: { color: '#5f7a92' } }
+                ]
+            }]
+        });
+
+        /* ================= 右下：省份 TOP5 ================= */
+
+        zhyMake('[data-zhy-chart-rank]').setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, backgroundColor: 'rgba(13,32,56,.92)', borderColor: 'rgba(127,208,255,.4)', textStyle: { color: '#cfe3f2' } },
+            grid: { left: 52, right: 40, top: 14, bottom: 22 },
+            xAxis: Object.assign({ type: 'value' }, zhyAxis),
+            yAxis: Object.assign({
+                type: 'category',
+                data: ['河南', '湖北', '浙江', '上海', '广东'],
+                axisLabel: { color: '#cfe3f2', fontSize: 12, fontWeight: 700 }
+            }, zhyAxis),
+            series: [{
+                type: 'bar',
+                barWidth: 12,
+                label: { show: true, position: 'right', color: '#ffd479', fontSize: 11 },
+                itemStyle: {
+                    borderRadius: [0, 6, 6, 0],
+                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        { offset: 0, color: 'rgba(179, 84, 30, .35)' },
+                        { offset: 1, color: '#ffb35a' }
+                    ])
+                },
+                data: [689, 742, 815, 845, 928]
+            }]
+        });
+
+        /* ================= 顶栏时钟 ================= */
+
+        function zhyTickClock() {
+            var zhyNow = new Date();
+            function zhyPad(zhyN) { return (zhyN < 10 ? '0' : '') + zhyN; }
+            document.querySelector('[data-zhy-clock]').textContent =
+                zhyNow.getFullYear() + '-' + zhyPad(zhyNow.getMonth() + 1) + '-' + zhyPad(zhyNow.getDate()) +
+                '  ' + zhyPad(zhyNow.getHours()) + ':' + zhyPad(zhyNow.getMinutes()) + ':' + zhyPad(zhyNow.getSeconds());
+        }
+        zhyTickClock();
+        setInterval(zhyTickClock, 1000);
+
+        /* 在线客服数随机微动，制造"实时"感 */
+        setInterval(function () {
+            var zhyView = document.querySelector('[data-zhy-online]');
+            zhyView.textContent = 30 + Math.floor(Math.random() * 12);
+        }, 3000);
+
+        /* ================= 统一 resize ================= */
+
+        window.addEventListener('resize', function () {
+            zhyCharts.forEach(function (zhyChart) { zhyChart.resize(); });
+        });
+    })();
+</script>
+</body>
+</html>
