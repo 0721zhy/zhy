@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECharts 数据可视化 · 两个图表</title>
+    <!-- 全局样式 + iconfont 字体图标 -->
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <!-- ECharts 本地化引入：官网 CDN 文件已下载到 cdn/ 目录，离线可用 -->
+    <script src="cdn/echarts.min.js"></script>
+    <style>
+        /* =====================================================
+           本页私有样式：ECharts 两个图表（18.4）
+           图一：柱状 + 折线混合图（全年销售趋势）
+           图二：环形饼图（商品品类销售占比）
+           示例参考：https://echarts.apache.org/
+           ===================================================== */
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            min-height: 100vh;
+            color: #17212b;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        /* ---------- 图表容器：必须显式指定高度 ---------- */
+        .zhy_chart {
+            margin-top: 16px;
+            width: 100%;
+            height: 420px;
+            background: #fff;
+            border: 1.5px solid #d8e2ec;
+            border-radius: 12px;
+        }
+
+        /* ---------- 操作说明 ---------- */
+        .zhy_tip {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #7a8fa3;
+        }
+
+        /* ---------- 对比表 ---------- */
+        .zhy_compare {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .zhy_compare th,
+        .zhy_compare td {
+            padding: 10px 12px;
+            border: 1px solid #d8e2ec;
+            text-align: left;
+        }
+
+        .zhy_compare th {
+            background: #eef4fa;
+            color: #1d5d8f;
+            white-space: nowrap;
+        }
+
+        .zhy_compare td b { color: #b3541e; }
+
+        /* ---------- 代码块 ---------- */
+        .zhy_code {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #14202c;
+            border-radius: 10px;
+            color: #cfe3f2;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .zhy_code .zhy_kw { color: #7fb3ff; }
+        .zhy_code .zhy_fn { color: #ffd479; }
+        .zhy_code .zhy_str { color: #9ed58b; }
+        .zhy_code .zhy_cm { color: #5f7a92; }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能：ECharts 可视化 · 柱线混合图（销售趋势）与环形饼图（品类占比），库文件本地化到 cdn/ -->
+<div class="zhy_page">
+    <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> 18-4 · ECharts 数据可视化</p>
+    <h1 class="zhy_title">ECharts 两个数据图表</h1>
+    <p class="zhy_intro">ECharts 是百度开源、现由 Apache 基金会托管的可视化图表库（示例代码参考 <strong>echarts.apache.org</strong>）。为符合本站"资源全部本地化"的要求，官方 CDN 上的 <strong>echarts.min.js</strong> 已下载到 <strong>cdn/</strong> 目录本地引用。本页包含两个最常用的图：<strong>柱状 + 折线混合图</strong>与<strong>环形饼图</strong>。</p>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-tuijian" aria-hidden="true"></i> 图一 · 2026 年销售趋势（柱状图 + 折线图）</h2>
+        <p>柱形展示每月<strong>销售额</strong>，折线展示<strong>同比增长率</strong>，双 Y 轴呈现量级不同的两类指标。</p>
+        <div class="zhy_chart" data-zhy-chart-bar></div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 试试：把鼠标悬停在柱子上查看数据详情；点击顶部图例可隐藏/显示对应系列。</p>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-gouwuche" aria-hidden="true"></i> 图二 · 商品品类销售占比（环形饼图）</h2>
+        <p>饼图内半径展示占比结构，扇区外侧标注品类名称与百分比。</p>
+        <div class="zhy_chart" data-zhy-chart-pie></div>
+        <p class="zhy_tip"><i class="iconfont icon-xinxi" aria-hidden="true"></i> 试试：点击某个扇区它会被"选中"外移；把鼠标放上去查看金额与占比。</p>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 两种图表对比</h2>
+        <table class="zhy_compare">
+            <tr><th>对比项</th><th>柱状 + 折线混合图</th><th>环形饼图</th></tr>
+            <tr><td>擅长表达</td><td><b>趋势与对比</b>：随时间变化的数量关系</td><td><b>构成与占比</b>：整体中各部分的份额</td></tr>
+            <tr><td>数据维度</td><td>类目轴（月份）× 双数值轴（金额、百分比）</td><td>名称 × 数值（自动算占比）</td></tr>
+            <tr><td>关键配置</td><td>series 的 type: 'bar' / 'line'，yAxis 配两个</td><td>type: 'pie'，radius: ['45%', '70%'] 形成环</td></tr>
+            <tr><td>交互特性</td><td>图例切换系列、tooltip 十字准星</td><td>扇区选中偏移、labelLine 引导线标签</td></tr>
+        </table>
+    </section>
+
+    <section class="zhy_section">
+        <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> ECharts 使用三步核心代码</h2>
+        <div class="zhy_code"><span class="zhy_cm">&lt;!-- 1. 引入库（本页已本地化：cdn/echarts.min.js） --&gt;</span>
+<span class="zhy_kw">&lt;script</span> <span class="zhy_fn">src</span>=<span class="zhy_str">"cdn/echarts.min.js"</span><span class="zhy_kw">&gt;&lt;/script&gt;</span>
+
+<span class="zhy_cm">// 2. 初始化：传入 DOM 容器（容器必须有宽高）</span>
+<span class="zhy_kw">var</span> zhyChart = echarts.<span class="zhy_fn">init</span>(document.<span class="zhy_fn">querySelector</span>(<span class="zhy_str">'[data-zhy-chart-bar]'</span>));
+
+<span class="zhy_cm">// 3. setOption 配置数据与样式</span>
+zhyChart.<span class="zhy_fn">setOption</span>({
+    tooltip: { trigger: <span class="zhy_str">'axis'</span> },           <span class="zhy_cm">// 悬停提示</span>
+    legend: { data: [<span class="zhy_str">'销售额'</span>, <span class="zhy_str">'同比增长率'</span>] },
+    xAxis: { type: <span class="zhy_str">'category'</span>, data: [<span class="zhy_str">'1月'</span>, <span class="zhy_str">'2月'</span>, ...] },
+    yAxis: [{ type: <span class="zhy_str">'value'</span> }, { type: <span class="zhy_str">'value'</span> }],  <span class="zhy_cm">// 双 Y 轴</span>
+    series: [
+        { name: <span class="zhy_str">'销售额'</span>, type: <span class="zhy_str">'bar'</span>, data: [...] },
+        { name: <span class="zhy_str">'同比增长率'</span>, type: <span class="zhy_str">'line'</span>, yAxisIndex: 1, smooth: true }
+    ]
+});
+
+<span class="zhy_cm">// 窗口尺寸变化时自适应</span>
+window.<span class="zhy_fn">addEventListener</span>(<span class="zhy_str">'resize'</span>, <span class="zhy_kw">function</span> () {
+    zhyChart.<span class="zhy_fn">resize</span>();
+});</div>
+    </section>
+
+    <section class="zhy_footer-note">说明：echarts.min.js（v5.5.1，约 1MB）来自官方 CDN 并已本地化到 cdn/ 目录，页面离线也能正常渲染；图表数据为教学模拟数据。</section>
+</div>
+
+<script>
+    /* =====================================================
+       本页脚本：ECharts 两个图表（18.4）
+       约定：所有变量带 zhy_ 前缀
+       ===================================================== */
+
+    (function () {
+        'use strict';
+
+        /* ========== 图一：柱状 + 折线混合图（销售趋势） ========== */
+        var zhyBarChart = echarts.init(document.querySelector('[data-zhy-chart-bar]'));
+
+        zhyBarChart.setOption({
+            /* 深色系文字配色，与站点风格统一 */
+            textStyle: { fontFamily: '"Microsoft YaHei", sans-serif' },
+            color: ['#1d5d8f', '#b3541e'],
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'cross', crossStyle: { color: '#999' } }
+            },
+            legend: {
+                data: ['销售额（万元）', '同比增长率（%）'],
+                top: 8
+            },
+            grid: { left: 60, right: 60, top: 60, bottom: 40 },
+
+            xAxis: {
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                axisPointer: { type: 'shadow' }
+            },
+
+            /* 双 Y 轴：左轴金额，右轴百分比 */
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '销售额（万元）',
+                    axisLabel: { formatter: '{value}' }
+                },
+                {
+                    type: 'value',
+                    name: '同比增长率（%）',
+                    axisLabel: { formatter: '{value} %' }
+                }
+            ],
+
+            series: [
+                {
+                    name: '销售额（万元）',
+                    type: 'bar',
+                    barWidth: '45%',
+                    data: [152, 178, 210, 196, 245, 288, 310, 296, 335, 402, 468, 520]
+                },
+                {
+                    name: '同比增长率（%）',
+                    type: 'line',
+                    yAxisIndex: 1,          /* 挂到右轴 */
+                    smooth: true,           /* 平滑曲线 */
+                    lineStyle: { width: 3 },
+                    symbolSize: 8,
+                    data: [8.2, 10.5, 12.1, 9.8, 15.3, 18.6, 21.0, 17.4, 22.8, 28.5, 33.2, 39.6]
+                }
+            ]
+        });
+
+        /* ========== 图二：环形饼图（品类占比） ========== */
+        var zhyPieChart = echarts.init(document.querySelector('[data-zhy-chart-pie]'));
+
+        zhyPieChart.setOption({
+            textStyle: { fontFamily: '"Microsoft YaHei", sans-serif' },
+
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} 万元（{d}%）'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 12,
+                top: 'middle'
+            },
+
+            series: [
+                {
+                    name: '品类销售额',
+                    type: 'pie',
+                    radius: ['45%', '70%'],          /* 内外半径 → 环形 */
+                    center: ['55%', '52%'],
+                    avoidLabelOverlap: true,
+                    padAngle: 2,                      /* 扇区间隙 */
+                    itemStyle: {
+                        borderRadius: 8,              /* 扇区圆角 */
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: '{b}\n{d}%'        /* 名称 + 占比 */
+                    },
+                    labelLine: {
+                        show: true,
+                        length: 14,
+                        length2: 18
+                    },
+                    data: [
+                        { value: 1286, name: '数码家电', itemStyle: { color: '#1d5d8f' } },
+                        { value: 968, name: '服饰鞋包', itemStyle: { color: '#b3541e' } },
+                        { value: 742, name: '美妆个护', itemStyle: { color: '#c8a8ff' } },
+                        { value: 635, name: '食品生鲜', itemStyle: { color: '#5cab69' } },
+                        { value: 421, name: '图书文娱', itemStyle: { color: '#f0a05a' } },
+                        { value: 289, name: '其他', itemStyle: { color: '#9db3c6' } }
+                    ]
+                }
+            ]
+        });
+
+        /* ========== 窗口缩放自适应 ========== */
+        window.addEventListener('resize', function () {
+            zhyBarChart.resize();
+            zhyPieChart.resize();
+        });
+    })();
+</script>
+</body>
+</html>

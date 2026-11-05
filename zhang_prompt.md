@@ -387,3 +387,12 @@
 
 > 完成18.3.html，其中包括基于图像识别的系统的系统结构框架图，图的格式为svg，科研方向。以及完成layzhang.html，文字为lay张canvas动画，字体颜色为淡紫色。
 
+
+## 2026-11-05
+
+**模型：** GLM-5.3-FlashX
+
+**提示词：**
+
+> 实现18.4.html，其中包括echarts的两个图，cdn文件下载到cdn目录下。示例代码网址 https://echarts.apache.org/
+

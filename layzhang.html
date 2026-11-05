@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas 文字粒子动画 · lay张</title>
+    <title>Canvas 文字粒子动画 · layzhang</title>
     <!-- 全局样式 + iconfont 字体图标 -->
     <link rel="stylesheet" href="css.css">
     <link rel="stylesheet" href="font/iconfont.css">
     <style>
         /* =====================================================
-           本页私有样式："lay张" 文字粒子动画（layzhang）
+           本页私有样式："layzhang" 文字粒子动画（layzhang）    
            离屏采样文字像素 → 淡紫色粒子汇聚成字
            ===================================================== */
 
@@ -120,11 +120,11 @@
     </style>
 </head>
 <body>
-<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能："lay张" Canvas 文字粒子动画 · 淡紫色粒子汇聚成字 -->
+<!-- 姓名：张海玉 建立时间：2026-11-05 大模型：GLM-5.3-FlashX 功能："layzhang" Canvas 文字粒子动画 · 淡紫色粒子汇聚成字 -->
 <div class="zhy_page">
     <p class="zhy_eyebrow"><i class="iconfont icon-shouye" aria-hidden="true"></i> layzhang · Canvas 文字动画</p>
-    <h1 class="zhy_title">"lay张" 粒子文字动画</h1>
-    <p class="zhy_intro">先把文字 <strong>lay张</strong> 画在一张看不见的离屏画布上，再用 <strong>getImageData</strong> 采样文字像素点，每个采样点变成一颗<strong>淡紫色粒子</strong>。粒子从四面八方飞来，汇聚成文字；移动鼠标可以把粒子推开，松手后它们又会慢慢"愈合"。</p>
+    <h1 class="zhy_title">"layzhang" 粒子文字动画</h1>
+    <p class="zhy_intro">先把文字 <strong>layzhang</strong> 画在一张看不见的离屏画布上，再用 <strong>getImageData</strong> 采样文字像素点，每个采样点变成一颗<strong>淡紫色粒子</strong>。粒子从四面八方飞来，汇聚成文字；移动鼠标可以把粒子推开，松手后它们又会慢慢"愈合"。</p>
 
     <section class="zhy_section">
         <h2><i class="iconfont icon-shipin" aria-hidden="true"></i> 一、动画演示</h2>
@@ -146,7 +146,7 @@
         <h2><i class="iconfont icon-bianji" aria-hidden="true"></i> 二、核心代码</h2>
         <div class="zhy_code"><span class="zhy_cm">// 1. 在离屏画布上绘制文字，采样像素生成粒子</span>
 zhyOffCtx.font = <span class="zhy_fn">'700 180px "Microsoft YaHei"'</span>;
-zhyOffCtx.<span class="zhy_fn">fillText</span>(<span class="zhy_fn">'lay张'</span>, zhyX, zhyY);
+zhyOffCtx.<span class="zhy_fn">fillText</span>(<span class="zhy_fn">'layzhang'</span>, zhyX, zhyY);
 <span class="zhy_kw">var</span> zhyData = zhyOffCtx.<span class="zhy_fn">getImageData</span>(0, 0, zhyW, zhyH).data;
 
 <span class="zhy_kw">for</span> (<span class="zhy_kw">var</span> y = 0; y &lt; zhyH; y += zhyGap) {
@@ -170,7 +170,7 @@ zhyP.vx *= 0.88; zhyP.vy *= 0.88;       <span class="zhy_cm">// 阻尼防震荡<
 
 <script>
     /* =====================================================
-       本页脚本："lay张" 文字粒子动画（layzhang）
+       本页脚本："layzhang" 文字粒子动画（layzhang）
        离屏文字采样 → 淡紫色粒子 → 弹簧缓动汇聚
        ===================================================== */
 
@@ -185,7 +185,7 @@ zhyP.vx *= 0.88; zhyP.vy *= 0.88;       <span class="zhy_cm">// 阻尼防震荡<
         var zhyParticles = [];         // 粒子数组
         var zhyMouse = { x: -9999, y: -9999 };
         var zhyGap = 4;                // 采样间距（像素）
-        var zhyText = 'lay张';
+        var zhyText = 'layzhang';
 
         /* 淡紫色系色板 */
         var zhyColors = ['#c8a8ff', '#d8c5ff', '#e6d9ff', '#b699ff', '#a887f0', '#cdb4ff'];
