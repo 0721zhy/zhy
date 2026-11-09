@@ -90,3 +90,83 @@ FLUSH PRIVILEGES;
 ## 第 7 步（2026-11-09）：校园图文表 zhang_gallery
 
 建表与 6 条数据 SQL 见 `backend/zhang_gallery.sql`。字段：zhang_id、zhang_title、zhang_desc、zhang_image（相对 frontend/ 的图片路径）、zhang_place、zhang_tag、zhang_publish_time、zhang_sort、zhang_created_at。图片为本地生成文件 `frontend/img/gallery-1.jpg` ~ `gallery-6.jpg`。
+
+------------------------------------------------------------
+## 2026-11-09 大项目改版：微博数据库 zhang_weibo_db（GLM-5.3-FlashX）
+
+旧库 zhang_book_db（zhang_categories / zhang_books / zhang_news / zhang_gallery）不再使用；
+新库脚本已完整保存在 backend/zhang_weibo.sql，仅凭该文件即可在新机器重建。要点如下（完整 SQL 含全部 INSERT 见 zhang_weibo.sql）：
+
+CREATE DATABASE IF NOT EXISTS zhang_weibo_db DEFAULT CHARACTER SET utf8mb4;
+USE zhang_weibo_db;
+
+CREATE TABLE zhang_users (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_username VARCHAR(50) NOT NULL UNIQUE,
+    zhang_nickname VARCHAR(50) NOT NULL,
+    zhang_avatar CHAR(7) NOT NULL DEFAULT '#eb7350',
+    zhang_bio VARCHAR(200) NOT NULL DEFAULT '',
+    zhang_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE zhang_posts (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_user_id INT NOT NULL,
+    zhang_content VARCHAR(500) NOT NULL,
+    zhang_image VARCHAR(200) NOT NULL DEFAULT '',
+    zhang_reposts INT NOT NULL DEFAULT 0,
+    zhang_comments INT NOT NULL DEFAULT 0,
+    zhang_likes INT NOT NULL DEFAULT 0,
+    zhang_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT zhang_fk_post_user FOREIGN KEY (zhang_user_id) REFERENCES zhang_users(zhang_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE zhang_comments (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_post_id INT NOT NULL,
+    zhang_user_id INT NOT NULL,
+    zhang_content VARCHAR(300) NOT NULL,
+    zhang_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT zhang_fk_comment_post FOREIGN KEY (zhang_post_id) REFERENCES zhang_posts(zhang_id),
+    CONSTRAINT zhang_fk_comment_user FOREIGN KEY (zhang_user_id) REFERENCES zhang_users(zhang_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE zhang_likes (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_post_id INT NOT NULL,
+    zhang_user_id INT NOT NULL,
+    zhang_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY zhang_uniq_like (zhang_post_id, zhang_user_id),
+    CONSTRAINT zhang_fk_like_post FOREIGN KEY (zhang_post_id) REFERENCES zhang_posts(zhang_id),
+    CONSTRAINT zhang_fk_like_user FOREIGN KEY (zhang_user_id) REFERENCES zhang_users(zhang_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE zhang_follows (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_follower_id INT NOT NULL,
+    zhang_followee_id INT NOT NULL,
+    zhang_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY zhang_uniq_follow (zhang_follower_id, zhang_followee_id),
+    CONSTRAINT zhang_fk_follow_a FOREIGN KEY (zhang_follower_id) REFERENCES zhang_users(zhang_id),
+    CONSTRAINT zhang_fk_follow_b FOREIGN KEY (zhang_followee_id) REFERENCES zhang_users(zhang_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE zhang_messages (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_user_id INT NOT NULL,
+    zhang_type VARCHAR(20) NOT NULL COMMENT 'like/comment/follow/system',
+    zhang_content VARCHAR(300) NOT NULL,
+    zhang_is_read TINYINT NOT NULL DEFAULT 0,
+    zhang_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT zhang_fk_msg_user FOREIGN KEY (zhang_user_id) REFERENCES zhang_users(zhang_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE zhang_hot_search (
+    zhang_id INT AUTO_INCREMENT PRIMARY KEY,
+    zhang_keyword VARCHAR(100) NOT NULL,
+    zhang_heat INT NOT NULL DEFAULT 0,
+    zhang_tag VARCHAR(20) NOT NULL DEFAULT '' COMMENT '热/新/爆/沸',
+    zhang_rank INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+测试数据规模：zhang_users 8 条、zhang_posts 9 条、zhang_comments 13 条、zhang_likes 18 条、zhang_follows 14 条、zhang_messages 9 条、zhang_hot_search 8 条（完整 INSERT 见 backend/zhang_weibo.sql）。

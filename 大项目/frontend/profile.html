@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博 - 个人主页</title>
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+    <script src="js/zhang_common.js" defer></script>
+    <script src="js/zhang_feed.js" defer></script>
+    <script src="js/zhang_profile.js" defer></script>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-09 大模型：GLM-5.3-FlashX 功能：微博个人主页（用户资料 + 关注/粉丝 + TA 的微博） -->
+
+<header class="zhang_topbar">
+    <a class="zhang_logo" href="index.html">
+        <i class="iconfont icon-faxian1"></i>微博 <small>全栈大项目 · Express + MySQL</small>
+    </a>
+    <nav class="zhang_nav">
+        <a href="index.html"><i class="iconfont icon-shouye"></i>首页</a>
+        <a href="profile.html?id=1" class="zhang_nav--on"><i class="iconfont icon-my"></i>个人主页</a>
+        <a href="message.html"><i class="iconfont icon-xinxi"></i>消息通知<span class="zhang_nav-badge"></span></a>
+        <a href="database.html"><i class="iconfont icon-zengjia"></i>数据库测试</a>
+    </nav>
+    <div class="zhang_topbar-user">当前用户：张海玉（uid 1）</div>
+</header>
+
+<main class="zhang_layout">
+    <!-- 左栏：用户信息 + 关注/粉丝 -->
+    <div class="zhang_col zhang_col--left">
+        <div class="zhang_card" id="zhang_userCard"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+        <div class="zhang_card" id="zhang_followCard"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+    </div>
+
+    <!-- 中栏：TA 的微博 -->
+    <div class="zhang_col">
+        <div class="zhang_card">
+            <div class="zhang_card-title"><i class="iconfont icon-bianji"></i><span id="zhang_feedTitle">TA 的微博</span></div>
+            <div class="zhang_tip" id="zhang_feedTip"></div>
+            <div id="zhang_feed"></div>
+        </div>
+    </div>
+
+    <!-- 右栏：关注 / 粉丝列表 -->
+    <div class="zhang_col zhang_col--right">
+        <div class="zhang_card">
+            <div class="zhang_tabs">
+                <button class="zhang_tab zhang_tab--on" data-type="following">关注</button>
+                <button class="zhang_tab" data-type="followers">粉丝</button>
+            </div>
+            <div id="zhang_sideFollowList"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+        </div>
+    </div>
+</main>
+
+<footer class="zhang_footnote">张海玉 · 24001010521 · 《高级网页设计》全栈大项目 · 微博网页（Express + MySQL + 原生前端）</footer>
+</body>
+</html>

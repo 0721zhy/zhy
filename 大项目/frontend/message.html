@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微博 - 消息通知</title>
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+    <script src="js/zhang_common.js" defer></script>
+    <script src="js/zhang_message.js" defer></script>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-09 大模型：GLM-5.3-FlashX 功能：微博消息通知（点赞/评论/关注/系统消息 + 一键已读） -->
+
+<header class="zhang_topbar">
+    <a class="zhang_logo" href="index.html">
+        <i class="iconfont icon-faxian1"></i>微博 <small>全栈大项目 · Express + MySQL</small>
+    </a>
+    <nav class="zhang_nav">
+        <a href="index.html"><i class="iconfont icon-shouye"></i>首页</a>
+        <a href="profile.html?id=1"><i class="iconfont icon-my"></i>个人主页</a>
+        <a href="message.html" class="zhang_nav--on"><i class="iconfont icon-xinxi"></i>消息通知<span class="zhang_nav-badge"></span></a>
+        <a href="database.html"><i class="iconfont icon-zengjia"></i>数据库测试</a>
+    </nav>
+    <div class="zhang_topbar-user">当前用户：张海玉（uid 1）</div>
+</header>
+
+<main class="zhang_layout">
+    <!-- 左栏：快捷入口 -->
+    <div class="zhang_col zhang_col--left">
+        <div class="zhang_card">
+            <div class="zhang_card-title"><i class="iconfont icon-gengduo"></i>快捷入口</div>
+            <nav style="display:grid;gap:8px;font-size:14px;">
+                <a href="index.html"><i class="iconfont icon-shouye"></i> 回到首页</a>
+                <a href="profile.html?id=1"><i class="iconfont icon-my"></i> 我的主页</a>
+                <a href="database.html"><i class="iconfont icon-zengjia"></i> 数据库连接测试</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 中栏：消息列表 -->
+    <div class="zhang_col">
+        <div class="zhang_card">
+            <div class="zhang_card-title">
+                <i class="iconfont icon-xinxi"></i>消息通知
+                <span style="font-size:12px;font-weight:400;color:var(--zhang_sub);margin-left:6px;" id="zhang_unreadInfo"></span>
+                <button class="zhang_btn zhang_btn--ghost zhang_btn--sm" id="zhang_readBtn" style="margin-left:auto;">
+                    <i class="iconfont icon-xihuan"></i>全部已读
+                </button>
+            </div>
+            <div class="zhang_tip" id="zhang_msgTip"></div>
+            <div id="zhang_msgList"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+        </div>
+    </div>
+
+    <!-- 右栏：消息类型说明 -->
+    <div class="zhang_col zhang_col--right">
+        <div class="zhang_card">
+            <div class="zhang_card-title"><i class="iconfont icon-tuijian"></i>消息类型</div>
+            <div class="zhang_msg-item"><span class="zhang_msg-icon zhang_msg-icon--like"><i class="iconfont icon-xihuan"></i></span>
+                <div class="zhang_msg-main"><div class="zhang_msg-text">赞 — 有人赞了你的微博</div></div></div>
+            <div class="zhang_msg-item"><span class="zhang_msg-icon zhang_msg-icon--comment"><i class="iconfont icon-xinxi"></i></span>
+                <div class="zhang_msg-main"><div class="zhang_msg-text">评论 — 有人评论了你的微博</div></div></div>
+            <div class="zhang_msg-item"><span class="zhang_msg-icon zhang_msg-icon--follow"><i class="iconfont icon-guanzhu"></i></span>
+                <div class="zhang_msg-main"><div class="zhang_msg-text">关注 — 有人关注了你</div></div></div>
+            <div class="zhang_msg-item"><span class="zhang_msg-icon zhang_msg-icon--system"><i class="iconfont icon-gengduo"></i></span>
+                <div class="zhang_msg-main"><div class="zhang_msg-text">系统 — 官方通知消息</div></div></div>
+        </div>
+    </div>
+</main>
+
+<footer class="zhang_footnote">张海玉 · 24001010521 · 《高级网页设计》全栈大项目 · 微博网页（Express + MySQL + 原生前端）</footer>
+</body>
+</html>

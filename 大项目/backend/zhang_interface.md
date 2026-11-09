@@ -146,3 +146,28 @@
 响应：`{ "code": 0, "msg": "查询成功", "data": [ { "zhang_id": 1, "zhang_title": "...", "zhang_desc": "...", "zhang_image": "img/gallery-1.jpg", "zhang_place": "实训中心一层展厅", "zhang_tag": "人工智能", "zhang_publish_time": "2026-11-08T02:20:00.000Z" } ] }`
 
 ### /api/gallery/tags | GET | `{ "code": 0, "msg": "查询成功", "data": ["人工智能","低空经济","智能制造","编程赛事","虚拟现实"] }` | 2026-11-09
+
+------------------------------------------------------------
+## 2026-11-09 大项目改版：图书管理系统 → 微博网页（GLM-5.3-FlashX）
+
+旧接口（/api/categories、/api/books、/api/news、/api/gallery）已随旧业务一并下线，仅保留 /api/database。
+
+| 接口路径 | HTTP 方法 | 请求参数（示例） | 响应格式（JSON 示例） | 修改时间 |
+|---|---|---|---|---|
+| /api/posts?me=1&userId=&onlyFollowing=1 | GET | me 当前用户ID；userId 指定作者（个人主页）；onlyFollowing=1 只看关注的人 | {"code":0,"msg":"查询成功","data":[{"zhang_id":1,"zhang_user_id":2,"zhang_content":"…","zhang_image":"img/gallery-3.jpg","zhang_reposts":45,"zhang_comments":3,"zhang_likes":156,"zhang_created_at":"…","zhang_nickname":"林科技","zhang_avatar":"#4a90d9","zhang_bio":"…","zhang_liked":1}]} | 2026-11-09 |
+| /api/posts | POST | {"zhang_user_id":1,"zhang_content":"新微博","zhang_image":"img/gallery-1.jpg"} | {"code":0,"msg":"发布成功","data":{…新微博对象…}} | 2026-11-09 |
+| /api/posts/:id?me=1 | GET | 路径参数 id | {"code":0,"msg":"查询成功","data":{…单条微博…}} | 2026-11-09 |
+| /api/posts/:id | DELETE | 路径参数 id | {"code":0,"msg":"删除成功","data":null} | 2026-11-09 |
+| /api/posts/:id/like | POST | {"zhang_user_id":1}（再次调用即取消点赞） | {"code":0,"msg":"点赞成功","data":{"zhang_liked":1,"zhang_likes":157}} | 2026-11-09 |
+| /api/posts/:id/comments | GET | 路径参数 id | {"code":0,"msg":"查询成功","data":[{zhang_id,zhang_post_id,zhang_user_id,zhang_content,zhang_created_at,zhang_nickname,zhang_avatar}]} | 2026-11-09 |
+| /api/posts/:id/comments | POST | {"zhang_user_id":1,"zhang_content":"评论内容"} | {"code":0,"msg":"评论成功","data":[…该微博全部评论…]} | 2026-11-09 |
+| /api/users/recommend?me=1 | GET | me 当前用户ID | {"code":0,"msg":"查询成功","data":[{zhang_id,zhang_nickname,zhang_avatar,zhang_bio,zhang_follower_count}]}（未被关注者，按粉丝数取前5） | 2026-11-09 |
+| /api/users/:id?me=1 | GET | 路径参数 id；me 用于计算是否已关注 | {"code":0,"msg":"查询成功","data":{…用户信息 + zhang_post_count / zhang_following_count / zhang_follower_count / zhang_is_followed…}} | 2026-11-09 |
+| /api/users/:id/follows?type=following | GET | type=following 关注列表 / type=followers 粉丝列表 | {"code":0,"msg":"查询成功","data":[{zhang_id,zhang_nickname,zhang_avatar,zhang_bio}]} | 2026-11-09 |
+| /api/users/:id/follow | POST | {"zhang_me":1}（再次调用即取消关注；不能关注自己） | {"code":0,"msg":"关注成功","data":{"zhang_followed":1,"zhang_changed":1}} | 2026-11-09 |
+| /api/messages?userId=1 | GET | userId 接收人 | {"code":0,"msg":"查询成功","data":{"zhang_list":[{zhang_id,zhang_user_id,zhang_type,zhang_content,zhang_is_read,zhang_created_at}],"zhang_unread":3}} | 2026-11-09 |
+| /api/messages/read | POST | {"zhang_user_id":1} | {"code":0,"msg":"已全部标记为已读","data":{"zhang_affected":3}} | 2026-11-09 |
+| /api/hot | GET | 无 | {"code":0,"msg":"查询成功","data":[{zhang_id,zhang_keyword,zhang_heat,zhang_tag,zhang_rank}]} | 2026-11-09 |
+| /api/database/test | POST | {"zhang_user":"root@localhost","zhang_password":"***","zhang_host":"localhost","zhang_port":3306,"zhang_database":"zhang_weibo_db"} | {"code":0,"msg":"连接成功","data":{zhang_user,zhang_host,zhang_version,zhang_database}}（保留自旧版） | 2026-11-09 |
+
+说明：点赞 / 评论 / 关注成功后会自动给对方写入 zhang_messages 通知消息（自己操作自己的不发）。

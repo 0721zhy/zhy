@@ -3,67 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图书管理系统 · 首页</title>
-    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：GLM-5.3-FlashX | 功能：全栈项目前端入口页 -->
+    <title>微博 - 首页</title>
     <link rel="stylesheet" href="fonts/iconfont.css">
     <link rel="stylesheet" href="css/zhang_style.css">
+    <script src="js/zhang_common.js" defer></script>
+    <script src="js/zhang_feed.js" defer></script>
+    <script src="js/zhang_index.js" defer></script>
 </head>
 <body>
-    <!-- 顶部导航 -->
-    <header class="zhang_topbar">
-        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
-        <nav class="zhang_nav">
-            <a href="index.html" class="zhang_nav--on">首页</a>
-            <a href="books.html">图书列表</a>
-            <a href="news.html">科技新闻</a>
-            <a href="gallery.html">校园图文</a>
-            <a href="database.html">数据库测试</a>
-        </nav>
-        <span class="zhang_topbar-user">张海玉 24001010521</span>
-    </header>
+<!-- 姓名：张海玉 建立时间：2026-11-09 大模型：GLM-5.3-FlashX 功能：微博网页首页（发微博 + 信息流 + 热搜榜 + 推荐关注） -->
 
-    <main class="zhang_wrap">
-        <!-- 项目介绍 -->
-        <section class="zhang_hero">
-            <h1>图书管理系统</h1>
-            <p>全栈课程项目：前端使用原生 HTML / CSS / JavaScript，通过 fetch 调用后端 RESTful 接口；后端采用 Node.js + Express（MVC 架构，端口 521），数据存储于 MySQL 数据库。服务器返回的数据与错误信息统一输出到浏览器控制台。</p>
-        </section>
+<header class="zhang_topbar">
+    <a class="zhang_logo" href="index.html">
+        <i class="iconfont icon-faxian1"></i>微博 <small>全栈大项目 · Express + MySQL</small>
+    </a>
+    <nav class="zhang_nav">
+        <a href="index.html" class="zhang_nav--on"><i class="iconfont icon-shouye"></i>首页</a>
+        <a href="profile.html?id=1"><i class="iconfont icon-my"></i>个人主页</a>
+        <a href="message.html"><i class="iconfont icon-xinxi"></i>消息通知<span class="zhang_nav-badge"></span></a>
+        <a href="database.html"><i class="iconfont icon-zengjia"></i>数据库测试</a>
+    </nav>
+    <div class="zhang_topbar-user">当前用户：张海玉（uid 1）</div>
+</header>
 
-        <!-- 页面入口 -->
-        <section class="zhang_entry-grid">
-            <a class="zhang_entry" href="books.html">
-                <i class="iconfont icon-tuijian"></i>
-                <strong>图书列表</strong>
-                <span>查看全部图书，支持关键词搜索与分类筛选，可新增、编辑、删除图书。</span>
-            </a>
-            <a class="zhang_entry" href="books.html">
-                <i class="iconfont icon-gouwuche"></i>
-                <strong>图书详情</strong>
-                <span>在列表中点击书名进入详情页，查看价格、库存、出版社等完整信息。</span>
-            </a>
-            <a class="zhang_entry" href="/api/books" target="_blank">
-                <i class="iconfont icon-xinxi"></i>
-                <strong>接口预览</strong>
-                <span>直接访问 GET /api/books 查看后端返回的统一 JSON 格式（code / msg / data）。</span>
-            </a>
-            <a class="zhang_entry" href="database.html">
-                <i class="iconfont icon-zengjia"></i>
-                <strong>数据库连接测试</strong>
-                <span>输入 MySQL 用户名与密码，测试数据库连接是否可用，成功与失败均有提示。</span>
-            </a>
-            <a class="zhang_entry" href="news.html">
-                <i class="iconfont icon-xinxi"></i>
-                <strong>科技新闻</strong>
-                <span>新闻数据存放于 MySQL 表 zhang_news，列表页展示接口连接状态与新闻内容，支持搜索与分类筛选。</span>
-            </a>
-            <a class="zhang_entry" href="gallery.html">
-                <i class="iconfont icon-faxian"></i>
-                <strong>校园图文</strong>
-                <span>图文数据存放于 MySQL 表 zhang_gallery，图片为本地文件，卡片式排列，点击可查看大图与完整说明。</span>
-            </a>
-        </section>
+<main class="zhang_layout">
+    <!-- 左栏：我的信息卡 -->
+    <div class="zhang_col zhang_col--left">
+        <div class="zhang_card" id="zhang_meCard"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+        <div class="zhang_card">
+            <div class="zhang_card-title"><i class="iconfont icon-gengduo"></i>快捷入口</div>
+            <nav style="display:grid;gap:8px;font-size:14px;">
+                <a href="profile.html?id=1"><i class="iconfont icon-my"></i> 我的主页</a>
+                <a href="message.html"><i class="iconfont icon-xinxi"></i> 消息通知</a>
+                <a href="database.html"><i class="iconfont icon-zengjia"></i> 数据库连接测试</a>
+            </nav>
+        </div>
+    </div>
 
-        <p class="zhang_footnote">张海玉 24001010521 · 全栈提示词实践项目 · 2026-11-09</p>
-    </main>
+    <!-- 中栏：发微博 + 信息流 -->
+    <div class="zhang_col">
+        <div class="zhang_card">
+            <div class="zhang_composer-box">
+                <span id="zhang_composerAvatar"></span>
+                <div class="zhang_composer-main">
+                    <textarea class="zhang_composer" id="zhang_composer" maxlength="500"
+                              placeholder="有什么新鲜事想告诉大家？"></textarea>
+                    <img class="zhang_post-img" id="zhang_preview" alt="配图预览" style="display:none">
+                    <div class="zhang_composer-foot">
+                        <span class="zhang_composer-count" id="zhang_count">0 / 500</span>
+                        <select class="zhang_select" id="zhang_imagePick">
+                            <option value="">不配图</option>
+                            <option value="img/gallery-1.jpg">配图 1 · 星海广场</option>
+                            <option value="img/gallery-2.jpg">配图 2 · 青藏线</option>
+                            <option value="img/gallery-3.jpg">配图 3 · AI 实验室</option>
+                            <option value="img/gallery-4.jpg">配图 4 · 城市夜景</option>
+                            <option value="img/gallery-5.jpg">配图 5 · 无人机编队</option>
+                            <option value="img/gallery-6.jpg">配图 6 · 橘猫</option>
+                        </select>
+                        <button class="zhang_btn" id="zhang_publishBtn"><i class="iconfont icon-bianji"></i>发布</button>
+                    </div>
+                </div>
+            </div>
+            <div class="zhang_tip" id="zhang_pubTip"></div>
+        </div>
+
+        <div class="zhang_card">
+            <div class="zhang_tabs">
+                <button class="zhang_tab zhang_tab--on" data-tab="all">全部微博</button>
+                <button class="zhang_tab" data-tab="following">关注的人</button>
+            </div>
+            <div class="zhang_tip" id="zhang_feedTip"></div>
+            <div id="zhang_feed"></div>
+        </div>
+    </div>
+
+    <!-- 右栏：热搜榜 + 推荐关注 -->
+    <div class="zhang_col zhang_col--right">
+        <div class="zhang_card">
+            <div class="zhang_card-title"><i class="iconfont icon-sousuo"></i>微博热搜</div>
+            <div id="zhang_hotList"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+        </div>
+        <div class="zhang_card">
+            <div class="zhang_card-title"><i class="iconfont icon-tuijian"></i>推荐关注</div>
+            <div id="zhang_recList"><div class="zhang_tip zhang_tip--loading">加载中…</div></div>
+        </div>
+    </div>
+</main>
+
+<footer class="zhang_footnote">张海玉 · 24001010521 · 《高级网页设计》全栈大项目 · 微博网页（Express + MySQL + 原生前端）</footer>
 </body>
 </html>

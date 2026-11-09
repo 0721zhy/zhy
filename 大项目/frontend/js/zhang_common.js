@@ -6,10 +6,13 @@ if (location.protocol === 'file:') {
     console.error('[zhang_common] 当前以 file:// 协议打开，接口请求会失败。请通过 http://localhost:521 访问本页面。');
 }
 
+// 当前登录用户（课程演示不做人脸登录，固定为 1 号用户：张海玉）
+const ZHANG_CURRENT_USER_ID = 1;
+
 /**
  * 通用接口请求
  * @param {string} zhang_method HTTP 方法（GET/POST/PUT/DELETE）
- * @param {string} zhang_url 接口路径（如 /api/books）
+ * @param {string} zhang_url 接口路径（如 /api/posts）
  * @param {object|null} zhang_body 请求体（POST/PUT 时传 JSON）
  * @returns {Promise<object>} 后端 data 字段内容；code 非 0 时抛出错误
  */
@@ -66,4 +69,32 @@ function zhangFormatTime(zhang_str) {
     const zhang_pad = function (zhang_n) { return zhang_n < 10 ? '0' + zhang_n : '' + zhang_n; };
     return zhang_d.getFullYear() + '-' + zhang_pad(zhang_d.getMonth() + 1) + '-' + zhang_pad(zhang_d.getDate()) +
         ' ' + zhang_pad(zhang_d.getHours()) + ':' + zhang_pad(zhang_d.getMinutes());
+}
+
+/**
+ * 头像 HTML：色块 + 昵称首字（无图片资源，纯 CSS 渲染）
+ * @param {object} zhang_user 含 zhang_nickname / zhang_avatar 的用户对象
+ * @param {string} zhang_size 头像尺寸类（zhang_avatar--40 等）
+ */
+function zhangAvatarHtml(zhang_user, zhang_size) {
+    const zhang_name = zhang_user ? zhang_user.zhang_nickname : '?';
+    return '<span class="zhang_avatar ' + zhang_size + '" style="background:' +
+        zhangEscape(zhang_user.zhang_avatar) + '">' + zhangEscape(zhang_name.slice(0, 1)) + '</span>';
+}
+
+/**
+ * 顶部导航未读消息角标：查询当前用户未读数并显示在"消息通知"入口
+ */
+async function zhangLoadNavBadge() {
+    try {
+        const zhang_data = await zhangApi('GET', '/api/messages?userId=' + ZHANG_CURRENT_USER_ID);
+        const zhang_badge = document.querySelector('.zhang_nav-badge');
+        if (!zhang_badge) { return; }
+        if (zhang_data.zhang_unread > 0) {
+            zhang_badge.textContent = zhang_data.zhang_unread > 99 ? '99+' : zhang_data.zhang_unread;
+            zhang_badge.style.display = 'inline-block';
+        }
+    } catch (zhang_err) {
+        console.error('[导航角标] 未读数查询失败', zhang_err.message);
+    }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据库连接测试 · 图书管理系统</title>
+    <title>数据库连接测试 · 微博网页</title>
     <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：DeepSeek-V4.1-Flash | 功能：MySQL 数据库连接测试页（输入用户名密码，成功/失败均有提示） -->
     <link rel="stylesheet" href="fonts/iconfont.css">
     <link rel="stylesheet" href="css/zhang_style.css">
@@ -86,13 +86,12 @@
 <body>
     <!-- 顶部导航 -->
     <header class="zhang_topbar">
-        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-faxian1"></i>微博 <small>全栈大项目 · Express + MySQL</small></a>
         <nav class="zhang_nav">
-            <a href="index.html">首页</a>
-            <a href="books.html">图书列表</a>
-            <a href="news.html">科技新闻</a>
-            <a href="gallery.html">校园图文</a>
-            <a href="database.html" class="zhang_nav--on">数据库测试</a>
+            <a href="index.html"><i class="iconfont icon-shouye"></i>首页</a>
+            <a href="profile.html?id=1"><i class="iconfont icon-my"></i>个人主页</a>
+            <a href="message.html"><i class="iconfont icon-xinxi"></i>消息通知</a>
+            <a href="database.html" class="zhang_nav--on"><i class="iconfont icon-zengjia"></i>数据库测试</a>
         </nav>
         <span class="zhang_topbar-user">张海玉 24001010521</span>
     </header>
@@ -122,13 +121,13 @@
                     </div>
                     <div class="zhang_form-row zhang_form-row--wide">
                         <label>数据库名</label>
-                        <input class="zhang_input" id="zhang_dbName" type="text" value="zhang_book_db">
+                        <input class="zhang_input" id="zhang_dbName" type="text" value="zhang_weibo_db">
                     </div>
                 </div>
 
                 <div class="zhang_form-foot" style="justify-content:flex-start;">
-                    <button class="zhang_btn zhang_btn--main" type="submit" id="zhang_dbTestBtn">
-                        <i class="iconfont icon-tianjia"></i>测试连接
+                    <button class="zhang_btn" type="submit" id="zhang_dbTestBtn">
+                        <i class="iconfont icon-zengjia"></i>测试连接
                     </button>
                     <button class="zhang_btn zhang_btn--ghost" type="reset" id="zhang_dbResetBtn">重置</button>
                 </div>

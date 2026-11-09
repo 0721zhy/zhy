@@ -1,5 +1,6 @@
 // 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：GLM-5.3-FlashX
-// 服务入口：Express 启动文件，端口 521，托管 frontend/ 静态目录，挂载 /api/ 路由
+// 服务入口：微博网页后端，Express 启动文件，端口 521，
+// 托管 frontend/ 静态目录，挂载 /api/ 路由
 
 const zhang_express = require('express');
 const zhang_path = require('path');
@@ -14,15 +15,15 @@ zhang_app.use(zhang_cors());
 // 解析 JSON 请求体
 zhang_app.use(zhang_express.json());
 
-// express.static 托管 frontend/ 目录（访问 http://localhost:521/ 即入口页）
+// express.static 托管 frontend/ 目录（访问 http://localhost:521/ 即微博首页）
 zhang_app.use(zhang_express.static(zhang_path.join(__dirname, '..', 'frontend')));
 
 // 挂载业务路由（RESTful，统一以 /api/ 为前缀）
-zhang_app.use('/api/categories', require('./routes/zhang_category.routes'));
-zhang_app.use('/api/books', require('./routes/zhang_book.routes'));
+zhang_app.use('/api/users', require('./routes/zhang_user.routes'));
+zhang_app.use('/api/posts', require('./routes/zhang_post.routes'));
+zhang_app.use('/api/messages', require('./routes/zhang_message.routes'));
+zhang_app.use('/api/hot', require('./routes/zhang_hot.routes'));
 zhang_app.use('/api/database', require('./routes/zhang_database.routes'));
-zhang_app.use('/api/news', require('./routes/zhang_news.routes'));
-zhang_app.use('/api/gallery', require('./routes/zhang_gallery.routes'));
 
 // 统一 404（未匹配的 API 路径）
 zhang_app.use('/api', function (zhang_req, zhang_res) {
@@ -36,5 +37,5 @@ zhang_app.use(function (zhang_err, zhang_req, zhang_res, zhang_next) {
 });
 
 zhang_app.listen(zhang_PORT, function () {
-    console.log('图书管理系统后端已启动：http://localhost:' + zhang_PORT);
+    console.log('微博网页后端已启动：http://localhost:' + zhang_PORT);
 });

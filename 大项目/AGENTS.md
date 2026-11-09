@@ -1,4 +1,4 @@
-# AGENTS.md — 全栈项目规则（大项目/ 图书管理系统）
+# AGENTS.md — 全栈项目规则（大项目/ 微博网页）
 
 ## 项目结构与技术栈
 - 前端：frontend/ 目录
@@ -41,4 +41,4 @@
 
 ## 启动方式
 - 后端：cd 大项目/backend && node server.js（或 npm start）
-- 访问：http://localhost:521/（首页）、/books.html（列表）、/book-detail.html?id=1（详情）
+- 访问：http://localhost:521/（微博首页）、/profile.html?id=1（个人主页）、/message.html（消息通知）、/database.html（数据库测试）
