@@ -20,6 +20,7 @@ zhang_app.use(zhang_express.static(zhang_path.join(__dirname, '..', 'frontend'))
 // 挂载业务路由（RESTful，统一以 /api/ 为前缀）
 zhang_app.use('/api/categories', require('./routes/zhang_category.routes'));
 zhang_app.use('/api/books', require('./routes/zhang_book.routes'));
+zhang_app.use('/api/database', require('./routes/zhang_database.routes'));
 
 // 统一 404（未匹配的 API 路径）
 zhang_app.use('/api', function (zhang_req, zhang_res) {

@@ -72,3 +72,13 @@ INSERT INTO zhang_books (zhang_title, zhang_author, zhang_category_id, zhang_pri
 ```
 
 说明：本文件同步保留了 backend/zhang_init.sql 初始化脚本，两者内容一致；后续每次建表 / 改表 / 插入数据都会在本文件按顺序追加 SQL。
+
+## 第 5 步（2026-11-09）：创建 mysql80 测试用户并授权（database.html 默认凭据）
+
+```sql
+CREATE USER IF NOT EXISTS 'mysql80'@'localhost' IDENTIFIED BY '<见 backend/.env 的 DB_PASSWORD>';
+CREATE USER IF NOT EXISTS 'mysql80'@'%' IDENTIFIED BY '<见 backend/.env 的 DB_PASSWORD>';
+GRANT ALL PRIVILEGES ON zhang_book_db.* TO 'mysql80'@'localhost';
+GRANT ALL PRIVILEGES ON zhang_book_db.* TO 'mysql80'@'%';
+FLUSH PRIVILEGES;
+```

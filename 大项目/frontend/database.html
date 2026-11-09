@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据库连接测试 · 图书管理系统</title>
+    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：DeepSeek-V4.1-Flash | 功能：MySQL 数据库连接测试页（输入用户名密码，成功/失败均有提示） -->
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+    <style>
+        /* 本页私有样式：数据库连接测试 */
+        .zhang_db-form { max-width: 560px; }
+
+        .zhang_db-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 16px;
+        }
+
+        .zhang_db-grid .zhang_form-row--wide { grid-column: 1 / -1; }
+
+        /* 连接结果面板 */
+        .zhang_db-result {
+            display: none;
+            margin-top: 18px;
+            border-radius: 12px;
+            padding: 18px 20px;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .zhang_db-result.zhang_db-result--ok {
+            display: block;
+            background: #eaf7ec;
+            border: 1.5px solid #bfe3c6;
+            color: #1e7e34;
+        }
+
+        .zhang_db-result.zhang_db-result--err {
+            display: block;
+            background: #fdeeec;
+            border: 1.5px solid #e6b0aa;
+            color: #c0392b;
+        }
+
+        .zhang_db-result h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .zhang_db-result h4 .iconfont { font-size: 18px; }
+
+        .zhang_db-result dl {
+            display: grid;
+            grid-template-columns: 108px 1fr;
+            row-gap: 6px;
+        }
+
+        .zhang_db-result dt { opacity: .75; }
+        .zhang_db-result dd { font-weight: 700; word-break: break-all; }
+
+        .zhang_db-result .zhang_db-err-msg {
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .zhang_db-note {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--zhang_sub);
+            line-height: 1.8;
+        }
+
+        @media (max-width: 560px) {
+            .zhang_db-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="zhang_topbar">
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <nav class="zhang_nav">
+            <a href="index.html">首页</a>
+            <a href="books.html">图书列表</a>
+            <a href="database.html" class="zhang_nav--on">数据库测试</a>
+        </nav>
+        <span class="zhang_topbar-user">张海玉 24001010521</span>
+    </header>
+
+    <main class="zhang_wrap">
+        <h1 class="zhang_page-title"><i class="iconfont icon-xinxi"></i>数据库连接测试</h1>
+        <p class="zhang_page-sub">输入 MySQL 用户名与密码，点击"测试连接"验证凭据是否可用。连接结果与错误信息会同时显示在下方和无浏览器控制台（F12）。</p>
+
+        <section class="zhang_card zhang_db-form">
+            <form id="zhang_dbForm">
+                <div class="zhang_db-grid">
+                    <div class="zhang_form-row">
+                        <label>用户名 <b>*</b></label>
+                        <input class="zhang_input" id="zhang_dbUser" type="text" value="mysql80" required>
+                    </div>
+                    <div class="zhang_form-row">
+                        <label>密码 <b>*</b></label>
+                        <input class="zhang_input" id="zhang_dbPwd" type="password" value="zhang0168" required>
+                    </div>
+                    <div class="zhang_form-row">
+                        <label>主机地址</label>
+                        <input class="zhang_input" id="zhang_dbHost" type="text" value="localhost">
+                    </div>
+                    <div class="zhang_form-row">
+                        <label>端口</label>
+                        <input class="zhang_input" id="zhang_dbPort" type="number" value="3306" min="1" max="65535">
+                    </div>
+                    <div class="zhang_form-row zhang_form-row--wide">
+                        <label>数据库名</label>
+                        <input class="zhang_input" id="zhang_dbName" type="text" value="zhang_book_db">
+                    </div>
+                </div>
+
+                <div class="zhang_form-foot" style="justify-content:flex-start;">
+                    <button class="zhang_btn zhang_btn--main" type="submit" id="zhang_dbTestBtn">
+                        <i class="iconfont icon-tianjia"></i>测试连接
+                    </button>
+                    <button class="zhang_btn zhang_btn--ghost" type="reset" id="zhang_dbResetBtn">重置</button>
+                </div>
+            </form>
+
+            <!-- 连接结果面板：成功 / 失败 -->
+            <div class="zhang_db-result" id="zhang_dbResult"></div>
+
+            <p class="zhang_db-note">
+                说明：浏览器无法直接连接 MySQL，本页通过后端接口 POST /api/database/test 使用所填凭据发起一次临时连接，成功返回 MySQL 版本与当前库名，失败返回具体错误原因（如用户名或密码错误、库不存在、服务未启动等）。
+            </p>
+        </section>
+    </main>
+
+    <script src="js/zhang_common.js"></script>
+    <script src="js/zhang_database.js"></script>
+</body>
+</html>

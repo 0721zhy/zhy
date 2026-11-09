@@ -99,3 +99,29 @@
 响应示例：`{ "code": 0, "msg": "删除成功", "data": null }`
 
 不存在时：`{ "code": 404, "msg": "图书不存在", "data": null }`
+
+---
+
+## 2026-11-09 新增：数据库连接测试
+
+### /api/database/test | POST | body(JSON)：zhang_user*、zhang_password*、zhang_host（默认 localhost）、zhang_port（默认 3306）、zhang_database | 2026-11-09
+
+请求示例：
+
+```json
+{ "zhang_user": "mysql80", "zhang_password": "zhang0168", "zhang_host": "localhost", "zhang_port": 3306, "zhang_database": "zhang_book_db" }
+```
+
+响应示例（成功）：
+
+```json
+{ "code": 0, "msg": "连接成功", "data": { "zhang_user": "mysql80", "zhang_host": "localhost", "zhang_version": "8.0.43", "zhang_database": "zhang_book_db" } }
+```
+
+响应示例（密码错误）：
+
+```json
+{ "code": 1, "msg": "连接失败：Access denied for user 'mysql80'@'localhost' (using password: YES)", "data": { "zhang_error_code": "ER_ACCESS_DENIED_ERROR" } }
+```
+
+用户名称为空时：`{ "code": 400, "msg": "用户名不能为空", "data": null }`
