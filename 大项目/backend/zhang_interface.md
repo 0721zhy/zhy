@@ -125,3 +125,6 @@
 ```
 
 用户名称为空时：`{ "code": 400, "msg": "用户名不能为空", "data": null }`
+
+补充（2026-11-09）：前端支持 用户名@主机 写法（如 root@localhost），提交前自动拆分为 zhang_user=root、zhang_host=localhost；实测该写法连接成功。
+

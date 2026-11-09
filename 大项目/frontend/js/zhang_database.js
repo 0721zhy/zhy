@@ -34,10 +34,19 @@
     zhang_form.addEventListener('submit', async function (zhang_e) {
         zhang_e.preventDefault();
 
+        // 支持 "用户名@主机" 写法（如 root@localhost），自动拆分出主机地址
+        let zhang_userInput = document.querySelector('#zhang_dbUser').value.trim();
+        let zhang_hostInput = document.querySelector('#zhang_dbHost').value.trim() || 'localhost';
+        if (zhang_userInput.indexOf('@') > -1) {
+            const zhang_parts = zhang_userInput.split('@');
+            zhang_userInput = zhang_parts[0].trim();
+            zhang_hostInput = zhang_parts[1].trim() || zhang_hostInput;
+        }
+
         const zhang_body = {
-            zhang_user: document.querySelector('#zhang_dbUser').value.trim(),
+            zhang_user: zhang_userInput,
             zhang_password: document.querySelector('#zhang_dbPwd').value,
-            zhang_host: document.querySelector('#zhang_dbHost').value.trim() || 'localhost',
+            zhang_host: zhang_hostInput,
             zhang_port: Number(document.querySelector('#zhang_dbPort').value) || 3306,
             zhang_database: document.querySelector('#zhang_dbName').value.trim()
         };
