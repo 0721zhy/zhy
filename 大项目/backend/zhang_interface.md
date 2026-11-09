@@ -140,3 +140,9 @@
 ### /api/news/categories | GET | 返回分类数组：`{ "code": 0, "msg": "查询成功", "data": ["人工智能", "低空经济", ...] }` | 2026-11-09
 
 ### /api/news/:id | GET | 返回单条含正文 zhang_content，浏览量自动 +1；id 不存在时 `code=404, msg="新闻不存在"` | 2026-11-09
+
+### /api/gallery | GET | query：tag（按标签筛选） | 2026-11-09
+
+响应：`{ "code": 0, "msg": "查询成功", "data": [ { "zhang_id": 1, "zhang_title": "...", "zhang_desc": "...", "zhang_image": "img/gallery-1.jpg", "zhang_place": "实训中心一层展厅", "zhang_tag": "人工智能", "zhang_publish_time": "2026-11-08T02:20:00.000Z" } ] }`
+
+### /api/gallery/tags | GET | `{ "code": 0, "msg": "查询成功", "data": ["人工智能","低空经济","智能制造","编程赛事","虚拟现实"] }` | 2026-11-09

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园图文 · 图书管理系统</title>
+    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：DeepSeek-V4.1-Flash | 功能：图文列表页（数据存于 MySQL 表 zhang_gallery，展示接口连接状态、图片与文字说明） -->
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+    <style>
+        /* 本页私有样式：图文卡片网格 + 图片大图预览 */
+        .zhang_gallery-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 22px;
+            align-items: center;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1.5px solid var(--zhang_line);
+            background: #fff;
+            font-size: 13px;
+            color: var(--zhang_sub);
+            margin-bottom: 16px;
+        }
+
+        .zhang_gallery-bar b { color: var(--zhang_ink); }
+        .zhang_gallery-bar .zhang_ok { color: #1e7e34; font-weight: 700; }
+        .zhang_gallery-bar .zhang_bad { color: #c0392b; font-weight: 700; }
+
+        .zhang_gallery-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+
+        .zhang_gallery-tag {
+            padding: 6px 16px;
+            border: 1.5px solid var(--zhang_line);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--zhang_sub);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .16s;
+        }
+
+        .zhang_gallery-tag:hover { border-color: var(--zhang_main); color: var(--zhang_main); }
+        .zhang_gallery-tag--on { background: var(--zhang_main); border-color: var(--zhang_main); color: #fff; }
+
+        .zhang_gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .zhang_gallery-card {
+            background: #fff;
+            border: 1.5px solid var(--zhang_line);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: zoom-in;
+            transition: all .2s;
+        }
+
+        .zhang_gallery-card:hover {
+            border-color: var(--zhang_main);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 26px rgba(29, 93, 143, .15);
+        }
+
+        .zhang_gallery-thumb { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #eef3f8; }
+        .zhang_gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+        .zhang_gallery-card:hover .zhang_gallery-thumb img { transform: scale(1.06); }
+
+        .zhang_gallery-tagline {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: rgba(16, 42, 67, .82);
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .zhang_gallery-info { padding: 14px 16px 16px; }
+        .zhang_gallery-info h3 { font-size: 15px; line-height: 1.6; color: var(--zhang_ink); margin-bottom: 8px; }
+        .zhang_gallery-info p {
+            font-size: 13px;
+            line-height: 1.85;
+            color: var(--zhang_sub);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .zhang_gallery-meta {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #93a5b8;
+        }
+
+        /* 大图预览遮罩 */
+        .zhang_lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 24, 38, .86);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            z-index: 999;
+        }
+        .zhang_lightbox--show { display: flex; }
+
+        .zhang_lightbox-inner { max-width: 900px; width: 100%; background: #fff; border-radius: 14px; overflow: hidden; }
+        .zhang_lightbox-inner img { width: 100%; max-height: 64vh; object-fit: contain; background: #0f2233; display: block; }
+        .zhang_lightbox-cap { padding: 16px 22px; }
+        .zhang_lightbox-cap h3 { font-size: 16px; color: var(--zhang_ink); margin-bottom: 6px; }
+        .zhang_lightbox-cap p { font-size: 13px; line-height: 1.8; color: var(--zhang_sub); }
+        .zhang_lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .16);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="zhang_topbar">
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <nav class="zhang_nav">
+            <a href="index.html">首页</a>
+            <a href="books.html">图书列表</a>
+            <a href="news.html">科技新闻</a>
+            <a href="gallery.html" class="zhang_nav--on">校园图文</a>
+            <a href="database.html">数据库测试</a>
+        </nav>
+        <span class="zhang_topbar-user">张海玉 24001010521</span>
+    </header>
+
+    <main class="zhang_wrap">
+        <h1 class="zhang_page-title"><i class="iconfont icon-xinxi"></i>校园图文</h1>
+        <p class="zhang_page-sub">图文数据存放于 MySQL 表 zhang_gallery，图片为本地文件（frontend/img/），点击任意图片可查看大图与完整说明。</p>
+
+        <!-- 接口连接状态 -->
+        <div class="zhang_gallery-bar">
+            <span>接口：<b>GET /api/gallery</b></span>
+            <span>状态：<span class="zhang_ok" id="zhang_apiState">连接中…</span></span>
+            <span>数据条数：<b id="zhang_apiCount">-</b></span>
+            <span>耗时：<b id="zhang_apiMs">-</b></span>
+            <span>数据表：<b>zhang_gallery</b></span>
+        </div>
+
+        <div class="zhang_tip" id="zhang_tip"></div>
+
+        <!-- 标签筛选 -->
+        <div class="zhang_gallery-tags" id="zhang_tags"></div>
+
+        <!-- 图文卡片 -->
+        <section class="zhang_gallery-grid" id="zhang_galleryGrid">
+            <div class="zhang_card">加载中…</div>
+        </section>
+    </main>
+
+    <!-- 大图预览 -->
+    <div class="zhang_lightbox" id="zhang_lightbox">
+        <button class="zhang_lightbox-close" id="zhang_lightboxClose" title="关闭">✕</button>
+        <div class="zhang_lightbox-inner">
+            <img id="zhang_lightboxImg" src="" alt="大图预览">
+            <div class="zhang_lightbox-cap">
+                <h3 id="zhang_lightboxTitle"></h3>
+                <p id="zhang_lightboxDesc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/zhang_common.js"></script>
+    <script src="js/zhang_gallery.js"></script>
+</body>
+</html>

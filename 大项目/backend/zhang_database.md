@@ -86,3 +86,7 @@ FLUSH PRIVILEGES;
 ## 第 6 步（2026-11-09）：科技新闻表 zhang_news
 
 建表与 8 条测试数据的完整 SQL 见 `backend/zhang_news.sql`（可重复执行，先 USE zhang_book_db）。字段：zhang_id、zhang_title、zhang_summary、zhang_content、zhang_source、zhang_category、zhang_publish_time、zhang_views、zhang_created_at。
+
+## 第 7 步（2026-11-09）：校园图文表 zhang_gallery
+
+建表与 6 条数据 SQL 见 `backend/zhang_gallery.sql`。字段：zhang_id、zhang_title、zhang_desc、zhang_image（相对 frontend/ 的图片路径）、zhang_place、zhang_tag、zhang_publish_time、zhang_sort、zhang_created_at。图片为本地生成文件 `frontend/img/gallery-1.jpg` ~ `gallery-6.jpg`。

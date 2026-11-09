@@ -31,3 +31,11 @@
 > 完成科技新闻跟列表页面，新闻数据存在数据库表里面。网页显示后端接口连接和数据内容
 
 交付：zhang_news 表（8 条数据）、GET /api/news（keyword/category 筛选）、GET /api/news/categories、GET /api/news/:id（浏览量 +1）；前端 news.html 列表页（顶部展示接口地址/连接状态/条数/耗时）+ news-detail.html 详情页。
+
+## 2026-11-09 16:10 | DeepSeek-V4.1-Flash
+
+提示词全文：
+
+> 完成图文列表页面的显示，图片可用网络图片或者自己创造。一个新的数据库表
+
+交付：新建 zhang_gallery 表（6 条数据）；用图像生成工具自建 6 张本地图片存于 frontend/img/；后端 GET /api/gallery（tag 筛选）、GET /api/gallery/tags；前端 gallery.html 图文卡片列表（状态条显示接口连接/条数/耗时，标签筛选、点击看大图）。

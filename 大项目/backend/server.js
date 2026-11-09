@@ -22,6 +22,7 @@ zhang_app.use('/api/categories', require('./routes/zhang_category.routes'));
 zhang_app.use('/api/books', require('./routes/zhang_book.routes'));
 zhang_app.use('/api/database', require('./routes/zhang_database.routes'));
 zhang_app.use('/api/news', require('./routes/zhang_news.routes'));
+zhang_app.use('/api/gallery', require('./routes/zhang_gallery.routes'));
 
 // 统一 404（未匹配的 API 路径）
 zhang_app.use('/api', function (zhang_req, zhang_res) {
