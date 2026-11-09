@@ -54,3 +54,16 @@ function zhangEscape(zhang_str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
 }
+
+/**
+ * 日期时间格式化：把后端返回的 ISO 时间转成本地时间 "YYYY-MM-DD HH:mm"
+ * （MySQL DATETIME 经 JSON 序列化后会带时区偏移，直接截取字符串会相差 8 小时）
+ */
+function zhangFormatTime(zhang_str) {
+    if (!zhang_str) { return '-'; }
+    const zhang_d = new Date(zhang_str);
+    if (isNaN(zhang_d.getTime())) { return String(zhang_str).slice(0, 16); }
+    const zhang_pad = function (zhang_n) { return zhang_n < 10 ? '0' + zhang_n : '' + zhang_n; };
+    return zhang_d.getFullYear() + '-' + zhang_pad(zhang_d.getMonth() + 1) + '-' + zhang_pad(zhang_d.getDate()) +
+        ' ' + zhang_pad(zhang_d.getHours()) + ':' + zhang_pad(zhang_d.getMinutes());
+}

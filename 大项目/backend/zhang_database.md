@@ -82,3 +82,7 @@ GRANT ALL PRIVILEGES ON zhang_book_db.* TO 'mysql80'@'localhost';
 GRANT ALL PRIVILEGES ON zhang_book_db.* TO 'mysql80'@'%';
 FLUSH PRIVILEGES;
 ```
+
+## 第 6 步（2026-11-09）：科技新闻表 zhang_news
+
+建表与 8 条测试数据的完整 SQL 见 `backend/zhang_news.sql`（可重复执行，先 USE zhang_book_db）。字段：zhang_id、zhang_title、zhang_summary、zhang_content、zhang_source、zhang_category、zhang_publish_time、zhang_views、zhang_created_at。

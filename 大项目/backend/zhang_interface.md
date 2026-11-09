@@ -128,3 +128,15 @@
 
 补充（2026-11-09）：前端支持 用户名@主机 写法（如 root@localhost），提交前自动拆分为 zhang_user=root、zhang_host=localhost；实测该写法连接成功。
 
+
+---
+
+## 2026-11-09 新增：科技新闻接口
+
+### /api/news | GET | query：keyword（标题/摘要模糊）、category | 2026-11-09
+
+响应：`{ "code": 0, "msg": "查询成功", "data": [ { "zhang_id": 1, "zhang_title": "...", "zhang_summary": "...", "zhang_source": "科技日报", "zhang_category": "人工智能", "zhang_publish_time": "2026-11-08T01:30:00.000Z", "zhang_views": 1862 } ] }`
+
+### /api/news/categories | GET | 返回分类数组：`{ "code": 0, "msg": "查询成功", "data": ["人工智能", "低空经济", ...] }` | 2026-11-09
+
+### /api/news/:id | GET | 返回单条含正文 zhang_content，浏览量自动 +1；id 不存在时 `code=404, msg="新闻不存在"` | 2026-11-09

@@ -95,6 +95,7 @@ async function zhangDeleteBook(zhang_id) {
 }
 
 module.exports = {
+    zhang_pool,
     zhangFindAllCategories,
     zhangFindBooks,
     zhangFindBookById,

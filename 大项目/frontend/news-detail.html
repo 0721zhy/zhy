@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻详情 · 图书管理系统</title>
+    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：DeepSeek-V4.1-Flash | 功能：科技新闻详情页（按 URL 参数 id 请求接口读取正文） -->
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+    <style>
+        /* 本页私有样式：新闻详情 */
+        .zhang_article {
+            max-width: 860px;
+            background: #fff;
+            border: 1.5px solid var(--zhang_line);
+            border-radius: 16px;
+            padding: 34px 40px;
+        }
+
+        .zhang_article h1 {
+            font-size: 24px;
+            line-height: 1.55;
+            color: var(--zhang_ink);
+            margin-bottom: 14px;
+        }
+
+        .zhang_article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            font-size: 13px;
+            color: var(--zhang_sub);
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--zhang_line);
+            margin-bottom: 18px;
+        }
+
+        .zhang_article-summary {
+            background: #f5f9fd;
+            border-left: 4px solid var(--zhang_main);
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--zhang_sub);
+            margin-bottom: 22px;
+        }
+
+        .zhang_article-body p {
+            font-size: 15px;
+            line-height: 2.1;
+            color: #3a4b5c;
+            margin-bottom: 16px;
+            text-indent: 2em;
+        }
+
+        .zhang_article-back { margin-top: 26px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="zhang_topbar">
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <nav class="zhang_nav">
+            <a href="index.html">首页</a>
+            <a href="books.html">图书列表</a>
+            <a href="news.html" class="zhang_nav--on">科技新闻</a>
+            <a href="database.html">数据库测试</a>
+        </nav>
+        <span class="zhang_topbar-user">张海玉 24001010521</span>
+    </header>
+
+    <main class="zhang_wrap">
+        <div class="zhang_api-bar" style="display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center;padding:14px 18px;border:1.5px solid var(--zhang_line);border-radius:12px;background:#fff;font-size:13px;margin-bottom:18px;">
+            <span>接口：<b>GET /api/news/:id</b></span>
+            <span>状态：<b id="zhang_apiState">连接中…</b></span>
+            <span>耗时：<b id="zhang_apiMs">-</b></span>
+        </div>
+
+        <div class="zhang_tip" id="zhang_tip"></div>
+
+        <article class="zhang_article" id="zhang_article">
+            <div class="zhang_card">加载中…</div>
+        </article>
+
+        <div class="zhang_article-back">
+            <a class="zhang_btn zhang_btn--ghost" href="news.html"><i class="iconfont icon-shouye"></i>返回新闻列表</a>
+        </div>
+    </main>
+
+    <script src="js/zhang_common.js"></script>
+    <script src="js/zhang_news_detail.js"></script>
+</body>
+</html>

@@ -23,3 +23,11 @@
 > 用户名root@localhost
 
 处理：database.html 默认用户名改为 root@localhost，并支持「用户名@主机」写法自动拆分；已实测 root/zhang0168 连接成功（MySQL 8.0.43 / zhang_book_db）。
+
+## 2026-11-09 15:20 | DeepSeek-V4.1-Flash
+
+提示词全文：
+
+> 完成科技新闻跟列表页面，新闻数据存在数据库表里面。网页显示后端接口连接和数据内容
+
+交付：zhang_news 表（8 条数据）、GET /api/news（keyword/category 筛选）、GET /api/news/categories、GET /api/news/:id（浏览量 +1）；前端 news.html 列表页（顶部展示接口地址/连接状态/条数/耗时）+ news-detail.html 详情页。
