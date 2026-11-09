@@ -15,3 +15,11 @@
 
 > 创建database.html页面，输入用户名，密码，链接数据库，数据库使用mysql，成功和错误都有提示，默认用户mysql80，密码zhang0168。
 
+
+## 2026-11-09 14:45 | DeepSeek-V4.1-Flash
+
+提示词全文：
+
+> 用户名root@localhost
+
+处理：database.html 默认用户名改为 root@localhost，并支持「用户名@主机」写法自动拆分；已实测 root/zhang0168 连接成功（MySQL 8.0.43 / zhang_book_db）。
