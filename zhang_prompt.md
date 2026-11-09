@@ -432,3 +432,12 @@
 
 > 实现18.8html，实现基于three.js或者echarts的数据大屏，大屏要求：三列，中间上面是某种地理信息的图，cdn文件下载到cdn目录下。
 
+
+## 2026-11-09
+
+**模型：** DeepSeek-V4.1-Flash
+
+**提示词：**
+
+> 根据文件帮助我完成项目（全栈提示词.docx：Node.js+Express+MySQL 全栈项目，frontend/ 原生前端，backend/ RESTful+MVC，端口 521，zhang_ 前缀命名）
+

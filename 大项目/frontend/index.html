@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理系统 · 首页</title>
+    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：GLM-5.3-FlashX | 功能：全栈项目前端入口页 -->
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="zhang_topbar">
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <nav class="zhang_nav">
+            <a href="index.html" class="zhang_nav--on">首页</a>
+            <a href="books.html">图书列表</a>
+        </nav>
+        <span class="zhang_topbar-user">张海玉 24001010521</span>
+    </header>
+
+    <main class="zhang_wrap">
+        <!-- 项目介绍 -->
+        <section class="zhang_hero">
+            <h1>图书管理系统</h1>
+            <p>全栈课程项目：前端使用原生 HTML / CSS / JavaScript，通过 fetch 调用后端 RESTful 接口；后端采用 Node.js + Express（MVC 架构，端口 521），数据存储于 MySQL 数据库。服务器返回的数据与错误信息统一输出到浏览器控制台。</p>
+        </section>
+
+        <!-- 页面入口 -->
+        <section class="zhang_entry-grid">
+            <a class="zhang_entry" href="books.html">
+                <i class="iconfont icon-tuijian"></i>
+                <strong>图书列表</strong>
+                <span>查看全部图书，支持关键词搜索与分类筛选，可新增、编辑、删除图书。</span>
+            </a>
+            <a class="zhang_entry" href="books.html">
+                <i class="iconfont icon-gouwuche"></i>
+                <strong>图书详情</strong>
+                <span>在列表中点击书名进入详情页，查看价格、库存、出版社等完整信息。</span>
+            </a>
+            <a class="zhang_entry" href="/api/books" target="_blank">
+                <i class="iconfont icon-xinxi"></i>
+                <strong>接口预览</strong>
+                <span>直接访问 GET /api/books 查看后端返回的统一 JSON 格式（code / msg / data）。</span>
+            </a>
+        </section>
+
+        <p class="zhang_footnote">张海玉 24001010521 · 全栈提示词实践项目 · 2026-11-09</p>
+    </main>
+</body>
+</html>

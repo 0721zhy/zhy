@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书列表 · 图书管理系统</title>
+    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：GLM-5.3-FlashX | 功能：图书列表页（搜索、筛选、新增、编辑、删除） -->
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="zhang_topbar">
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <nav class="zhang_nav">
+            <a href="index.html">首页</a>
+            <a href="books.html" class="zhang_nav--on">图书列表</a>
+        </nav>
+        <span class="zhang_topbar-user">张海玉 24001010521</span>
+    </header>
+
+    <main class="zhang_wrap">
+        <h1 class="zhang_page-title"><i class="iconfont icon-tuijian"></i>图书列表</h1>
+        <p class="zhang_page-sub">数据来自 GET /api/books（MySQL 实时查询），操作结果与错误信息见浏览器控制台（F12）。</p>
+
+        <!-- 状态提示区 -->
+        <div class="zhang_tip" id="zhang_tip"></div>
+
+        <section class="zhang_card">
+            <!-- 工具栏：搜索 / 分类筛选 / 新增 -->
+            <div class="zhang_toolbar">
+                <input class="zhang_input zhang_input--search" id="zhang_search" type="text" placeholder="搜索书名或作者…">
+                <select class="zhang_select" id="zhang_cateFilter">
+                    <option value="">全部分类</option>
+                </select>
+                <button class="zhang_btn zhang_btn--main" id="zhang_addBtn" type="button">
+                    <i class="iconfont icon-zengjia"></i>新增图书
+                </button>
+            </div>
+
+            <!-- 数据表格 -->
+            <table class="zhang_table">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>书名</th><th>作者</th><th>分类</th>
+                        <th>定价</th><th>库存</th><th>出版社</th><th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="zhang_tbody">
+                    <tr><td colspan="8">加载中…</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- 新增/编辑 弹层表单 -->
+    <div class="zhang_mask" id="zhang_mask">
+        <form class="zhang_modal" id="zhang_form">
+            <h3><i class="iconfont icon-bianji"></i><span id="zhang_formTitle">新增图书</span></h3>
+            <input type="hidden" id="zhang_fId">
+            <div class="zhang_form-row">
+                <label>书名 <b>*</b></label>
+                <input class="zhang_input" id="zhang_fTitle" type="text" required>
+            </div>
+            <div class="zhang_form-row">
+                <label>作者 <b>*</b></label>
+                <input class="zhang_input" id="zhang_fAuthor" type="text" required>
+            </div>
+            <div class="zhang_form-row">
+                <label>分类 <b>*</b></label>
+                <select class="zhang_select" id="zhang_fCate" required></select>
+            </div>
+            <div class="zhang_form-row">
+                <label>定价（元）</label>
+                <input class="zhang_input" id="zhang_fPrice" type="number" step="0.01" min="0" value="0">
+            </div>
+            <div class="zhang_form-row">
+                <label>库存</label>
+                <input class="zhang_input" id="zhang_fStock" type="number" min="0" value="0">
+            </div>
+            <div class="zhang_form-row">
+                <label>出版社</label>
+                <input class="zhang_input" id="zhang_fPress" type="text">
+            </div>
+            <div class="zhang_form-row">
+                <label>出版日期</label>
+                <input class="zhang_input" id="zhang_fDate" type="date">
+            </div>
+            <div class="zhang_form-foot">
+                <button class="zhang_btn zhang_btn--ghost" type="button" id="zhang_cancelBtn">取消</button>
+                <button class="zhang_btn zhang_btn--main" type="submit" id="zhang_saveBtn">保存</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/zhang_common.js"></script>
+    <script src="js/zhang_books.js"></script>
+</body>
+</html>

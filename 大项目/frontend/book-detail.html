@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书详情 · 图书管理系统</title>
+    <!-- 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-09 | 大模型：GLM-5.3-FlashX | 功能：图书详情页（根据 URL 参数 id 调用 GET /api/books/:id） -->
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="zhang_topbar">
+        <a class="zhang_logo" href="index.html"><i class="iconfont icon-shouye"></i>图书管理系统</a>
+        <nav class="zhang_nav">
+            <a href="index.html">首页</a>
+            <a href="books.html" class="zhang_nav--on">图书列表</a>
+        </nav>
+        <span class="zhang_topbar-user">张海玉 24001010521</span>
+    </header>
+
+    <main class="zhang_wrap">
+        <a class="zhang_back" href="books.html"><i class="iconfont icon-fanhui"></i>返回图书列表</a>
+
+        <!-- 状态提示区 -->
+        <div class="zhang_tip" id="zhang_tip"></div>
+
+        <section class="zhang_card">
+            <div class="zhang_detail-grid">
+                <!-- 封面占位（渐变卡） -->
+                <div class="zhang_detail-cover">
+                    <i class="iconfont icon-tuijian"></i>
+                    <strong id="zhang_dCoverTitle">加载中…</strong>
+                </div>
+                <!-- 详细信息 -->
+                <div>
+                    <h1 class="zhang_page-title" id="zhang_dTitle" style="margin-bottom:14px;">加载中…</h1>
+                    <dl class="zhang_detail-rows">
+                        <div class="zhang_detail-row"><dt>作者</dt><dd id="zhang_dAuthor">-</dd></div>
+                        <div class="zhang_detail-row"><dt>分类</dt><dd id="zhang_dCate">-</dd></div>
+                        <div class="zhang_detail-row"><dt>定价</dt><dd class="zhang_price" id="zhang_dPrice">-</dd></div>
+                        <div class="zhang_detail-row"><dt>库存</dt><dd id="zhang_dStock">-</dd></div>
+                        <div class="zhang_detail-row"><dt>出版社</dt><dd id="zhang_dPress">-</dd></div>
+                        <div class="zhang_detail-row"><dt>出版日期</dt><dd id="zhang_dDate">-</dd></div>
+                        <div class="zhang_detail-row"><dt>入库时间</dt><dd id="zhang_dCreated">-</dd></div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/zhang_common.js"></script>
+    <script src="js/zhang_book_detail.js"></script>
+</body>
+</html>
