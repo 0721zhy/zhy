@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 聊天 - 微博网页</title>
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet" href="css/zhang_style.css">
+    <style>
+        /* chat.html 专属样式 */
+        .zhy_chat-wrap { max-width: 860px; margin: 0 auto; padding: 26px 20px 60px; }
+        .zhy_chat-card { background: #fff; border: 1px solid var(--zhang_line); border-radius: 12px; display: flex; flex-direction: column; height: 70vh; min-height: 480px; }
+        .zhy_chat-head { display: flex; align-items: center; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--zhang_line); font-weight: 700; }
+        .zhy_chat-head .iconfont { color: var(--zhang_main); }
+        .zhy_chat-head small { font-weight: 400; color: var(--zhang_sub); margin-left: auto; font-size: 12px; }
+        .zhy_chat-list { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .zhy_msg { display: flex; gap: 10px; max-width: 86%; }
+        .zhy_msg--me { align-self: flex-end; flex-direction: row-reverse; }
+        .zhy_msg-bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+        .zhy_msg--ai .zhy_msg-bubble { background: #f7f8fa; border: 1px solid var(--zhang_line); }
+        .zhy_msg--me .zhy_msg-bubble { background: var(--zhang_main); color: #fff; }
+        .zhy_msg-bubble--loading { color: var(--zhang_sub); }
+        .zhy_chat-form { display: flex; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--zhang_line); }
+        .zhy_chat-input { flex: 1; height: 42px; padding: 0 14px; border: 1px solid var(--zhang_line); border-radius: 10px; font-size: 14px; outline: none; }
+        .zhy_chat-input:focus { border-color: var(--zhang_main); }
+        .zhy_chat-tip { margin-top: 12px; }
+    </style>
+</head>
+<body>
+<!-- 姓名：张海玉 建立时间：2026-11-12 大模型：GLM-5.3-FlashX 功能：调用 LLM 接口的聊天页（提示词与响应均输出到控制台） -->
+
+<header class="zhang_topbar">
+    <a class="zhang_logo" href="index.html">
+        <i class="iconfont icon-faxian1"></i>微博 <small>全栈大项目 · Express + MySQL</small>
+    </a>
+    <nav class="zhang_nav">
+        <a href="index.html"><i class="iconfont icon-shouye"></i>首页</a>
+        <a href="profile.html?id=1"><i class="iconfont icon-my"></i>个人主页</a>
+        <a href="message.html"><i class="iconfont icon-xinxi"></i>消息通知</a>
+        <a href="database.html"><i class="iconfont icon-zengjia"></i>数据库测试</a>
+        <a href="chat.html" class="zhang_nav--on"><i class="iconfont icon-sousuo"></i>AI 聊天</a>
+    </nav>
+</header>
+
+<div class="zhy_chat-wrap">
+    <div class="zhy_chat-card">
+        <div class="zhy_chat-head">
+            <i class="iconfont icon-sousuo"></i>AI 聊天助手
+            <small>SiliconFlow · DeepSeek-V4-Flash · 对话内容同步输出到浏览器控制台（F12 查看）</small>
+        </div>
+        <div class="zhy_chat-list" id="zhy_chatList"></div>
+        <form class="zhy_chat-form" id="zhy_chatForm">
+            <input class="zhy_chat-input" id="zhy_chatInput" maxlength="500" placeholder="输入消息，回车或点击发送…" autocomplete="off">
+            <button class="zhang_btn" type="submit" id="zhy_sendBtn"><i class="iconfont icon-bianji"></i>发送</button>
+        </form>
+    </div>
+    <div class="zhang_tip zhy_chat-tip" id="zhy_chatTip"></div>
+</div>
+
+<script>
+// 姓名：张海玉 | 学号：24001010521 | 时间：2026-11-12 | 大模型：GLM-5.3-FlashX
+// 聊天逻辑：调用 SiliconFlow LLM 接口，发送的提示词与接收到的数据均在控制台输出
+
+const zhy_apiKey = 'sk-osyxygtqxntnmrbjmuwudasxpeeyuyliywdvvgadathospkd';
+const zhy_apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
+const zhy_model  = 'deepseek-ai/DeepSeek-V4-Flash';
+
+// 多轮对话上下文：system 提示词始终在首位
+const zhy_messages = [
+    { role: 'system', content: '你是一个有用的助手' }
+];
+
+const zhy_list = document.getElementById('zhy_chatList');
+const zhy_input = document.getElementById('zhy_chatInput');
+const zhy_btn = document.getElementById('zhy_sendBtn');
+const zhy_tip = document.getElementById('zhy_chatTip');
+
+// 追加一条气泡；返回气泡元素便于后续更新内容
+function zhyAddBubble(zhy_role, zhy_text) {
+    const zhy_item = document.createElement('div');
+    zhy_item.className = 'zhy_msg ' + (zhy_role === 'user' ? 'zhy_msg--me' : 'zhy_msg--ai');
+    const zhy_bubble = document.createElement('div');
+    zhy_bubble.className = 'zhy_msg-bubble';
+    zhy_bubble.textContent = zhy_text;
+    zhy_item.appendChild(zhy_bubble);
+    zhy_list.appendChild(zhy_item);
+    zhy_list.scrollTop = zhy_list.scrollHeight;
+    return zhy_bubble;
+}
+
+// 调用 LLM 接口：发送的提示词与接收到的数据都在控制台输出
+async function zhyChat(zhy_prompt) {
+    // 1) 发送的提示词输出到控制台
+    console.log('[zhyChat 发送的提示词]', zhy_prompt);
+    zhy_messages.push({ role: 'user', content: zhy_prompt });
+    console.log('[zhyChat 本次请求 messages]', JSON.parse(JSON.stringify(zhy_messages)));
+
+    zhyAddBubble('user', zhy_prompt);
+    const zhy_aiBubble = zhyAddBubble('ai', '思考中…');
+    zhy_aiBubble.classList.add('zhy_msg-bubble--loading');
+    zhy_btn.disabled = true;
+
+    try {
+        const zhy_resp = await fetch(zhy_apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + zhy_apiKey
+            },
+            body: JSON.stringify({
+                model: zhy_model,
+                messages: zhy_messages
+            })
+        });
+        const zhy_data = await zhy_resp.json();
+
+        // 2) 接收到的数据输出到控制台
+        console.log('[zhyChat 接收到的数据]', zhy_data);
+
+        if (zhy_data.error) {
+            throw new Error(zhy_data.error.message || '接口返回错误');
+        }
+        const zhy_reply = zhy_data.choices[0].message.content;
+
+        // 回复写入上下文，支持多轮对话
+        zhy_messages.push({ role: 'assistant', content: zhy_reply });
+        zhy_aiBubble.classList.remove('zhy_msg-bubble--loading');
+        zhy_aiBubble.textContent = zhy_reply;
+        zhy_tip.className = 'zhang_tip zhang_tip--ok zhy_chat-tip';
+        zhy_tip.textContent = '对话成功，模型：' + zhy_data.model + '，消耗 tokens：' +
+            (zhy_data.usage ? zhy_data.usage.total_tokens : '-');
+    } catch (zhy_err) {
+        console.error('[zhyChat 调用失败]', zhy_err);
+        zhy_aiBubble.classList.remove('zhy_msg-bubble--loading');
+        zhy_aiBubble.textContent = '调用失败：' + zhy_err.message;
+        zhy_tip.className = 'zhang_tip zhang_tip--error zhy_chat-tip';
+        zhy_tip.textContent = '调用失败：' + zhy_err.message;
+        // 失败时回退这条 user 消息，避免污染上下文
+        zhy_messages.pop();
+    } finally {
+        zhy_btn.disabled = false;
+        zhy_input.focus();
+    }
+}
+
+document.getElementById('zhy_chatForm').addEventListener('submit', function (zhy_ev) {
+    zhy_ev.preventDefault();
+    const zhy_text = zhy_input.value.trim();
+    if (!zhy_text) { return; }
+    zhy_input.value = '';
+    zhyChat(zhy_text);
+});
+</script>
+</body>
+</html>

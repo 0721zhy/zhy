@@ -41,3 +41,4 @@
 交付：新建 zhang_gallery 表（6 条数据）；用图像生成工具自建 6 张本地图片存于 frontend/img/；后端 GET /api/gallery（tag 筛选）、GET /api/gallery/tags；前端 gallery.html 图文卡片列表（状态条显示接口连接/条数/耗时，标签筛选、点击看大图）。
 
 2026-11-09 | 现在帮我这个项目换成我的大项目微博网页。（方案已确认：保留 Express+MySQL+原生前端架构与 521 端口，把图书/新闻/图文业务整体替换为完整微博功能：微博发布、信息流、评论、点赞、个人主页、关注/粉丝、热搜榜、消息通知） | GLM-5.3-FlashX
+2026-11-12 | 完成一个chat.html,内容是调用llm的接口完成聊天功能，发送的提示词和接收到的数据都在控制台输出，Api-key：sk-osyxygtqxntnmrbjmuwudasxpeeyuyliywdvvgadathospkd（SiliconFlow DeepSeek-V4-Flash），在 大项目 路径里面完成 | GLM-5.3-FlashX
